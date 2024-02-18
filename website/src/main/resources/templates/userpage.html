@@ -1,13 +1,144 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
+<style>
+    body {
+        background-color: #25528F;
+    }
+
+    .infoblock {
+        background-color: #EDCECD;
+        border: 2px solid;
+    }
+
+    .circle {
+        border: 2px solid;
+        border-radius: 50%;
+    }
+
+    .userimage {
+        position: relative;
+        width: 100%;
+    }
+
+    .button {
+        background-color: transparent;
+        background-repeat: no-repeat;
+        border: none;
+        cursor: pointer;
+        overflow: hidden;
+        outline: none;
+    }
+
+    .image {
+        position: relative;
+        width: 100%;
+    }
+
+    #home, #location, #search, #chat, #settings, #location, #create {
+        position: relative;
+        margin-left: 3%;
+        left: 20%;
+        top: -60%;
+        height: 0px;
+        width: 5%;
+        padding-bottom: 5%;
+    }
+
+    #navigationbar {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 75%;
+        height: 12%;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+
+    #famigotext {
+        margin: auto;
+        font-size: 100px;
+        font-weight: 700;
+        text-align: left;
+        margin-left: 2%;
+    }
+
+    #userinfo {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        height: 75%;
+        width: 20%;
+        border-top-right-radius: 15px;
+    }
+
+    #userlinks {
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        height: 75%;
+        width: 20%;
+        border-top-left-radius: 15px;
+    }
+
+    #profilepicture {
+        position: relative;
+        height: 0px;
+        width: 50%;
+        padding-bottom: 50%;
+        margin-left: 24%;
+        margin-top: 10%;
+    }
+
+</style>
 <head> 
     <title>Homepage</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<h1>Result</h1>
-    <p th:text="'Username: ' + ${login.username}" />
-    <p th:text="'Username: ' + ${login.password}" />
-    <a href="/login">Login again?</a>
+	<div id="navigationbar" class="infoblock">
+        <p id="famigotext">
+            Famigo
+        </p>
+
+        <button class="button" id="home">
+            <img draggable="false" class="image" th:src="@{/images/home.png}"/>
+        </button>
+
+        <button class="button" id="chat">
+            <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
+        </button>
+
+        <button class="button" id="create">
+            <img draggable="false" class="image" th:src="@{/images/create.png}"/>
+        </button>
+
+        <button class="button" id="location">
+            <img draggable="false" class="image" th:src="@{/images/location.png}"/>
+        </button>
+
+        <button class="button" id="search">
+            <img draggable="false" class="image" th:src="@{/images/search.png}"/>
+        </button>
+
+        <button class="button" id="settings">
+            <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
+        </button>
+    </div>
+
+    <div id="userinfo" class="infoblock">
+        <div class="circle" id="profilepicture">
+            <img draggable="false" class="userimage" th:src="@{/images/user.png}"/>
+        </div>
+
+        <p>
+            Text would go here that gives friends, followers, and possibly info like name and username. 
+        </p>
+    </div>
+
+    <div id="userlinks" class="infoblock">
+        <p>
+            This is where the section links (like detailed stats) would go. How said content is structured is 100% up to the person implementing but should be placed in the center section.
+        </p>
+    </div>
 </body>
 </html>

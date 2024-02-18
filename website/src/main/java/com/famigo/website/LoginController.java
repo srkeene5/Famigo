@@ -5,13 +5,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
 
 	@GetMapping("/login")
-	public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
+	public String greeting(Model model) {
 		model.addAttribute("login", new Login());
 		return "register";
 	}
@@ -21,12 +20,12 @@ public class LoginController {
     	model.addAttribute("login", login);
     	
 		if (login.getPassword() == null && login.getUsername() == null) {
-			return "signup";
+			return "redirect:/signup";
 		}
 
-		//TODO: Change this to check database for the username and password combo
+		//TODO: Change this to check database for the username/email and password combo
 		if (ValidateText.isPasswordValid(login.getPassword())) {
-			return "userpage";
+			return "redirect:/user";
 		}
 		
 		login.setPassword(null);
