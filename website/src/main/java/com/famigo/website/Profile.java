@@ -1,6 +1,9 @@
 package com.famigo.website;
 
 import java.sql.PreparedStatement;
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
@@ -11,9 +14,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
 
 @Repository
 public class Profile extends JdbcDaoSupport {

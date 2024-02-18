@@ -14,6 +14,8 @@ public class WebsiteApplication {
         Profile profile = context.getBean(Profile.class);
         profile.createProfile("user", "private", "email", "cain", "abel", "something");
         profile.printProfile();
+        /*Place place = context.getBean(Place.class);
+		place.createPlace("purdue", "WL", "0");*/
     }
 
 }
