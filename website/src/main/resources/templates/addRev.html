@@ -1,0 +1,197 @@
+<html>
+
+<head>
+    <title>Add Review</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, 
+                   initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .popup {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none;
+        }
+        .popup-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888888;
+            width: 30%;
+            font-weight: bolder;
+        }
+        .popup-content button {
+            display: block;
+            margin: 0 auto;
+        }
+        .show {
+            display: block;
+        }
+        h1 {
+            color: #5898FF;
+        }
+        textarea {
+            position: relative;
+            resize: none;
+            width: 100%;
+            height: 20%;
+        }
+        .button-container {
+            display: flex;
+        }
+        .formClear {
+            clear:left;
+            height: 5px;
+        }
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Testing Review</h1>
+    <button id="addReview">Add Review</button>
+
+    <div id="myPopup" class="popup">
+        <div class="popup-content">
+            <h3>Review Here:</h3>
+            <span id="error"></span>
+
+            <textarea id="Review" name="ReviewName"></textarea>
+            <div class="formClear"></div>
+            
+            <div class="rating">
+                <span class="fa fa-star" id="st1" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st2" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st3" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st4" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st5" name="rating" value="0"></span>
+            </div>
+
+            <div class="formClear"></div>
+            <div class="button-container">
+                <button id="cancel">Cancel</button>
+                <button id="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var stval = 0;
+        addReview.addEventListener("click",function(){
+            myPopup.classList.add("show");
+        });
+        cancel.addEventListener("click",function(){
+            resetRevPop();
+        });
+        submit.addEventListener("click",function(){
+            var revText = Review.value;
+            var revStVal = stval;
+            if (revText == "" || revStVal == 0){
+                var error = document.getElementById("error");
+                error.textContent = "Review must contain Text and Rating";
+                error.style.color = "red";
+            } else {
+                var send ={
+                    rText : revText,
+                    rStar : String(revStVal)
+                }
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/sendReview",
+                    data: JSON.stringify(send),
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response != "OK")
+                            alert(response);
+                        else
+                            console.log(response);
+                    },
+                    error : function(e) {
+                        alert('Error: ' + e);
+                    }
+                });
+                resetRevPop();
+            }
+        });
+        const e1 = document.getElementById("st1");
+        const e2 = document.getElementById("st2");
+        const e3 = document.getElementById("st3");
+        const e4 = document.getElementById("st4");
+        const e5 = document.getElementById("st5");
+        e1.addEventListener("click",function(event){
+            if (event.target == st1) {
+                st1.classList.add("checked");
+                st2.classList.remove("checked");
+                st3.classList.remove("checked");
+                st4.classList.remove("checked");
+                st5.classList.remove("checked");
+                stval = 1;
+            }
+        });
+        e2.addEventListener("click",function(event){
+            if (event.target == st2) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.remove("checked");
+                st4.classList.remove("checked");
+                st5.classList.remove("checked");
+                stval = 2;
+            }
+        });
+        e3.addEventListener("click",function(event){
+            if (event.target == st3) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.add("checked");
+                st4.classList.remove("checked");
+                st5.classList.remove("checked");
+                stval = 3;
+            }
+        });
+        e4.addEventListener("click",function(event){
+            if (event.target == st4) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.add("checked");
+                st4.classList.add("checked");
+                st5.classList.remove("checked");
+                stval = 4;
+            }
+        });
+        e5.addEventListener("click",function(event){
+            if (event.target == st5) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.add("checked");
+                st4.classList.add("checked");
+                st5.classList.add("checked");
+                stval = 5;
+            }
+        });
+        function resetRevPop(){
+            myPopup.classList.remove("show");
+            Review.value = "";
+            stval = 0;
+            error.textContent = "";
+            st1.classList.remove("checked");
+            st2.classList.remove("checked");
+            st3.classList.remove("checked");
+            st4.classList.remove("checked");
+            st5.classList.remove("checked");
+        }
+    </script>
+</body>
+
+</html>
