@@ -13,7 +13,8 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository
+@Component
 public class Place extends JdbcDaoSupport {
     private String rating;
     private String name;
@@ -29,10 +30,14 @@ public class Place extends JdbcDaoSupport {
     }
 
     public void createPlace(String name, String address, String rating) {
+        this.name = name;
+        this.address = address;
+        this.rating = rating;
+        
         String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
         id = Integer.toString(new Random().nextInt(1000));
         getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
-
+        
         @Override
         public void setValues(PreparedStatement ps, int i) throws SQLException {
             ps.setString(1, id);
@@ -55,8 +60,9 @@ public class Place extends JdbcDaoSupport {
         address = null;
     }
 
-    public Place(String id, String name, String address) {
-        this.rating = id;
+    public Place(String id, String rating, String name, String address) {
+        this.id = id;
+        this.rating = rating;
         this.name = name;
         this.address = address;
     }
