@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 
 //@Component
 @Repository
-public class Place extends JdbcDaoSupport {
+public class Place {
     private String rating;
     private String name;
     private String address;

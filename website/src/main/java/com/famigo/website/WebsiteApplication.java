@@ -11,9 +11,9 @@ public class WebsiteApplication {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
-        Profile profile = context.getBean(Profile.class);
+        /* Profile profile = context.getBean(Profile.class);
         profile.createProfile("user", "private", "email", "cain", "abel", "something");
-        profile.printProfile();
+        profile.printProfile(); */
         /*Place place = context.getBean(Place.class);
 		place.createPlace("purdue", "WL", "0");*/
     }
