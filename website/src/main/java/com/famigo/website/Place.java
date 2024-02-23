@@ -20,7 +20,8 @@ import org.springframework.stereotype.Repository;
 
 //@Component
 @Repository
-public class Place extends JdbcDaoSupport {
+
+public class Place {
     private String rating;
     private String name;
     private String address;
@@ -28,16 +29,6 @@ public class Place extends JdbcDaoSupport {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    public Place() {
-    }
-
-    public Place(String rating, String name, String address) {
-        //this.jdbcTemplate = null;
-        this.rating = rating;
-        this.name = name;
-        this.address = address;
-    }
 
     public void addPlace(Place place) {
         String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
@@ -53,6 +44,16 @@ public class Place extends JdbcDaoSupport {
             }
             
         });
+    }
+
+    public Place() {
+    }
+
+    public Place(String rating, String name, String address) {
+        //this.jdbcTemplate = null;
+        this.rating = rating;
+        this.name = name;
+        this.address = address;
     }
 
     // Getters

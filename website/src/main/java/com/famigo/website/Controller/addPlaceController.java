@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import org.springframework.web.bind.annotation.PostMapping;
+
 import com.famigo.website.Place;
 
 @Controller
@@ -19,10 +21,11 @@ public class addPlaceController {
         return "addplace";
     }
 
-    @RequestMapping(value = "/addplace", method = RequestMethod.POST)
-    public ResponseEntity<String> submitReview(@RequestBody Place place) {
+    @PostMapping(value = "/addplace"/*, method = RequestMethod.POST*/)
+    public ResponseEntity<String> submit_place(@RequestBody Place place) {
         System.out.println(place.getName());
         Place placeObject = new Place(place.getName(), "123 road", "100");
+        System.out.println("BEFORE");
         place.addPlace(placeObject);
         System.out.println("place added...");
         return new ResponseEntity<String>(HttpStatus.OK);
