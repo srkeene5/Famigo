@@ -18,6 +18,7 @@ public class WebsiteApplication {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
+        /*
         MessageRepository message = context.getBean(MessageRepository.class);
         Profile p = context.getBean(Profile.class);
         p.createProfile("bobby", "visible", "email@email.email", "bob", "bobberson", "this is a description");
@@ -42,6 +43,7 @@ public class WebsiteApplication {
         for (Message m : messages) {
             System.out.println(m.getSender() + " " + m.getContent());
         }
+        */
     }
 
 }

@@ -7,9 +7,10 @@
     <body>
         <h1>Conversations</h1>
         <table>
-            <tr th:each="conv : ${conversations}">
-                <td><a th:href="@{/message(cid=${conv.getID()})}"><span th:text="${conv.getName()}"></span></a></td>
+            <tr th:each="message : ${messages}">
+                <td><span th:text="${message.getContent()}"></span></td>
             </tr>
         </table>
+        <a href="/newMessage"><button>New Message</button></a>
     </body>
 </html>

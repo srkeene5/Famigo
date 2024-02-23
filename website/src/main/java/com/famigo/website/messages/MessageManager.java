@@ -30,19 +30,29 @@ public class MessageManager {
     }
 
     @GetMapping("/message")
-    public String seeMessages(Model model) {
-        
+    public String seeMessages(Model model, @RequestParam String cid) {
+        conversationID = cid;
+        ArrayList<Message> m = mr.getMessages(cid);
+        if (m.isEmpty()) {
+            return "you have no messages";
+        }
+        model.addAttribute("messages", m);
         return "viewMessages";
     }
 
+    @GetMapping("/newMessage")
+    public String newMessage(Model model) {
+        return "message";
+    }
+
     @PostMapping("/sendMessage")
-    public String sendMessage(Model model, @RequestParam String username, @RequestParam String recipient, @RequestParam String content) {
+    public String sendMessage(Model model, @RequestParam String username, @RequestParam String content) {
         if (conversationID == null) {
             return "no conversation selected";
         }
         Message m = new Message(Util.generateID(50), username, content, LocalDateTime.now(), false, conversationID);
         mr.addMessage(m);
-        return "message sent";
+        return "messageSent.html";
     }
 
 }
