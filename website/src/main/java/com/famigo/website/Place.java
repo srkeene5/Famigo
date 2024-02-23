@@ -19,35 +19,12 @@ import org.springframework.stereotype.Repository;
 
 
 //@Component
-@Repository
 
 public class Place {
     private String rating;
     private String name;
     private String address;
     private String id;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    public void addPlace(Place place) {
-        String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, new PreparedStatementSetter() {
-
-            @Override
-            public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
-                // TODO Auto-generated method stub
-                ps.setString(1, place.getId());
-                ps.setString(2, place.getName());
-                ps.setString(3, place.getAddress());
-                ps.setString(4, place.getRating());
-            }
-            
-        });
-    }
-
-    public Place() {
-    }
 
     public Place(String rating, String name, String address) {
         //this.jdbcTemplate = null;

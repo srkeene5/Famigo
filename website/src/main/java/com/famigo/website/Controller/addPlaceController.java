@@ -1,5 +1,6 @@
 package com.famigo.website.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.famigo.website.Place;
+import com.famigo.website.PlaceRepository;
 
 @Controller
 public class addPlaceController {
+
+    @Autowired
+    PlaceRepository placeRepository;
     
     @RequestMapping(value = "/addplace", method = RequestMethod.GET)
     public String add_place_site(ModelMap model) {
@@ -26,7 +31,7 @@ public class addPlaceController {
         System.out.println(place.getName());
         Place placeObject = new Place(place.getName(), "123 road", "100");
         System.out.println("BEFORE");
-        place.addPlace(placeObject);
+        placeRepository.addPlace(placeObject);
         System.out.println("place added...");
         return new ResponseEntity<String>(HttpStatus.OK);
     }
