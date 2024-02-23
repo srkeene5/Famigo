@@ -8,13 +8,18 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-//@Repository
-@Component
+
+//@Component
+@Repository
 public class Place extends JdbcDaoSupport {
     private String rating;
     private String name;
@@ -22,54 +27,41 @@ public class Place extends JdbcDaoSupport {
     private String id;
 
     @Autowired
-    DataSource dataSource;
-
-    @PostConstruct
-    private void initialize() {
-        setDataSource(dataSource);
-    }
-
-    public void createPlace(String name, String address, String rating) {
-        this.name = name;
-        this.address = address;
-        this.rating = rating;
-        
-        String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
-        id = Integer.toString(new Random().nextInt(1000));
-        getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
-        
-        @Override
-        public void setValues(PreparedStatement ps, int i) throws SQLException {
-            ps.setString(1, id);
-            ps.setString(2, name);
-            ps.setString(3, address);
-            ps.setString(4, rating);
-        }
-
-        @Override
-        public int getBatchSize() {
-            // TODO Auto-generated method stub
-            return 1;
-        }
-    });
-    }
+    private JdbcTemplate jdbcTemplate;
 
     public Place() {
-        rating = null;
-        name = null;
-        address = null;
     }
 
-    public Place(String id, String rating, String name, String address) {
-        this.id = id;
+    public Place(String rating, String name, String address) {
+        //this.jdbcTemplate = null;
         this.rating = rating;
         this.name = name;
         this.address = address;
+    }
+
+    public void addPlace(Place place) {
+        String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                ps.setString(1, place.getId());
+                ps.setString(2, place.getName());
+                ps.setString(3, place.getAddress());
+                ps.setString(4, place.getRating());
+            }
+            
+        });
     }
 
     // Getters
     public String getRating() {
         return rating;
+    }
+
+    protected String getId() {
+        return id;
     }
 
     public String getName() {

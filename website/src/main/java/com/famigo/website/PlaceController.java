@@ -25,9 +25,9 @@ public class PlaceController {
 
     @GetMapping("/places/{name}")
     public String showPlaceDetails(/*Model model*/ @PathVariable String name, Model model) {
-
+        
         Place place = context.getBean(Place.class);
-        place.createPlace("purdue", "WL", "0"); //--> will work with database i think
+        //place.createPlace("purdue", "WL", "0"); //--> will work with database i think
 
 
         /*model.addAttribute("place.name", place.getName());
