@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.context.ApplicationContext;
 
+
+import com.famigo.website.Place;
+import com.famigo.website.PlaceRepository;
+
+
 @Controller
 public class PlaceController {
     //@Autowired
@@ -21,23 +26,38 @@ public class PlaceController {
     @Autowired
     private ApplicationContext context;
 
+    @Autowired
+    private PlaceRepository placeRepository;
     
 
     @GetMapping("/places/{name}")
-    public String showPlaceDetails(/*Model model*/ @PathVariable String name, Model model) {
+    public String showPlaceDetails(@PathVariable String name, Model model) {
+        Place place = placeRepository.getPlaceByName(name);
+
+        System.out.println("name: " + place.getName());
+
+        System.out.println(place.getName());
         
-        Place place = context.getBean(Place.class);
-        //place.createPlace("purdue", "WL", "0"); //--> will work with database i think
-
-
-        /*model.addAttribute("place.name", place.getName());
-        model.addAttribute("address", place.getAddress());
-        model.addAttribute("rating", place.getRating());*/
+        
         model.addAttribute("place", place);
+        model.addAttribute("selectedPlace", place);
+
         System.out.println(place.getName() + "this is the name");
         System.out.println(place.getRating() + "this is the rate");
         System.out.println(place.getAddress() + "this is the address");
         return "place-details";
+
+    }
+
+    @GetMapping("/places")
+    public String places(Model model) {
+
+
+
+
+        model.addAttribute("placeNamesList", placeRepository.getPlaces());
+
+        return "place-search";
 
     }
 }

@@ -29,10 +29,11 @@ public class addPlaceController {
     @PostMapping(value = "/addplace"/*, method = RequestMethod.POST*/)
     public ResponseEntity<String> submit_place(@RequestBody Place place) {
         System.out.println(place.getName());
-        Place placeObject = new Place(place.getName(), "123 road", "100");
+        Place placeObject = new Place("0", place.getName(), "100");
         System.out.println("BEFORE");
         placeRepository.addPlace(placeObject);
         System.out.println("place added...");
+        System.out.println("List:\n" + placeRepository.getPlaces());
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
