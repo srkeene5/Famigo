@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
@@ -14,6 +15,7 @@ import com.famigo.website.repositories.Profile;
 import java.time.LocalDateTime;
 
 @SpringBootApplication
+// @ComponentScan("com.famigo.website")
 public class WebsiteApplication {
 
     static Profile profile;
