@@ -6,16 +6,20 @@ import java.sql.SQLException;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 @Repository
+@Component
+@Scope("prototype")
 public class Profile extends JdbcDaoSupport {
     
     String id;
@@ -26,6 +30,14 @@ public class Profile extends JdbcDaoSupport {
     @PostConstruct
     private void initialize() {
         setDataSource(dataSource);
+    }
+
+    public Profile() {
+        this.id = null;
+    }
+
+    public Profile(String id) {
+        this.id = id;
     }
 
     public void createProfile(String username, String visibility, String email, String firstName, String lastName, String description) {
@@ -60,12 +72,15 @@ public class Profile extends JdbcDaoSupport {
             @Nullable
             public Profile mapRow(ResultSet rs, int rowNum) throws SQLException {
                 // TODO Auto-generated method stub
-                Profile p = new Profile();
-                p.id = rs.getString("id");
+                Profile p = new Profile(rs.getString("id"));
                 System.out.println(rs.getString("id")+" "+rs.getString("username"));
                 return p;
             }
             
         });
+    }
+
+    public String getID() {
+        return id;
     }
 }
