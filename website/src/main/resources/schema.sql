@@ -25,3 +25,14 @@ CREATE TABLE IF NOT EXISTS message (
     edited BOOLEAN,
     conversation VARCHAR(30)
 );
+
+CREATE TABLE IF NOT EXISTS reviews (
+    revID int NOT NULL AUTO_INCREMENT,
+    userID VARCHAR(20) NOT NULL,
+    review TEXT,
+    stars INTEGER,
+    timestamp DATETIME,
+    edited BOOLEAN,
+    placeID VARCHAR(20),
+    PRIMARY KEY (revID)
+);

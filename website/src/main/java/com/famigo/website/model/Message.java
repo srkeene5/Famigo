@@ -1,17 +1,18 @@
-package com.famigo.website.messages;
+package com.famigo.website.model;
 
 import java.time.LocalDateTime;
 
 public class Message {
-    
+
     private String id;
     private String sender;
     private LocalDateTime timestamp;
     private String content;
     private Boolean edited;
     private String conversation;
-    
-    public Message(String id, String sender, String content, LocalDateTime timestamp, Boolean edited, String conversation) {
+
+    public Message(String id, String sender, String content, LocalDateTime timestamp, Boolean edited,
+            String conversation) {
         this.id = id;
         this.sender = sender;
         this.timestamp = timestamp;
@@ -23,7 +24,7 @@ public class Message {
     public String getId() {
         return id;
     }
-    
+
     public String getSender() {
         return sender;
     }
@@ -39,7 +40,7 @@ public class Message {
     public String getContent() {
         return content;
     }
-    
+
     public Boolean getEdited() {
         return edited;
     }

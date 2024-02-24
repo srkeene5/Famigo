@@ -89,6 +89,8 @@
 
     
     <script>
+        var user = "user";
+        var place = "place";
         var script = document.createElement('script');
         script.src = '//code.jquery.com/jquery-3.6.3.min.js'; // Check https://jquery.com/ for the current version
         document.getElementsByTagName('head')[0].appendChild(script);
@@ -109,7 +111,9 @@
             } else {
                 var send ={
                     rText : revText,
-                    rStar : revStVal
+                    rStar : revStVal,
+                    rUser : user,
+                    rPlace : place
                 }
                 st5.classList.add("checked");
                 $.ajax({
@@ -120,8 +124,8 @@
                     dataType: "json",
                     //cache: false,
                     timeout: 60,
-                    success: function() {
-                        console.log("Successful");
+                    success: function(result) {
+                        console.log(result);
                     },
                     error : function(e) {
                         alert('Error: ' + e);

@@ -1,4 +1,4 @@
-package com.famigo.website.messages;
+package com.famigo.website.model;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import com.famigo.website.Profile;
 
 @Component
 public class Conversation {
-    
+
     private String id;
     private String name;
     private ArrayList<Message> messages;
