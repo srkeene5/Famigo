@@ -124,15 +124,8 @@
                     dataType: "json",
                     //cache: false,
                     timeout: 60,
-                    success: function(result) {
-                        console.log(result);
-                    },
-                    error : function(e) {
-                        alert('Error: ' + e);
-                    },
-                    done : function(e) {
-                        console.log("DONE");
-                    }
+                }).done(function (data) {
+                    console.log(data);
                 });
                 st1.classList.remove("checked");
                 

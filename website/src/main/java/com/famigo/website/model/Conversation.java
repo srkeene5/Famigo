@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 
-import com.famigo.website.Profile;
+import com.famigo.website.repositories.Profile;
 
 @Component
 public class Conversation {

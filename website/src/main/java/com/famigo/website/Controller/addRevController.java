@@ -57,7 +57,7 @@ public class addRevController {
                 System.out.println();
             }
         }
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
     }
 
 }

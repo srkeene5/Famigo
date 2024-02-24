@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
 import com.famigo.website.repositories.MessageRepository;
+import com.famigo.website.repositories.Profile;
 
 import java.time.LocalDateTime;
 

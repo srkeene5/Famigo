@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.repositories;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 @Component
 @Scope("prototype")
 public class Profile extends JdbcDaoSupport {
-    
+
     String id;
 
     @Autowired
@@ -40,7 +40,8 @@ public class Profile extends JdbcDaoSupport {
         this.id = id;
     }
 
-    public void createProfile(String username, String visibility, String email, String firstName, String lastName, String description) {
+    public void createProfile(String username, String visibility, String email, String firstName, String lastName,
+            String description) {
         String sql = "INSERT INTO user (id, username, email, visibility, name, description) VALUES (?, ?, ?, ?, ?, ?)";
         id = Integer.toString(new Random().nextInt(1000));
         getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -66,18 +67,19 @@ public class Profile extends JdbcDaoSupport {
 
     public void printProfile() {
         String sql = "SELECT * FROM user WHERE id = ?";
-        Profile profile = (Profile)getJdbcTemplate().queryForObject(sql, new Object[]{id}, new RowMapper<Profile>() {
+        Profile profile = (Profile) getJdbcTemplate().queryForObject(sql, new Object[] { id },
+                new RowMapper<Profile>() {
 
-            @Override
-            @Nullable
-            public Profile mapRow(ResultSet rs, int rowNum) throws SQLException {
-                // TODO Auto-generated method stub
-                Profile p = new Profile(rs.getString("id"));
-                System.out.println(rs.getString("id")+" "+rs.getString("username"));
-                return p;
-            }
-            
-        });
+                    @Override
+                    @Nullable
+                    public Profile mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        // TODO Auto-generated method stub
+                        Profile p = new Profile(rs.getString("id"));
+                        System.out.println(rs.getString("id") + " " + rs.getString("username"));
+                        return p;
+                    }
+
+                });
     }
 
     public String getID() {

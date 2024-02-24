@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.famigo.website.Profile;
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
 
