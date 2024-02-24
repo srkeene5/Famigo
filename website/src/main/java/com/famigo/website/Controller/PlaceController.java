@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,23 +12,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.context.ApplicationContext;
 
-
-import com.famigo.website.Place;
-import com.famigo.website.PlaceRepository;
-
+import com.famigo.website.model.Place;
+import com.famigo.website.repositories.PlaceRepository;
 
 @Controller
 public class PlaceController {
-    //@Autowired
-    //private Place place;
-    // Currently we can't pull data from the database, but I think this should work when we can?
-    
+    // @Autowired
+    // private Place place;
+    // Currently we can't pull data from the database, but I think this should work
+    // when we can?
+
     @Autowired
     private ApplicationContext context;
 
     @Autowired
     private PlaceRepository placeRepository;
-    
 
     @GetMapping("/places/{name}")
     public String showPlaceDetails(@PathVariable String name, Model model) {
@@ -37,8 +35,7 @@ public class PlaceController {
         System.out.println("name: " + place.getName());
 
         System.out.println(place.getName());
-        
-        
+
         model.addAttribute("place", place);
         model.addAttribute("selectedPlace", place);
 
@@ -51,9 +48,6 @@ public class PlaceController {
 
     @GetMapping("/places")
     public String places(Model model) {
-
-
-
 
         model.addAttribute("placeNamesList", placeRepository.getPlaces());
 

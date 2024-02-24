@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.model;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,7 +17,6 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-
 //@Component
 
 public class Place {
@@ -27,7 +26,7 @@ public class Place {
     private String id;
 
     public Place(String rating, String name, String address) {
-        //this.jdbcTemplate = null;
+        // this.jdbcTemplate = null;
         this.rating = rating;
         this.name = name;
         this.address = address;

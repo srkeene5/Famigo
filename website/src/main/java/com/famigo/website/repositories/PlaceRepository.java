@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.repositories;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,6 +13,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
+
+import com.famigo.website.model.Place;
 
 @Repository
 public class PlaceRepository {
@@ -32,12 +34,12 @@ public class PlaceRepository {
                 ps.setString(3, place.getAddress());
                 ps.setString(4, place.getRating());
             }
-            
+
         });
     }
 
     public ArrayList<String> getPlaces() {
-        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT name FROM place", new Object[]{});
+        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT name FROM place", new Object[] {});
         if (placeList == null || placeList.isEmpty()) {
             return null;
         }
@@ -45,17 +47,17 @@ public class PlaceRepository {
         for (Map<String, Object> o : placeList) {
             placeNames.add((String) o.get("name"));
 
-            //placeNames.add((String) o.get("id"));
+            // placeNames.add((String) o.get("id"));
 
-            //placeNames.add((String) o.get("rating"));
+            // placeNames.add((String) o.get("rating"));
 
-            //placeNames.add((String) o.get("address"));
+            // placeNames.add((String) o.get("address"));
         }
         return placeNames;
     }
 
     public Place getPlaceByName(String name) {
-        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT name FROM place", new Object[]{});
+        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT name FROM place", new Object[] {});
         if (placeList == null || placeList.isEmpty()) {
             return null;
         }
@@ -69,5 +71,5 @@ public class PlaceRepository {
         }
         return place;
     }
-    
+
 }
