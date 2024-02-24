@@ -36,3 +36,10 @@ CREATE TABLE IF NOT EXISTS reviews (
     placeID VARCHAR(20),
     PRIMARY KEY (revID)
 );
+
+CREATE TABLE IF NOT EXISTS place (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    rating VARCHAR(255) NOT NULL
+);
