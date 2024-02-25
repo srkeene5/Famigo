@@ -19,8 +19,8 @@ public class PlaceRevsService {
         reviews.add(new Review("user3","place3","review3",3));
     }
 
-    public int[] getAllUserIds() {
-        int[] ids = new int[reviews.size()];
+    public String[] getAllUserIds() {
+        String[] ids = new String[reviews.size()];
         for (int i = 0; i < ids.length; i++) {
             ids[i] = reviews.get(i).getUserId();
         }
