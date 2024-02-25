@@ -16,10 +16,10 @@
 <div id="reviewDisplay"></div>
 
 This loop should work but for some reason it doesn't.
-<ul th:each="i : ${#numbers.sequence(0, ${userIds.length})}">
-    <li th:text="User: ${userIds[i]}"></li>
-    <li th:text="Rated ${stars[i]} stars"></li>
-    <li th:text="${text[i]}"></li>
+<ul th:each="i, ib : ${userIds.length}">
+    <li th:text="'User:' + ${i}"></li>
+    <li th:text="'Rated' + ${stars[ib.index]} + 'stars'"></li>
+    <li th:text="${text[ib.index]}"></li>
     <br>
 </ul>
 
