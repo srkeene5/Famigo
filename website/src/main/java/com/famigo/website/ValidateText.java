@@ -15,7 +15,7 @@ public class ValidateText {
         if (text == null) {
             return false;
         }
-        
+
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) > 255) {
                 return false;
@@ -23,5 +23,16 @@ public class ValidateText {
         }
 
         return true;
+    }
+
+    //This function checks if a given text has only the basic ascii characters and a few supplimentary characters (unicode 0-255)
+    public static String SanitizeText(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) > 255) {
+                text = text.substring(0, i) + 1561 + text.substring(i + 1);
+            }
+        }
+
+        return text;
     }
 }

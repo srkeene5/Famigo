@@ -10,6 +10,22 @@
         border: 2px solid;
     }
 
+    .settingsbutton, input[type=password], input[type=submit] {
+        background-color: #EDCECD;
+        border: 2px solid;
+        font-size: xx-large;
+        width: 75%;
+        height: 10%;
+        border-radius: 5px;
+        left: 50%;
+        margin-left: 12.5%;
+    }
+
+    .settingsbutton:hover, input[type=password]:hover, input[type=submit]:hover {
+        background-color: #25528F;
+        color: white;
+    }
+
     .circle {
         border: 2px solid;
         border-radius: 50%;
@@ -20,7 +36,7 @@
         width: 100%;
     }
 
-    .button {
+    .button, #backbutton {
         background-color: transparent;
         background-repeat: no-repeat;
         border: none;
@@ -32,6 +48,42 @@
     .image {
         position: relative;
         width: 100%;
+    }
+
+    #Logo {
+        border-top-left-radius: 25px;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+        border-top-right-radius: 25px;
+        border: 2px solid;
+        background-color: #EDCECD;
+        width: 25%;
+        height: 10%; 
+
+        position: absolute;
+        bottom: 5%;
+        margin-bottom: 30%;
+        left: 50%;
+        margin-left: -12.5%;
+    }
+
+    #FormBox {
+        background-color: #F8E6D0;
+        border: 2px solid;
+        width: 25%;
+        height: 60%;
+
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        margin-left: -12.5%;
+    }
+
+    #LogoText {
+        margin: auto;
+        font-size: 100px;
+        font-weight: 700;
+        text-align: center;
     }
 
     #home, #location, #search, #chat, #settings, #location, #create {
@@ -80,6 +132,35 @@
         border-top-left-radius: 15px;
     }
 
+    #backbutton {
+        position: absolute;
+        width: 10%;
+        height: 10%;
+        margin-top: 0.833%;
+        margin-left: 2%;
+    }
+
+    input[type=submit] {
+        width: 50%;
+        margin-left: 25%;
+    }
+
+    #password {
+        margin-top: 35%;
+    }
+
+    #resetfields {
+        display: none;
+    }
+
+    #settingspage {
+        display: none;
+    }
+
+    #resetpassword {
+        margin-top: 10%;
+    }
+
     #profilepicture {
         position: relative;
         height: 0px;
@@ -95,6 +176,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+    <div id="settingspage" class="contents">
+        <div id="Logo">
+            <p id="LogoText">Settings</p>
+        </div>
+        <div id="FormBox">
+            <button class="settingsbutton" id="resetpassword" onclick="PasswordReset();">
+                Change Password
+            </button>
+
+            <button class="addon" id="backbutton" onclick="ResetSettings()";>
+                <img draggable="false" class="image" th:src="@{/images/backarrow.png}"/>
+            </button>
+
+            <form class="addon" id="resetfields" onsubmit="return false">
+                <p><input id="password" type="password" placeholder="Password"/></p>
+                <p><input id="confirmpassword" type="password" placeholder="Confirm Password"/></p>
+                <p><input onclick="ValidatePassword();" type="submit" value="Change Password"/></p>
+            </form>
+        </div>
+    </div>
+
 	<div id="navigationbar" class="infoblock">
         <p id="famigotext">
             Famigo
@@ -120,7 +222,7 @@
             <img draggable="false" class="image" th:src="@{/images/search.png}"/>
         </button>
 
-        <button class="button" id="settings">
+        <button class="button" id="settings" onclick="ShowSettings();">
             <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
         </button>
     </div>
@@ -140,5 +242,56 @@
             This is where the section links (like detailed stats) would go. How said content is structured is 100% up to the person implementing but should be placed in the center section.
         </p>
     </div>
+
+    <script>
+        function RemoveClass(contents) {
+            var content = document.getElementsByClassName(contents);
+            for (let i = 0; i < content.length; i++) {
+                content[i].style.display = "none";
+            }
+        }
+
+        function AddClass(contents) {
+            var content = document.getElementsByClassName(contents);
+            for (let i = 0; i < content.length; i++) {
+                content[i].style.display = "block";
+            }
+        }
+
+        function AddElement(element) {
+            document.getElementById(element).style.display = "block";
+        }
+
+        function ValidatePassword() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmpassword").value;
+            if (password == confirmPassword && password != "") {
+                //TODO: change password in the database
+                ResetSettings();
+            } else {
+                alert("Passwords do not match. Please try again.");
+            }
+        }
+
+        function ShowSettings() {
+            ResetSettings();
+            RemoveClass("contents");
+            AddElement("settingspage");
+            AddClass("settingsbutton");
+        }
+
+        function ResetSettings() {
+            RemoveClass("addon");
+            AddClass("settingsbutton");
+            document.getElementById("password").value = "";
+            document.getElementById("confirmpassword").value = "";
+        }
+
+        function PasswordReset() {
+            RemoveClass("settingsbutton");
+            AddElement("resetfields");
+            AddElement("backbutton");
+        }
+    </script>
 </body>
 </html>
