@@ -2,19 +2,16 @@ package com.famigo.website.messages;
 
 import java.util.ArrayList;
 
-import org.springframework.stereotype.Component;
+import com.famigo.website.User;
 
-import com.famigo.website.Profile;
-
-@Component
 public class Conversation {
     
     private String id;
     private String name;
     private ArrayList<Message> messages;
-    private ArrayList<Profile> members;
+    private ArrayList<User> members;
 
-    public void createConversation(String id, String name, ArrayList<Profile> members, ArrayList<Message> messages) {
+    public Conversation(String id, String name, ArrayList<User> members, ArrayList<Message> messages) {
         this.id = id;
         this.name = name;
         this.members = members;
@@ -29,8 +26,32 @@ public class Conversation {
         return name;
     }
 
-    public ArrayList<Profile> getMembers() {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<User> getMembers() {
         return members;
+    }
+
+    public void addMember(User user) {
+        members.add(user);
+    }
+
+    public void removeMember(User user) {
+        members.remove(user);
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void addMessage(Message m) {
+        messages.add(m);
+    }
+
+    public void removeMessage(Message m) {
+        messages.remove(m);
     }
 
 }

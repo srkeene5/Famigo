@@ -14,14 +14,13 @@ import java.time.LocalDateTime;
 @SpringBootApplication
 public class WebsiteApplication {
     
-    static Profile profile;
-
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
+        UserRepository ur = context.getBean(UserRepository.class);
+        ur.createUser(new User(Util.generateID(20), "bob", "bob@bob.bob", "password", Role.USER, Visibility.ALL, "bob", "bob"));
+        
         /*
         MessageRepository message = context.getBean(MessageRepository.class);
-        Profile p = context.getBean(Profile.class);
-        p.createProfile("bobby", "visible", "email@email.email", "bob", "bobberson", "this is a description");
         Profile r = context.getBean(Profile.class);
         r.createProfile("billy", "visible", "email@email.email", "billy", "billerson", "this is a description");
         ArrayList<Profile> profiles = new ArrayList<>();

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,8 +30,8 @@ public class MessageManager {
         return "viewConversations";
     }
 
-    @GetMapping("/message")
-    public String seeMessages(Model model, @RequestParam String cid) {
+    @GetMapping("/conversations/{cid}")
+    public String seeMessages(Model model, @PathVariable String cid) {
         conversationID = cid;
         ArrayList<Message> m = mr.getMessages(cid);
         if (m.isEmpty()) {

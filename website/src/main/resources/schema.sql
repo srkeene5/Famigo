@@ -2,9 +2,11 @@ CREATE TABLE IF NOT EXISTS user (
     id VARCHAR(20) PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
+    password TEXT NOT NULL,
     name VARCHAR(100),
     description TEXT,
-    visibility TEXT
+    visibility VARCHAR(20) NOT NULL,
+    role VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS conversation (
