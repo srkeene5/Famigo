@@ -20,7 +20,12 @@ public class PlaceRevsController {
 
     @RequestMapping(value = "/placeRevs", method = RequestMethod.GET)
     public String showPlaceRevList(ModelMap model) {
-        model.addAttribute("reviewTextCombined", service.getAllReviewText());
+
+        model.addAttribute("testString", "hello this is a test");
+
+        model.addAttribute("userIds", service.getAllUserIds());
+        model.addAttribute("stars", service.getAllStars());
+        model.addAttribute("text", service.getAllRevText());
         return "placeRevs";
     }
 

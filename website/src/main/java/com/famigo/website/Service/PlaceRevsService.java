@@ -19,12 +19,28 @@ public class PlaceRevsService {
         reviews.add(new Review(3));
     }
 
-    public String getAllReviewText() {
-        String combinedText = "";
-        for (Review r : reviews) {
-            combinedText += (r.getUserId() + '\n' + r.getReview() + "\n\n");
+    public int[] getAllUserIds() {
+        int[] ids = new int[reviews.size()];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = reviews.get(i).getUserId();
         }
-        return combinedText;
+        return ids;
+    }
+
+    public int[] getAllStars() {
+        int[] ratings = new int[reviews.size()];
+        for (int i = 0; i < ratings.length; i++) {
+            ratings[i] = reviews.get(i).getStars();
+        }
+        return ratings;
+    }
+
+    public String[] getAllRevText() {
+        String[] revs = new String[reviews.size()];
+        for (int i = 0; i < revs.length; i++) {
+            revs[i] = reviews.get(i).getReview();
+        }
+        return revs;
     }
 
 }
