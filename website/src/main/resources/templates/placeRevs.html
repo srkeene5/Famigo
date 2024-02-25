@@ -1,86 +1,20 @@
 <html>
+
 <head>
-<title>Review List</title>
+    <title>Review List</title>
 </head>
+
+<h1>Reivews</h1>
 
 <body>
 
-<p id="idArr">[[${userIds}]]</p>
-<p id="starArr">[[${stars}]]</p>
-<p id="textArr">[[${text}]]</p>
-
-<p id="testPrint"></p>
-
-<p id="reviewListHTML">Text text</p>
-
-<div id="reviewDisplay"></div>
-
-This loop should work but for some reason it doesn't.
-<ul th:each="i : ${#numbers.sequence(0, ${userIds.length})}">
-    <li th:text="User: ${userIds[i]}"></li>
-    <li th:text="Rated ${stars[i]} stars"></li>
-    <li th:text="${text[i]}"></li>
+<ul th:each="i, ib : ${userIds}">
+    <li th:text="'User: ' + ${i}"></li>
+    <li th:text="'Rated ' + ${stars[ib.index]} + ' stars'"></li>
+    <li th:text="${text[ib.index]}"></li>
     <br>
 </ul>
 
 </body>
-
-<script>
-
-    function displayReviews() {
-
-        var perPage = 25; // Maximum reviews displayed on one page
-        var pageNum = 0; // Current page of reviews
-        // var testString = [[${testString}]];
-        // var idArr = /*[[${revUserIds}]]*/ {};
-        // var starArr = /*[[${revStars}]]*/ {};
-        // var textArr = /*[[${revText}]]*/ {};
-        var idArr = document.getElementById("idArr");
-        var starArr = document.getElementById("starArr");
-        var textArr = document.getElementById("textArr");
-
-        // Make parameters invisible
-        idArr.style.display = "none";
-        starArr.style.display = "none";
-        textArr.style.display = "none";
-
-        // Use the innerHTML from now on
-        idArr = idArr.innerHTML;
-        starArr = starArr.innerHTML;
-        textArr = textArr.innerHTML;
-
-        var revDisplay = document.getElementById("reviewDisplay");
-
-        document.getElementById("testPrint").innerHTML = idArr;
-
-        // Loop through all review objects and add each one to the
-        // reviewListHTML element.
-        for (var i = 0; i < perPage; i++) {
-            var revNum = (perPage * pageNum) + i;
-            var revString = "";
-            
-            // Break if no reviews are remaining
-            if (revNum >= idArr.length) {
-                break;
-            }
-
-            // Review user id
-            revString += toString(idArr[revNum]);
-
-            // Star rating
-            revString += "<br>" + toString(starArr[revNum]);
-
-            // Review text
-            revString += "<br>" + textArr[revNum] + "<br><br>";
-
-            // Add review to HTML display
-            revDisplay.innerHTML += revString;
-        }
-    }
-
-    // Run script as page loads
-    window.onload = displayReviews();
-
-</script>
 
 </html>
