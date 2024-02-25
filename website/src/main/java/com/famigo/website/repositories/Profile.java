@@ -1,23 +1,27 @@
-package com.famigo.website;
+package com.famigo.website.repositories;
 
 import java.sql.PreparedStatement;
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-
 @Repository
+@Component
+@Scope("prototype")
 public class Profile extends JdbcDaoSupport {
-    
+
     String id;
 
     @Autowired
@@ -28,7 +32,16 @@ public class Profile extends JdbcDaoSupport {
         setDataSource(dataSource);
     }
 
-    public void createProfile(String username, String visibility, String email, String firstName, String lastName, String description) {
+    public Profile() {
+        this.id = null;
+    }
+
+    public Profile(String id) {
+        this.id = id;
+    }
+
+    public void createProfile(String username, String visibility, String email, String firstName, String lastName,
+            String description) {
         String sql = "INSERT INTO user (id, username, email, visibility, name, description) VALUES (?, ?, ?, ?, ?, ?)";
         id = Integer.toString(new Random().nextInt(1000));
         getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -54,18 +67,22 @@ public class Profile extends JdbcDaoSupport {
 
     public void printProfile() {
         String sql = "SELECT * FROM user WHERE id = ?";
-        Profile profile = (Profile)getJdbcTemplate().queryForObject(sql, new Object[]{id}, new RowMapper<Profile>() {
+        Profile profile = (Profile) getJdbcTemplate().queryForObject(sql, new Object[] { id },
+                new RowMapper<Profile>() {
 
-            @Override
-            @Nullable
-            public Profile mapRow(ResultSet rs, int rowNum) throws SQLException {
-                // TODO Auto-generated method stub
-                Profile p = new Profile();
-                p.id = rs.getString("id");
-                System.out.println(rs.getString("id")+" "+rs.getString("username"));
-                return p;
-            }
-            
-        });
+                    @Override
+                    @Nullable
+                    public Profile mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        // TODO Auto-generated method stub
+                        Profile p = new Profile(rs.getString("id"));
+                        System.out.println(rs.getString("id") + " " + rs.getString("username"));
+                        return p;
+                    }
+
+                });
+    }
+
+    public String getID() {
+        return id;
     }
 }

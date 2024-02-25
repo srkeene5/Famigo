@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Place</title>
+</head>
+<body>
+
+    <h2>Add a Place</h2>
+
+    <form action="/addplace" method="post">
+        <label for="placeName">Place Name:</label>
+        <input type="text" id="placeName" name="placeName" required>
+        <br>
+        <input type="submit" value="Add Place" onclick="submitPlace()">
+    </form>
+
+    <script>
+        function submitPlace() {
+            var placeName = document.getElementById("placeName").value;
+            var placeData = { "name": placeName };
+
+            fetch("/addplace", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(placeData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log(data);
+                // Handle success, if needed
+            })
+            .catch(error => {
+                console.error("There was a problem with the fetch operation:", error);
+            });
+        }
+    </script>
+
+</body>
+</html>

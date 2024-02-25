@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+    <style>
+        body {
+            background-color: #25528F;
+        }
+
+        .infoblock {
+            background-color: #EDCECD;
+            border: 2px solid;
+        }
+
+        .circle {
+            border: 2px solid;
+            border-radius: 50%;
+        }
+
+        .userimage {
+            position: relative;
+            width: 100%;
+        }
+
+        .button {
+            background-color: transparent;
+            background-repeat: no-repeat;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .image {
+            position: relative;
+            width: 100%;
+        }
+
+        #home, #location, #search, #chat, #settings, #location, #create {
+            position: relative;
+            margin: auto;
+            left: 0px;
+            top: 10px;
+            height: 55px;
+            width: 50px;
+            padding-bottom: 100px;
+            display: inline;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        #navigationbuttons {
+            position: fixed;
+            display: inline;
+            width: 100%;
+            left: 150px;
+            top: 0px;
+            height: 55px;
+            overflow-y: hidden;
+            
+        }
+
+        #navigationbar {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 55px;
+            display: inline;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        #famigotext {
+            position: relative;
+            margin: auto;
+            width: 20% auto;
+            height: 100% auto;
+            text-align: left;
+            margin-left: 2%;
+        }
+
+        #userinfo {
+            position: absolute;
+            top: 50px;
+            left: 0px;
+            height: 950px;
+            width: 200px ;
+        }
+
+        #userlinks {
+            position: absolute;
+            top: 200px;
+            right: 0px;
+            height: 800px;
+            width: 200px;
+            border-top-left-radius: 15px;
+        }
+
+        #profilepicture {
+            position: relative;
+            height: 0px;
+            width: 50%;
+            padding-bottom: 50%;
+            margin-left: 24%;
+            margin-top: 10%;
+        }
+
+    </style>
+    <head> 
+        <title>Homepage</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <div id="userlinks" class="infoblock">
+            <p>
+                This is where the section links (like detailed stats) would go. How said content is structured is 100% up to the person implementing but should be placed in the center section.
+            </p>
+        </div>
+        <div id="userinfo" class="infoblock">
+            <h1 class="Username">"username"</h1>
+            <div class="circle" id="profilepicture">
+                <img draggable="false" class="userimage" th:src="@{/images/user.png}"/>
+            </div>
+
+            <button id = "follow">Follow</button>
+
+            <p>
+                Text would go here that gives friends, followers, and possibly info like name and username. 
+            </p>
+        </div>
+        <div id="navigationbar" class="infoblock">
+            <div>
+                <h1 id="famigotext">
+                    Famigo
+                </h1>
+            </div>
+            <div id = "navigationbuttons">
+                <button class="button" id="home">
+                    <img draggable="false" class="image" th:src="@{/images/home.png}"/>
+                </button>
+
+                <button class="button" id="chat">
+                    <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
+                </button>
+
+                <button class="button" id="create">
+                    <img draggable="false" class="image" th:src="@{/images/create.png}"/>
+                </button>
+
+                <button class="button" id="location">
+                    <img draggable="false" class="image" th:src="@{/images/location.png}"/>
+                </button>
+
+                <button class="button" id="search">
+                    <img draggable="false" class="image" th:src="@{/images/search.png}"/>
+                </button>
+
+                <button class="button" id="settings">
+                    <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
+                </button>
+            </div>
+        </div>
+    </body>
+    <script>
+
+    </script>
+</html>

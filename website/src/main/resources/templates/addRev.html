@@ -8,6 +8,7 @@
     <meta name="viewport"
           content="width=device-width, 
                    initial-scale=1.0">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .popup {
@@ -85,8 +86,14 @@
             </div>
         </div>
     </div>
+
     
     <script>
+        var user = "user";
+        var place = "place";
+        var script = document.createElement('script');
+        script.src = '//code.jquery.com/jquery-3.6.3.min.js'; // Check https://jquery.com/ for the current version
+        document.getElementsByTagName('head')[0].appendChild(script);
         var stval = 0;
         addReview.addEventListener("click",function(){
             myPopup.classList.add("show");
@@ -104,24 +111,24 @@
             } else {
                 var send ={
                     rText : revText,
-                    rStar : String(revStVal)
+                    rStar : revStVal,
+                    rUser : user,
+                    rPlace : place
                 }
+                st5.classList.add("checked");
                 $.ajax({
                     type: "POST",
                     contentType: "application/json",
-                    url: "/sendReview",
+                    url: "/addRev",
                     data: JSON.stringify(send),
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response != "OK")
-                            alert(response);
-                        else
-                            console.log(response);
-                    },
-                    error : function(e) {
-                        alert('Error: ' + e);
-                    }
+                    dataType: "json",
+                    //cache: false,
+                    timeout: 60,
+                }).done(function (data) {
+                    console.log(data);
                 });
+                st1.classList.remove("checked");
+                
                 resetRevPop();
             }
         });

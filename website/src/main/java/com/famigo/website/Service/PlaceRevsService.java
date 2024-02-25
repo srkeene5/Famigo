@@ -13,10 +13,10 @@ public class PlaceRevsService {
 
     // Add test reviews to display
     static {
-        reviews.add(new Review(0));
-        reviews.add(new Review(1));
-        reviews.add(new Review(2));
-        reviews.add(new Review(3));
+        reviews.add(new Review("user0", "place0", "review0", 1));
+        reviews.add(new Review("user1","place1","review1",2));
+        reviews.add(new Review("user2","place2","review2",3));
+        reviews.add(new Review("user3","place3","review3",3));
     }
 
     public int[] getAllUserIds() {
