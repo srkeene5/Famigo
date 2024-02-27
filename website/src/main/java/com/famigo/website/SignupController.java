@@ -24,6 +24,9 @@ public class SignupController {
 
 		if (ValidateText.isPasswordValid(signup.getPassword()) && signup.getPassword().equals(signup.getConfirmPassword())) {
 			if (signup.getFirstName() != null && signup.getLastName() != null && signup.getUsername() != null && signup.getEmail() != null && !signup.getGender().equals("")) {
+				Profile database = new Profile();
+				database.createProfile(signup.getUsername(), "User", signup.getEmail(), signup.getFirstName(), signup.getLastName(), "test user");
+				database.printProfile();
 				return "redirect:/user";
 			}
 		}
