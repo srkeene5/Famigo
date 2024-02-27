@@ -6,10 +6,13 @@
     </header>
     <body>
         <h1>Conversations</h1>
-        <table>
+        <table th:if="${conversations == null}">
             <tr th:each="conv : ${conversations}">
                 <td><a th:href="@{/message/${conv.getID()}}"><span th:text="${conv.getName()}"></span></a></td>
             </tr>
         </table>
+        <div th:unless="${conversations == null}">
+            You have no conversations
+        </div>
     </body>
 </html>

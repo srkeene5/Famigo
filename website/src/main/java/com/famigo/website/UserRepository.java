@@ -26,9 +26,10 @@ public class UserRepository {
                 ps.setString(2, user.getUsername());
                 ps.setString(3, user.getEmail());
                 ps.setString(4, user.getPassword());
-                ps.setString(4, user.getVisibility().toString());
                 ps.setString(5, user.getName());
                 ps.setString(6, user.getDescription());
+                ps.setString(7, user.getVisibility().toString());
+                ps.setString(8, user.getRole().toString());
             }
             
         });
@@ -40,7 +41,7 @@ public class UserRepository {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                 try {
-                    User newUser = new User(rs.getString("id"), rs.getString("username"), rs.getString("email"), rs.getString("password"), Role.valueOf(rs.getString("role")), Visibility.valueOf(rs.getString("visibility")), rs.getString("name"), rs.getString("description"));
+                    User newUser = new User(rs.getString("id"), rs.getString("username"), rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("description"), Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
                     return newUser;
                 }
                 catch(Exception e) {

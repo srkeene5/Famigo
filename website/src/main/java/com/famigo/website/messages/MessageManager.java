@@ -23,9 +23,6 @@ public class MessageManager {
     @GetMapping("/conversations")
     public String getConversations(Model model, @RequestParam String userID) {
         ArrayList<Conversation> c = mr.getConversations(userID);
-        if (c.isEmpty()) {
-            return "you have no conversations";
-        }
         model.addAttribute("conversations", c);
         return "viewConversations";
     }
@@ -34,9 +31,6 @@ public class MessageManager {
     public String seeMessages(Model model, @PathVariable String cid) {
         conversationID = cid;
         ArrayList<Message> m = mr.getMessages(cid);
-        if (m.isEmpty()) {
-            return "you have no messages";
-        }
         model.addAttribute("messages", m);
         return "viewMessages";
     }
