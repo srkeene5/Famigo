@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+    <header>
+        <title>Message</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </header>
+    <body>
+        <h1>Conversations</h1>
+        <table>
+            <tr th:each="message : ${messages}">
+                <td><span th:text="${message.getContent()}"></span></td>
+            </tr>
+        </table>
+        <a href="/newMessage"><button>New Message</button></a>
+    </body>
+</html>
