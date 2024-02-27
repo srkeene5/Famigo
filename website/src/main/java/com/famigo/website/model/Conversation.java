@@ -1,4 +1,4 @@
-package com.famigo.website.messages;
+package com.famigo.website.model;
 
 import java.util.ArrayList;
 

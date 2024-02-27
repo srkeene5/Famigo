@@ -1,15 +1,8 @@
 package com.famigo.website;
 
-import java.util.ArrayList;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-
-import com.famigo.website.messages.Conversation;
-import com.famigo.website.messages.Message;
-import com.famigo.website.messages.MessageRepository;
-import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class WebsiteApplication {

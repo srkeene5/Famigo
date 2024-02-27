@@ -1,4 +1,4 @@
-package com.famigo.website.messages;
+package com.famigo.website.controlller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.famigo.website.MessageRepository;
 import com.famigo.website.Util;
+import com.famigo.website.model.Conversation;
+import com.famigo.website.model.Message;
 
 @Controller
-public class MessageManager {
+public class MessageController {
 
     @Autowired
     MessageRepository mr;
