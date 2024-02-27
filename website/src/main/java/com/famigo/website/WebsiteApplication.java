@@ -8,9 +8,7 @@ import org.springframework.context.ApplicationContext;
 public class WebsiteApplication {
     
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
-        UserRepository ur = context.getBean(UserRepository.class);
-        ur.createUser(new User(Util.generateID(20), "bob", "bob@bob.bob", "password", "bob", "bob", Visibility.ALL, Role.USER));
+        SpringApplication.run(WebsiteApplication.class, args);
     }
 
 }
