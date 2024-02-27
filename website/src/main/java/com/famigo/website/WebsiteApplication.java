@@ -7,13 +7,8 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 public class WebsiteApplication {
     
-    static Profile profile;
-
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
-        Profile profile = context.getBean(Profile.class);
-        profile.createProfile("user", "private", "email", "cain", "abel", "something");
-        profile.printProfile();
+        SpringApplication.run(WebsiteApplication.class, args);
     }
 
 }
