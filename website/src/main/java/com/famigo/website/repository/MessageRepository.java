@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
+import com.famigo.website.model.User;
 
 @Repository
 public class MessageRepository {

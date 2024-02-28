@@ -1,4 +1,4 @@
-package com.famigo.website.Controller;
+package com.famigo.website.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

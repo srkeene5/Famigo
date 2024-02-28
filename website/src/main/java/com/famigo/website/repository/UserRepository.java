@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import com.famigo.website.model.User;
+import com.famigo.website.utilities.Role;
+import com.famigo.website.utilities.Visibility;
 
 @Repository
 public class UserRepository {

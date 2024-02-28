@@ -2,8 +2,6 @@ package com.famigo.website.model;
 
 import java.util.ArrayList;
 
-import com.famigo.website.User;
-
 public class Conversation {
     
     private String id;

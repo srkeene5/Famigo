@@ -1,4 +1,7 @@
-package com.famigo.website;
+package com.famigo.website.model;
+
+import com.famigo.website.utilities.Role;
+import com.famigo.website.utilities.Visibility;
 
 public class User {
 

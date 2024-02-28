@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.utilities;
 
 import java.util.Random;
 
@@ -18,7 +18,7 @@ public class Util {
         Random random = new Random();
         StringBuilder s = new StringBuilder();
         int maxChar = 123;
-        int minChar = 48;
+        int minChar = 65;
         for (int i = 0; i < size; i++) {
             int x = random.nextInt(maxChar - minChar) + minChar;
             if (x >= 91 && x <= 96) i = i - 1;

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS conversation (
 
 CREATE TABLE IF NOT EXISTS conversationParticipants(
     conversationID VARCHAR(30),
-    userID VARCHAR(10)
+    userID VARCHAR(20)
 );
 
 CREATE TABLE IF NOT EXISTS message (
