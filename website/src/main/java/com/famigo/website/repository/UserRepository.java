@@ -61,4 +61,25 @@ public class UserRepository {
             return null;
         }
     }
+
+    public User getUserByUsername(String userID) {
+        try {
+            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE id=?", new RowMapper<User>() {
+                @Override
+                public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    try {
+                        User newUser = new User(rs.getString("id"), rs.getString("username"), rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("description"), Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
+                        return newUser;
+                    }
+                    catch(Exception e) {
+                        return null;
+                    }
+                }
+                
+            }, userID);
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
