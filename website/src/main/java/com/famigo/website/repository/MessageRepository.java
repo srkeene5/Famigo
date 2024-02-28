@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
+import com.famigo.website.model.User;
 
 @Repository
 public class MessageRepository {
@@ -99,7 +100,7 @@ public class MessageRepository {
         List<Map<String, Object>> memberList = jdbcTemplate.queryForList("SELECT userID FROM conversationParticipants WHERE conversationID=?", new Object[]{cid});
         ArrayList<User> members = new ArrayList<>();
         for (Map<String, Object> o : memberList) {
-            members.add(ur.getUser((String) o.get("userID")));
+            members.add(ur.getUser("id", (String) o.get("userID")));
         }
         ArrayList<Message> messages = getMessages(cid);
         Conversation conversationObject = jdbcTemplate.queryForObject("SELECT name FROM conversation WHERE id=?", new RowMapper<Conversation>() {

@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.utilities;
 
 public enum Role {
     USER,

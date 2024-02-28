@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Component
+import com.famigo.website.model.User;
+import com.famigo.website.utilities.Role;
+import com.famigo.website.utilities.Visibility;
+
 @Repository
 public class UserRepository {
     
@@ -37,9 +39,10 @@ public class UserRepository {
         });
     }
 
-    public User getUser(String userID) {
+    public User getUser(String column, String value) {
         try {
-            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE id=?", new RowMapper<User>() {
+            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE " + column + "=?", new RowMapper<User>() {
+
                 @Override
                 public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                     try {
@@ -51,9 +54,10 @@ public class UserRepository {
                     }
                 }
                 
-            }, userID);
+            }, value);
             return user;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return null;
         }
     }
