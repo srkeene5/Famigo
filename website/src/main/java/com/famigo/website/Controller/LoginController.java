@@ -1,4 +1,4 @@
-package com.famigo.website.Controller;
+package com.famigo.website.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.famigo.website.Service.ValidateText;
 import com.famigo.website.model.Login;
+import com.famigo.website.service.ValidateText;
 
 @Controller
 public class LoginController {

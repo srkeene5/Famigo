@@ -1,4 +1,4 @@
-package com.famigo.website.Controller;
+package com.famigo.website.controller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

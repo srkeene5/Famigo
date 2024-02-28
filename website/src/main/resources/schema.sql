@@ -37,6 +37,17 @@ CREATE TABLE IF NOT EXISTS reviews (
     PRIMARY KEY (revID)
 );
 
+CREATE TABLE IF NOT EXISTS comments (
+    comID int NOT NULL AUTO_INCREMENT,
+    userID VARCHAR(20) NOT NULL,
+    comment TEXT,
+    likes INTEGER,
+    timestamp DATETIME,
+    edited BOOLEAN,
+    reviewID VARCHAR(20),
+    PRIMARY KEY (comID)
+);
+
 CREATE TABLE IF NOT EXISTS place (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,

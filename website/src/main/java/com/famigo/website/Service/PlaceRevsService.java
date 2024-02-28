@@ -1,4 +1,4 @@
-package com.famigo.website.Service;
+package com.famigo.website.service;
 
 import java.util.ArrayList;
 import com.famigo.website.model.Review;
@@ -14,9 +14,9 @@ public class PlaceRevsService {
     // Add test reviews to display
     static {
         reviews.add(new Review("user0", "place0", "review0", 1));
-        reviews.add(new Review("user1","place1","review1",2));
-        reviews.add(new Review("user2","place2","review2",3));
-        reviews.add(new Review("user3","place3","review3",3));
+        reviews.add(new Review("user1", "place1", "review1", 2));
+        reviews.add(new Review("user2", "place2", "review2", 3));
+        reviews.add(new Review("user3", "place3", "review3", 3));
     }
 
     public String getAllReviewText() {

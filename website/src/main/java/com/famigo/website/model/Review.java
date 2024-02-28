@@ -3,7 +3,6 @@ package com.famigo.website.model;
 import java.time.LocalDateTime;
 
 public class Review {
-    private int revIDval = 0;
     private String userId;
     private int revId;
     private String review;
@@ -14,7 +13,6 @@ public class Review {
 
     public Review(String userId, String placeId, String review, int stars) {
         this.userId = userId;
-        this.revId = newReviewId();
         this.timeStamp = java.time.LocalDateTime.now();
         this.review = review;
         this.stars = stars;
@@ -69,11 +67,6 @@ public class Review {
 
     public String getPlaceId() {
         return placeId;
-    }
-
-    private int newReviewId() {
-        // TODO implement uniqueRevId
-        return revIDval++;
     }
 
     public static void main(String[] args) {

@@ -1,11 +1,22 @@
-package com.famigo.website.Service;
+package com.famigo.website.service;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+
+import com.famigo.website.WebsiteApplication;
 import com.famigo.website.model.Comment;
+import com.famigo.website.model.Review;
+import com.famigo.website.repositories.CommentRepository;
+import com.famigo.website.repositories.MessageRepository;
+
+import jnr.ffi.types.caddr_t;
 
 public class CommentSorter {
+
     /*
      * README
      * 
@@ -79,16 +90,24 @@ public class CommentSorter {
 
     /* _____Main for Debugging_____ */
     public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
+        CommentRepository cr = context.getBean(CommentRepository.class);
+
         boolean testing = true;
         int likeCap = 1000;
-        int runs = 10;
+        int addruns = 0;
+        String getBy = "review";
+
         if (testing) {
             ArrayList<Comment> coms = new ArrayList<Comment>();
             Random rand = new Random();
-            for (int i = 0; i < runs; i++) {
-                Comment com = new Comment();
-                com.setLikes(rand.nextInt(likeCap));
-                coms.add(com);
+            for (int i = 0; i < addruns; i++) {
+                cr.addComment(new Comment("user", "review", "comment", rand.nextInt(likeCap)));
+            }
+            if (getBy.equals("user")) {
+                coms = cr.getCommentsByUser("user");
+            } else {
+                coms = cr.getCommentsByReview("review");
             }
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {

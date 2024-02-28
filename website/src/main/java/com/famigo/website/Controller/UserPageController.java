@@ -1,4 +1,4 @@
-package com.famigo.website.Controller;
+package com.famigo.website.controller;
 
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
