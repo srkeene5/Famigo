@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.model;
 
 public class Login {
     private String username;

@@ -6,12 +6,22 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class Util {
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public String getUserID() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails user = (UserDetails) auth.getPrincipal();
+        return user.getUsername();
     }
     
     public static String generateID(int size) {

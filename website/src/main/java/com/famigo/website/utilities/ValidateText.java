@@ -1,4 +1,4 @@
-package com.famigo.website;
+package com.famigo.website.utilities;
 
 public class ValidateText {
     // This function checks a password to ensure that it has at least one uppercase letter 

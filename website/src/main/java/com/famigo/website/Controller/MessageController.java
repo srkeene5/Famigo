@@ -3,7 +3,6 @@ package com.famigo.website.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
 import com.famigo.website.model.SubConversation;
-import com.famigo.website.model.SubReview;
 import com.famigo.website.model.User;
 import com.famigo.website.repository.MessageRepository;
 import com.famigo.website.repository.UserRepository;
@@ -39,7 +37,8 @@ public class MessageController {
     String conversationID = null;
 
     @GetMapping("/conversations")
-    public String getConversations(Model model, @RequestParam String userID) {
+    public String getConversations(Model model) {
+        String userID = new Util().getUserID();
         ArrayList<Conversation> c = mr.getConversations(userID);
         model.addAttribute("conversations", c);
         return "viewConversations";
@@ -49,7 +48,7 @@ public class MessageController {
     public ResponseEntity<Map<String, String>> createConversation(@RequestBody SubConversation members) {
         ArrayList<User> userList = new ArrayList<>();
         for (String user : members.getMembers()) {   
-            User u = ur.getUser(user);
+            User u = ur.getUser("id", user);
             if (u != null) {
                 userList.add(u);
             }

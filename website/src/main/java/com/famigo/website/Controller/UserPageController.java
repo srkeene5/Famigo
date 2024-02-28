@@ -1,8 +1,10 @@
-package com.famigo.website;
+package com.famigo.website.controller;
 
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.famigo.website.model.Signup;
 
 @Controller
 public class UserPageController {
