@@ -21,6 +21,17 @@ public class User {
         this.name = name;
         this.description = description;
     }
+
+    public void setUser(String id, String username, String email, String password, String name, String description, Visibility visibility, Role role) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.visibility = visibility;
+        this.name = name;
+        this.description = description;
+    }
     
     public String getID() {
         return id;

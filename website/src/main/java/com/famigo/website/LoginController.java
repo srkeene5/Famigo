@@ -1,5 +1,6 @@
 package com.famigo.website;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class LoginController {
+	@Autowired
+	UserRepository userRepository;
 
 	@GetMapping("/login")
 	public String greeting(Model model) {
@@ -25,11 +28,14 @@ public class LoginController {
 
 		//TODO: Change this to check database for the username/email and password combo
 		if (ValidateText.isPasswordValid(login.getPassword())) {
-			return "redirect:/user";
+			User user = userRepository.getUser(login.getUsername());
+
+			if (user != null && user.getPassword().equals(login.getPassword())) {
+				return "redirect:/user";
+			}
 		}
 		
 		login.setPassword(null);
-		login.setUsername(null);
 		return "failedlogin";
   	}
 }
