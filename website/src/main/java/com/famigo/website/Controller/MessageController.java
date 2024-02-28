@@ -38,7 +38,7 @@ public class MessageController {
 
     @GetMapping("/conversations")
     public String getConversations(Model model) {
-        String userID = new Util().getUserID();
+        String userID = Util.getUserID();
         ArrayList<Conversation> c = mr.getConversations(userID);
         model.addAttribute("conversations", c);
         return "viewConversations";

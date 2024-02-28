@@ -18,7 +18,7 @@ public class Util {
     }
 
     @Bean
-    public String getUserID() {
+    public static String getUserID() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails user = (UserDetails) auth.getPrincipal();
         return user.getUsername();

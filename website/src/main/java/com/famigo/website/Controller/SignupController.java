@@ -34,11 +34,8 @@ public class SignupController {
 		//kind of a behemoth of a statement but basically the first if checks if the password is valid and the two passwords match
 		//second checks to make sure that all of the boxes were entered
 		//TODO: make email verification
-		System.out.println("GOT HERE");
 		if (ValidateText.isPasswordValid(signup.getPassword()) && signup.getPassword().equals(signup.getConfirmPassword())) {
-			System.out.println("GOT HERE");
 			if (signup.getFirstName() != null && signup.getLastName() != null && signup.getUsername() != null && signup.getEmail() != null && !signup.getGender().equals("")) {
-				System.out.println("GOT HERE");
 				User existing = userRepository.getUser("username", signup.getUsername());
 				if (existing == null) {
 					String password = "{bcrypt}"+BCrypt.hashpw(signup.getPassword(), BCrypt.gensalt());
