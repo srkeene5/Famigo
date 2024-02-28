@@ -231,9 +231,14 @@
         <div class="circle" id="profilepicture">
             <img draggable="false" class="userimage" th:src="@{/images/user.png}"/>
         </div>
-
         <p>
-            Text would go here that gives friends, followers, and possibly info like name and username. 
+            Text would go here that gives friends, followers, and possibly info like name and username.
+        </p>
+        <p th:if="${userpage != null}">
+            Username: <span th:text="${userpage.username}"></span>
+        </p>
+        <p th:if="${userpage == null}">
+            <p>User does not exist.</p>
         </p>
     </div>
 
