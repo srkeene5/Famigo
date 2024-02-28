@@ -26,8 +26,8 @@ public class UserPageController {
 	@GetMapping("/user/{username}")
 	public String userPage(@PathVariable String username, Model model) {
 		//UserRepository userRepo = new UserRepository();
-		Util util = new Util();
-		User user = userRepository.getUser("username", util.getUserID());
+		//Util util = new Util();
+		User user = userRepository.getUser("username", username/*util.getUserID()*/); // accidentally made the user always go to their own page, oops
 		if (user != null) {
 			System.out.println("username: " + user.getUsername());
 			System.out.println("password: " + user.getPassword());
