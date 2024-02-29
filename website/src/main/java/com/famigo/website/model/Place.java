@@ -1,22 +1,5 @@
 package com.famigo.website.model;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Random;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-
 //@Component
 
 public class Place {

@@ -1,4 +1,4 @@
-package com.famigo.website.Controller;
+package com.famigo.website.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

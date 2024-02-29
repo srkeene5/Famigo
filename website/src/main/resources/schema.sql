@@ -2,9 +2,11 @@ CREATE TABLE IF NOT EXISTS user (
     id VARCHAR(20) PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
+    password TEXT NOT NULL,
     name VARCHAR(100),
     description TEXT,
-    visibility TEXT
+    visibility VARCHAR(20) NOT NULL,
+    role VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS conversation (
@@ -14,7 +16,7 @@ CREATE TABLE IF NOT EXISTS conversation (
 
 CREATE TABLE IF NOT EXISTS conversationParticipants(
     conversationID VARCHAR(30),
-    userID VARCHAR(10)
+    userID VARCHAR(20)
 );
 
 CREATE TABLE IF NOT EXISTS message (
@@ -35,6 +37,17 @@ CREATE TABLE IF NOT EXISTS reviews (
     edited BOOLEAN,
     placeID VARCHAR(20),
     PRIMARY KEY (revID)
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+    comID int NOT NULL AUTO_INCREMENT,
+    userID VARCHAR(20) NOT NULL,
+    comment TEXT,
+    likes INTEGER,
+    timestamp DATETIME,
+    edited BOOLEAN,
+    reviewID VARCHAR(20),
+    PRIMARY KEY (comID)
 );
 
 CREATE TABLE IF NOT EXISTS place (

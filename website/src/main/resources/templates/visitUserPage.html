@@ -36,7 +36,7 @@
 
         #home, #location, #search, #chat, #settings, #location, #create {
             position: relative;
-            margin: auto;
+            margin-right: 0%;
             left: 0px;
             top: 10px;
             height: 55px;
@@ -47,12 +47,12 @@
             overflow-y: hidden;
         }
 
-        #navigationbuttons {
-            position: fixed;
-            display: inline;
-            width: 100%;
+        .navigationbuttons {
+            position: relative;
+            display: flex;
+            right: 0px;
             left: 150px;
-            top: 0px;
+            top: -40px;
             height: 55px;
             overflow-y: hidden;
             
@@ -106,6 +106,7 @@
 
     </style>
     <head> 
+        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
         <title>Homepage</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
@@ -133,34 +134,46 @@
                     Famigo
                 </h1>
             </div>
-            <div id = "navigationbuttons">
-                <button class="button" id="home">
-                    <img draggable="false" class="image" th:src="@{/images/home.png}"/>
-                </button>
-
-                <button class="button" id="chat">
-                    <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
-                </button>
-
-                <button class="button" id="create">
-                    <img draggable="false" class="image" th:src="@{/images/create.png}"/>
-                </button>
-
-                <button class="button" id="location">
-                    <img draggable="false" class="image" th:src="@{/images/location.png}"/>
-                </button>
-
-                <button class="button" id="search">
-                    <img draggable="false" class="image" th:src="@{/images/search.png}"/>
-                </button>
-
-                <button class="button" id="settings">
-                    <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
-                </button>
+            <div class = "navigationbuttons">
+                <form action="#" th:action="@{/user}" method="post">
+                    <button class="button" id="home">
+                        <img draggable="false" class="image" th:src="@{/images/home.png}"/>
+                    </button>
+                </form>
+    
+                <form action="#" th:action="@{/conversationsTest}" method="get">
+                    <button class="button" id="chat">
+                        <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
+                    </button>
+                </form>
+    
+                <form action="#" th:action="@{/user}" method="post">
+                    <button class="button" id="create">
+                        <img draggable="false" class="image" th:src="@{/images/create.png}"/>
+                    </button>
+                </form>
+    
+                <form action="#" th:action="@{/places}" method="post">
+                    <button class="button" id="location">
+                        <img draggable="false" class="image" th:src="@{/images/location.png}"/>
+                    </button>
+                </form>
+    
+                <form action="#" th:action="@{/user}" method="post">
+                    <button class="button" id="search">
+                        <img draggable="false" class="image" th:src="@{/images/search.png}"/>
+                    </button>
+                </form>
+    
+                <form action="#" th:action="@{/user}" method="post">
+                    <button class="button" id="settings">
+                        <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
+                    </button>
+                </form>
             </div>
         </div>
     </body>
     <script>
-
+        
     </script>
 </html>

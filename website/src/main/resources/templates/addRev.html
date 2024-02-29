@@ -115,7 +115,7 @@
                     rUser : user,
                     rPlace : place
                 }
-                st5.classList.add("checked");
+                //st5.classList.add("checked");
                 $.ajax({
                     type: "POST",
                     contentType: "application/json",
@@ -127,7 +127,7 @@
                 }).done(function (data) {
                     console.log(data);
                 });
-                st1.classList.remove("checked");
+                //st1.classList.remove("checked");
                 
                 resetRevPop();
             }

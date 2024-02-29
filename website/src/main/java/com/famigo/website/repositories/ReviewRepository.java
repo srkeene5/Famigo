@@ -1,6 +1,6 @@
 package com.famigo.website.repositories;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class ReviewRepository {
                 ps.setString(2, review.getUserId());
                 ps.setString(3, review.getReview());
                 ps.setInt(4, review.getStars());
-                ps.setDate(5, Date.valueOf(review.getTimeStamp().toLocalDate()));
+                ps.setTimestamp(5, Timestamp.valueOf(review.getTimeStamp()));
                 ps.setBoolean(6, review.isEdited());
                 ps.setString(7, review.getPlaceId());
             }
