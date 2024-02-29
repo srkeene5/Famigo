@@ -4,11 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 
-import com.famigo.website.repositories.Profile;
-
-import com.famigo.website.model.User;
-
-@Component
+//@Component
 public class Conversation {
 
     private String id;

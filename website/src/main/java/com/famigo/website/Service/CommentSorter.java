@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import com.famigo.website.Role;
-import com.famigo.website.Visibility;
+import com.famigo.website.utilities.Role;
+import com.famigo.website.utilities.Visibility;
 import com.famigo.website.WebsiteApplication;
 import com.famigo.website.model.Comment;
 import com.famigo.website.model.User;

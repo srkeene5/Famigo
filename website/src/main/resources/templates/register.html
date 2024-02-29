@@ -136,8 +136,11 @@
         <p><input type="submit" value="Login" class="login"/></p>
     </form>
 
-    <form action="#" th:action="@{/login}" method="post">
-        <p><input type="submit" value="Sign Up" class="signup" /></p>
-    </form>
+    <button class="signup">Sign Up</button>
 </body>
+<script>
+    document.getElementsByClassName("signup")[0].addEventListener("click", function() {
+        window.location.href = window.location.protocol + "//" + window.location.host + "/signup";
+    });
+</script>
 </html>
