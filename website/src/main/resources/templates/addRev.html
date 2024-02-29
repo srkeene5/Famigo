@@ -89,6 +89,8 @@
 
     
     <script>
+        var user = "user";
+        var place = "place";
         var script = document.createElement('script');
         script.src = '//code.jquery.com/jquery-3.6.3.min.js'; // Check https://jquery.com/ for the current version
         document.getElementsByTagName('head')[0].appendChild(script);
@@ -109,9 +111,11 @@
             } else {
                 var send ={
                     rText : revText,
-                    rStar : revStVal
+                    rStar : revStVal,
+                    rUser : user,
+                    rPlace : place
                 }
-                st5.classList.add("checked");
+                //st5.classList.add("checked");
                 $.ajax({
                     type: "POST",
                     contentType: "application/json",
@@ -120,17 +124,10 @@
                     dataType: "json",
                     //cache: false,
                     timeout: 60,
-                    success: function() {
-                        console.log("Successful");
-                    },
-                    error : function(e) {
-                        alert('Error: ' + e);
-                    },
-                    done : function(e) {
-                        console.log("DONE");
-                    }
+                }).done(function (data) {
+                    console.log(data);
                 });
-                st1.classList.remove("checked");
+                //st1.classList.remove("checked");
                 
                 resetRevPop();
             }

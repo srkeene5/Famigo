@@ -13,7 +13,7 @@ public class Util {
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
-    
+
     public static String generateID(int size) {
         Random random = new Random();
         StringBuilder s = new StringBuilder();
@@ -21,8 +21,10 @@ public class Util {
         int minChar = 48;
         for (int i = 0; i < size; i++) {
             int x = random.nextInt(maxChar - minChar) + minChar;
-            if (x >= 91 && x <= 96) i = i - 1;
-            else s.append(Character.toString((char) x));
+            if (x >= 91 && x <= 96)
+                i = i - 1;
+            else
+                s.append(Character.toString((char) x));
         }
         return s.toString();
     }

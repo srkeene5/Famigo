@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+    body {
+        background: linear-gradient(#F9F8F5, #E5AD70);
+        background-attachment: fixed;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+    
+    #FamigoLogo {
+        border-top-left-radius: 25px;
+        border-bottom-right-radius: 25px;
+        border-bottom-left-radius: 0px;
+        border-top-right-radius: 0px;
+        border: 2px solid;
+        background: #A6C4E5;
+        padding: 20px;
+        width: 600px;
+        height: 150px; 
+
+        position: absolute;
+        top: 50%;
+        left: 23%;
+        margin-top: -250px;
+    }
+
+    #FamigoSlogan {
+        border-top-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 25px;
+        border-top-right-radius: 25px;
+        border: 2px solid;
+        background: #D2E1F1;
+        padding: 20px;
+        width: 600px;
+        height: 150px;
+
+        position: absolute;
+        left: 23%;
+        top: 50%;
+    }
+
+    #FamigoText {
+        margin: auto;
+        font-size: 100px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    #SloganText {
+        margin: auto;
+        font-size: 35px;
+        text-align: center;
+    }
+
+    input[type=text] {
+        background-color: #D2E1F1;
+        border: 2px solid;
+        width: 400px;
+        font-size: 25px;
+        height: 50px;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-top: -235px;
+    }
+
+    input[type=password] {
+        background-color: #D2E1F1;
+        border: 2px solid;
+        font-size: 25px;
+        width: 308px;
+        height: 50px;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-top: -140px;
+    }
+
+    .signup {
+        background-color: #D1E0F0;
+        border: 2px solid;
+        border-radius: 5px;
+        font-size: 25px;
+        width: 150px;
+        height: 50px;
+
+        position: absolute;
+        left: 50%;
+        top: 50%;
+    }
+
+    .login {
+        background-color: #D1E0F0;
+        width: 75px;
+        font-size: 25px;
+        height: 56px;
+        border: 2px solid;
+        border-radius: 5px;
+
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-top: -140px;
+        margin-left: 333px;
+    }
+
+    .login:hover, input[type=password]:hover, input[type=text]:hover, .signup:hover {
+        background-color: #A6C4E5;
+    }
+
+    .alert {
+        padding: 20px;
+        background-color: #f44336; /* Red */
+        color: white;
+        margin-bottom: 15px;
+    }
+
+
+    .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+</style>
+
+<head> 
+    <title>Famigo Login</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div id="failedlogin" class="alert">
+        <span id="exit" class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        Your Username/Password does not match any records. Please try again.
+    </div>
+    
+    <div id="FamigoLogo">
+        <p id="FamigoText">
+            Famigo
+        </p>
+    </div>
+
+    <div id="FamigoSlogan">
+        <p id="SloganText">
+            The one-stop destination for planning vacations for and with the people you cherish the most
+        </p>
+    </div>
+
+    <form action="#" th:action="@{/login}" th:object="${login}" method="post">
+    	<p><input type="text" placeholder="Username or Email" th:field="*{username}" /></p>
+        <p><input type="password" placeholder="Password" th:field="*{password}" /></p>
+        <p><input type="submit" value="Login" class="login"/></p>
+    </form>
+
+    <form action="#" th:action="@{/login}" method="post">
+        <p><input type="submit" value="Sign Up" class="signup" /></p>
+    </form>
+</body>
+</html>
