@@ -227,7 +227,7 @@
         </button>
     </div>
 
-    <div id="userinfo" class="infoblock">
+    <div id="userinfo" class="infoblock" userid="${userpage.username}" userloggedin="${user_logged_in.username}">
         <div class="circle" id="profilepicture">
             <img draggable="false" class="userimage" th:src="@{/images/user.png}"/>
         </div>
@@ -236,14 +236,46 @@
         </p>
         <p th:if="${userpage != null}">
             Username: <span th:text="${userpage.username}"></span>
+
+            testing purposes: Your username: <span th:text="${user_logged_in.username}"></span>
         </p>
         <p th:if="${userpage == null}">
-            <p>User does not exist.</p>
+            User does not exist.
         </p>
         <p>
-            <button type="button" th:text="${'Follow'}">Follow</button>
+            <button id="followbutton" type="button" >Follow</button>
         </p>
     </div>
+    
+    <script>
+        document.getElementById("followbutton").addEventListener("click", function() {
+            console.log("button clicked");
+            //var user_doing_following = followbutton.parentElement.parentElement.getAttribute("userloggedin");
+            //var user_to_be_followed = followbutton.parentElement.parentElement.getAttribute("user-id");
+            var user_to_be_followed = document.getElementById("userinfo").getAttribute("userid");
+            var user_doing_following = document.getElementById("userinfo").getAttribute("userloggedin");
+            var follower_count = 100;
+
+            console.log("-->" + document.getElementById("userinfo").value);
+
+            console.log(user_doing_following);
+            console.log(user_to_be_followed);
+            console.log("before follow");
+            const response = fetch("/follow", {
+                    method : "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body : JSON.stringify({
+                        members : [user_doing_following, user_to_be_followed, follower_count]
+                    })
+                }).then((response) => response.json()
+                ).then((response) => {
+                    //window.location.href = window.location.protocol + "//" + window.location.host;
+                });
+            console.log("after follow");
+        });
+    </script>
 
     <div id="userlinks" class="infoblock">
         <p>

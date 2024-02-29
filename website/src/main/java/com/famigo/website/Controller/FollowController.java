@@ -1,35 +1,37 @@
 package com.famigo.website.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Signup;
+import com.famigo.website.model.SubConversation;
 import com.famigo.website.repository.UserRepository;
+import com.famigo.website.utilities.Util;
 import com.famigo.website.model.User;
 
 @Controller
 public class FollowController {
-    /*@Autowired
+    @Autowired
     UserRepository userRepository;
-	
-	@GetMapping("/user")
-	public String greeting(Model model) {
-		model.addAttribute("signup", new Signup());
-        return "userpage";
-	}
 
-	@GetMapping("/user/{username}")
-	public String userPage(@PathVariable String username, Model model) {
-		//UserRepository userRepo = new UserRepository();
-		User user = userRepository.getUser(username);
-		if (user != null) {
-			System.out.println("username: " + user.getUsername());
-			System.out.println("password: " + user.getPassword());
-		}
-		model.addAttribute("userpage", user);
-        return "userpage";
-	}*/
+    @PostMapping("/follow")
+    public String followUser(Model model) {
+        System.out.println("GOT TO FOLLOW CONTROLLER");
+        return "Followed user.";
+    }
 }

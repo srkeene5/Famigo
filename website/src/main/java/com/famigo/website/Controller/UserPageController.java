@@ -26,13 +26,16 @@ public class UserPageController {
 	@GetMapping("/user/{username}")
 	public String userPage(@PathVariable String username, Model model) {
 		//UserRepository userRepo = new UserRepository();
-		//Util util = new Util();
-		User user = userRepository.getUser("username", username/*util.getUserID()*/); // accidentally made the user always go to their own page, oops
-		if (user != null) {
-			System.out.println("username: " + user.getUsername());
-			System.out.println("password: " + user.getPassword());
+		Util util = new Util();
+		User user_being_viewed = userRepository.getUser("username", username/*util.getUserID()*/); // accidentally made the user always go to their own page, oops
+		User user_logged_in = userRepository.getUser("username", util.getUserID());
+		if (user_being_viewed != null) {
+			System.out.println("username of user's page being viewed: " + user_being_viewed.getUsername());
+			System.out.println("password of user's page being viewed: " + user_being_viewed.getPassword());
+			System.out.println("Logged in user: " + user_logged_in.getUsername());
 		}
-		model.addAttribute("userpage", user);
+		model.addAttribute("userpage", user_being_viewed);
+		model.addAttribute("user_logged_in", user_logged_in);
         return "userpage";
 	}
 }
