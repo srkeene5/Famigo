@@ -1,6 +1,6 @@
 package com.famigo.website.repositories;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class CommentRepository {
                 ps.setString(2, comment.getUserId());
                 ps.setString(3, comment.getComment());
                 ps.setInt(4, comment.getLikes());
-                ps.setDate(5, Date.valueOf(comment.getTimeStamp().toLocalDate()));
+                ps.setTimestamp(5, Timestamp.valueOf(comment.getTimeStamp()));
                 ps.setBoolean(6, comment.isEdited());
                 ps.setString(7, comment.getReviewId());
             }

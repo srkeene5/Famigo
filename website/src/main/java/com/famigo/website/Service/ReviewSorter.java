@@ -4,22 +4,38 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+
+import com.famigo.website.Role;
+import com.famigo.website.Visibility;
+import com.famigo.website.WebsiteApplication;
 import com.famigo.website.model.Review;
+import com.famigo.website.model.User;
+import com.famigo.website.repositories.ReviewRepository;
 
 public class ReviewSorter {
 
     /*
      * README
      * 
-     * This function is for sorting Review objects by different values
+     * This function is a stable sorting algorithm for Review objects
+     * 
+     * It has overloaded method calls to allow simplified implementation
      * 
      * Usage: ReviewSortBy(ArrayList to be sorted, ".get function to be sorted by",
-     * if you want ascending or descending);
+     * if you want ascending or descending,
+     * (optional: 1) primary array of specific users to seperate (ex: friend list),
+     * (optional: 1) move primary users to top,
+     * (optional: 2) secondary array of specific users to seperate (ex: follower
+     * list), (optional: 2) move secondary users to top);
      * 
      * Currently can Handle:
      * "stars"
      * "timeStamp"
      * "review"
+     * 
+     * 
      * 
      * Add handling in ReviewMergeBy
      * 1. Copy between the "copy comments" in ReviewMergeBy, and paste after the
@@ -30,7 +46,20 @@ public class ReviewSorter {
      * 
      */
     public void ReviewSortBy(ArrayList<Review> revs, String val, boolean ascending) {
-        ReviewsubSortBy(revs, 0, revs.size() - 1, val, ascending);
+        ReviewsubSortBy(revs, 0, revs.size() - 1, val, ascending, null, false, null, false);
+    }
+
+    public void ReviewSortBy(ArrayList<Review> revs, String val, boolean ascending, ArrayList<User> sortPrime,
+            boolean primeAscend) {
+        ReviewsubSortBy(revs, 0, revs.size() - 1, val, ascending, null, false, null, false);
+        ReviewsubSortBy(revs, 0, revs.size() - 1, "sortPrimeSec", ascending, sortPrime, primeAscend, null, false);
+    }
+
+    public void ReviewSortBy(ArrayList<Review> revs, String val, boolean ascending, ArrayList<User> sortPrime,
+            boolean primeAscend, ArrayList<User> sortSec, boolean secAscend) {
+        ReviewsubSortBy(revs, 0, revs.size() - 1, val, ascending, null, false, null, false);
+        ReviewsubSortBy(revs, 0, revs.size() - 1, "sortPrimeSec", ascending, sortPrime, primeAscend, sortSec,
+                secAscend);
     }
 
     /* _____Private Classes_____ */
@@ -38,14 +67,15 @@ public class ReviewSorter {
      * This is the merge sort function that recursively splits
      * and recombines the subArrayList
      */
-    private void ReviewsubSortBy(ArrayList<Review> revs, int s, int f, String val, boolean ascending) {
+    private void ReviewsubSortBy(ArrayList<Review> revs, int s, int f, String val, boolean ascending,
+            ArrayList<User> sortPrime, boolean primeAscend, ArrayList<User> sortSec, boolean secAscend) {
         if (s >= f) {
             return;
         }
         int m = s + (f - s) / 2;
-        ReviewsubSortBy(revs, s, m, val, ascending);
-        ReviewsubSortBy(revs, m + 1, f, val, ascending);
-        ReviewMergeBy(revs, s, m, f, val, ascending);
+        ReviewsubSortBy(revs, s, m, val, ascending, sortPrime, primeAscend, sortSec, secAscend);
+        ReviewsubSortBy(revs, m + 1, f, val, ascending, sortPrime, primeAscend, sortSec, secAscend);
+        ReviewMergeBy(revs, s, m, f, val, ascending, sortPrime, primeAscend, sortSec, secAscend);
     }
 
     /*
@@ -54,7 +84,8 @@ public class ReviewSorter {
      * This is the Merge function, using an inplace merge
      * Comments are included to show where handling can be added
      */
-    private void ReviewMergeBy(ArrayList<Review> revs, int s, int m, int f, String val, boolean ascending) {
+    private void ReviewMergeBy(ArrayList<Review> revs, int s, int m, int f, String val, boolean ascending,
+            ArrayList<User> sortPrime, boolean primeAscend, ArrayList<User> sortSec, boolean secAscend) {
         int i = s;
         int j = m + 1;
         while (i <= m && j <= f) {
@@ -95,8 +126,7 @@ public class ReviewSorter {
                 } else {
                     i++;
                 }
-            }
-            if (val.equals("review")) {
+            } else if (val.equals("review")) {
                 if ((ascending && revs.get(i).getReview().compareTo(revs.get(j).getReview()) > 0)
                         || (!ascending && revs.get(i).getReview().compareTo(revs.get(j).getReview()) < 0)) {
                     Review hold = revs.get(j);
@@ -112,91 +142,205 @@ public class ReviewSorter {
                 } else {
                     i++;
                 }
+            } else if (val.equals("sortPrimeSec") && sortPrime != null) {
+                int UPi = 0;
+                int UPj = 0;
+                if (sortSec != null) {
+                    for (User user : sortSec) {
+                        if (revs.get(i).getUserId().equals(user.getID())) {
+                            if (secAscend) {
+                                UPi = 1;
+                            } else {
+                                UPi = -1;
+                            }
+                        }
+                        if (revs.get(j).getUserId().equals(user.getID())) {
+                            if (secAscend) {
+                                UPj = 1;
+                            } else {
+                                UPj = -1;
+                            }
+                        }
+                    }
+                }
+                for (User user : sortPrime) {
+                    if (revs.get(i).getUserId().equals(user.getID())) {
+                        if (primeAscend) {
+                            UPi = 2;
+                        } else {
+                            UPi = -2;
+                        }
+                    }
+                    if (revs.get(j).getUserId().equals(user.getID())) {
+                        if (primeAscend) {
+                            UPj = 2;
+                        } else {
+                            UPj = -2;
+                        }
+                    }
+                }
+                if (UPi < UPj) {
+                    Review hold = revs.get(j);
+                    int index = j;
+                    while (index != i) {
+                        revs.set(index, revs.get(index - 1));
+                        index--;
+                    }
+                    revs.set(i, hold);
+                    i++;
+                    m++;
+                    j++;
+                } else {
+                    i++;
+                }
+            } else if (val.equals("sortPrimeSec")) {
+                // TODO: handle exception
             }
         }
     }
 
     /* _____Main for Debugging_____ */
     public static void main(String[] args) {
-        boolean testingTimeStamp = false;
+        ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
+        ReviewRepository rr = context.getBean(ReviewRepository.class);
+
+        boolean testingTimeStamp = true;
         boolean testingStars = true;
         boolean testingReview = true;
-        int runs = 10;
+        boolean testingPrime = true;
+        boolean testingSec = true;
+
+        int addruns = 0;
         int revLen = 10;
-        if (testingTimeStamp) {
-            System.out.println("May take a moment\nWaits included to test timeStamp");
-            ArrayList<Review> revs = new ArrayList<Review>();
-            Random rand = new Random();
-            for (int i = 0; i < runs; i++) {
-                Review rev = new Review("user", "place", "review", rand.nextInt(1, 6));
+        String getBy = "place";
+        String[] userIds = { "u1", "u2", "u3", "u4", "u5", "u6", "u7", "u8" };
+
+        ArrayList<User> friends = new ArrayList<User>();
+        ArrayList<User> following = new ArrayList<User>();
+        friends.add(new User("u1", "user1", "testEmail1", "testPass1", "testName1", "testDescription1", Visibility.ALL,
+                Role.USER));
+        friends.add(new User("u2", "user2", "testEmail2", "testPass2", "testName2", "testDescription2", Visibility.ALL,
+                Role.USER));
+        following
+                .add(new User("u3", "user3", "testEmail3", "testPass3", "testName3", "testDescription3", Visibility.ALL,
+                        Role.USER));
+        following
+                .add(new User("u4", "user4", "testEmail4", "testPass4", "testName4", "testDescription4", Visibility.ALL,
+                        Role.USER));
+
+        ArrayList<Review> revs = new ArrayList<Review>();
+        Random rand = new Random();
+        if (addruns > 0) {
+            System.out.println("\nMay take a moment\nWaits included to test timeStamp");
+        }
+        for (String userId : userIds) {
+            for (int i = 0; i < addruns; i++) {
+                StringBuilder buffer = new StringBuilder(revLen);
+                for (int j = 0; j < revLen; j++) {
+                    buffer.append((char) rand.nextInt(97, 123));
+                }
+                rr.addReview(new Review(userId, "place", buffer.toString(), rand.nextInt(1, 6)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
-                revs.add(rev);
             }
+        }
+        if (getBy.equals("user")) {
+            revs = rr.getReviewsByUser("user");
+        } else {
+            revs = rr.getReviewsByPlace("place");
+        }
+        ReviewSorter rs = new ReviewSorter();
+        if (testingTimeStamp) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getTimeStamp());
             }
-            new ReviewSorter().ReviewSortBy(revs, "timeStamp", false);
+            rs.ReviewSortBy(revs, "timeStamp", false);
             System.out.println("_____Sorted_Desc_____");
             for (Review rev : revs) {
                 System.out.println(rev.getTimeStamp());
             }
-            new ReviewSorter().ReviewSortBy(revs, "timeStamp", true);
+            rs.ReviewSortBy(revs, "timeStamp", true);
             System.out.println("_____Sorted_Asc_____");
             for (Review rev : revs) {
                 System.out.println(rev.getTimeStamp());
             }
         }
         if (testingStars) {
-            ArrayList<Review> revs = new ArrayList<Review>();
-            Random rand = new Random();
-            for (int i = 0; i < runs; i++) {
-                Review rev = new Review("user", "place", "review", rand.nextInt(1, 6));
-                revs.add(rev);
-            }
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getStars());
             }
-            new ReviewSorter().ReviewSortBy(revs, "stars", false);
+            rs.ReviewSortBy(revs, "stars", false);
             System.out.println("_____Sorted_Desc_____");
             for (Review rev : revs) {
                 System.out.println(rev.getStars());
             }
-            new ReviewSorter().ReviewSortBy(revs, "stars", true);
+            rs.ReviewSortBy(revs, "stars", true);
             System.out.println("_____Sorted_Asc_____");
             for (Review rev : revs) {
                 System.out.println(rev.getStars());
             }
         }
         if (testingReview) {
-            ArrayList<Review> revs = new ArrayList<Review>();
-            Random rand = new Random();
-            for (int i = 0; i < runs; i++) {
-                StringBuilder buffer = new StringBuilder(revLen);
-                for (int j = 0; j < revLen; j++) {
-                    buffer.append((char) rand.nextInt(97, 123));
-                }
-                Review rev = new Review("user", "place", buffer.toString(), rand.nextInt(1, 6));
-                revs.add(rev);
-            }
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getReview());
             }
-            new ReviewSorter().ReviewSortBy(revs, "review", false);
+            rs.ReviewSortBy(revs, "review", false);
             System.out.println("_____Sorted_Desc_____");
             for (Review rev : revs) {
                 System.out.println(rev.getReview());
             }
-            new ReviewSorter().ReviewSortBy(revs, "review", true);
+            rs.ReviewSortBy(revs, "review", true);
             System.out.println("_____Sorted_Asc_____");
             for (Review rev : revs) {
                 System.out.println(rev.getReview());
+            }
+        }
+        if (testingPrime) {
+            System.out.println("_____Unsorted_____");
+            for (Review rev : revs) {
+                System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
+                        + rev.getTimeStamp());
+            }
+            rs.ReviewSortBy(revs, "timeStamp", false);
+            rs.ReviewSortBy(revs, "stars", false, friends, true);
+            System.out.println("_____Sorted_Desc_____");
+            for (Review rev : revs) {
+                System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
+                        + rev.getTimeStamp());
+            }
+            rs.ReviewSortBy(revs, "timeStamp", false);
+            rs.ReviewSortBy(revs, "stars", true, friends, true);
+            System.out.println("_____Sorted_Asc_____");
+            for (Review rev : revs) {
+                System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
+                        + rev.getTimeStamp());
+            }
+        }
+        if (testingSec) {
+            System.out.println("_____Unsorted_____");
+            for (Review rev : revs) {
+                System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
+                        + rev.getTimeStamp());
+            }
+            rs.ReviewSortBy(revs, "timeStamp", false);
+            rs.ReviewSortBy(revs, "stars", false, friends, true, following, true);
+            System.out.println("_____Sorted_Desc_____");
+            for (Review rev : revs) {
+                System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
+                        + rev.getTimeStamp());
+            }
+            rs.ReviewSortBy(revs, "timeStamp", false);
+            rs.ReviewSortBy(revs, "stars", true, friends, true, following, true);
+            System.out.println("_____Sorted_Asc_____");
+            for (Review rev : revs) {
+                System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
+                        + rev.getTimeStamp());
             }
         }
     }
