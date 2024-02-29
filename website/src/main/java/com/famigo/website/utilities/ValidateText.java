@@ -1,8 +1,7 @@
-package com.famigo.website.service;
+package com.famigo.website.utilities;
 
 public class ValidateText {
-    // This function checks a password to ensure that it has at least one uppercase
-    // letter
+    // This function checks a password to ensure that it has at least one uppercase letter 
     // has at least eight characters and has no illegal characters
     public static boolean isPasswordValid(String password) {
         if (isTextSanitary(password) && !password.equals(password.toLowerCase()) && (password.length() > 7)) {
@@ -11,8 +10,7 @@ public class ValidateText {
         return false;
     }
 
-    // This function checks if a given text has only the basic ascii characters and
-    // a few supplimentary characters (unicode 0-255)
+    //This function checks if a given text has only the basic ascii characters and a few supplimentary characters (unicode 0-255)
     public static boolean isTextSanitary(String text) {
         if (text == null) {
             return false;

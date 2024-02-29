@@ -3,7 +3,6 @@ package com.famigo.website.service;
 import java.util.ArrayList;
 import com.famigo.website.model.Review;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service

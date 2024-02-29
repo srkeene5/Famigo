@@ -22,7 +22,7 @@ import com.famigo.website.model.User;
 
 @Repository
 public class MessageRepository {
-
+    
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -43,20 +43,18 @@ public class MessageRepository {
                 ps.setBoolean(5, message.getEdited());
                 ps.setString(6, message.getConversation());
             }
-
+            
         });
     }
 
     public ArrayList<Message> getMessages(String cid) {
-        List<Map<String, Object>> messageList = jdbcTemplate.queryForList("SELECT * FROM message WHERE conversation=?",
-                new Object[] { cid });
+        List<Map<String, Object>> messageList = jdbcTemplate.queryForList("SELECT * FROM message WHERE conversation=?", new Object[]{cid});
         if (messageList == null || messageList.isEmpty()) {
             return null;
         }
         ArrayList<Message> messages = new ArrayList<>();
         for (Map<String, Object> o : messageList) {
-            messages.add(new Message((String) o.get("id"), (String) o.get("sender"), (String) o.get("content"),
-                    (LocalDateTime) o.get("timestamp"), (Boolean) o.get("edited"), (String) o.get("conversation")));
+            messages.add(new Message((String) o.get("id"), (String) o.get("sender"), (String) o.get("content"), (LocalDateTime) o.get("timestamp"), (Boolean) o.get("edited"), (String) o.get("conversation")));
         }
         return messages;
     }
@@ -70,26 +68,24 @@ public class MessageRepository {
                 ps.setString(1, conversation.getID());
                 ps.setString(2, conversation.getName());
             }
-
+            
         });
         for (User u : conversation.getMembers()) {
-            jdbcTemplate.update("INSERT INTO conversationParticipants (conversationID, userID) VALUES (?, ?)",
-                    new PreparedStatementSetter() {
+            jdbcTemplate.update("INSERT INTO conversationParticipants (conversationID, userID) VALUES (?, ?)", new PreparedStatementSetter() {
 
-                        @Override
-                        public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
-                            // TODO Auto-generated method stub
-                            ps.setString(1, conversation.getID());
-                            ps.setString(2, u.getID());
-                        }
-
-                    });
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
+                    // TODO Auto-generated method stub
+                    ps.setString(1, conversation.getID());
+                    ps.setString(2, u.getID());
+                }
+                
+            });
         }
     }
 
     public ArrayList<Conversation> getConversations(String userID) {
-        List<Map<String, Object>> conversationList = jdbcTemplate.queryForList(
-                "SELECT conversationID FROM conversationParticipants WHERE userID=?", new Object[] { userID });
+        List<Map<String, Object>> conversationList = jdbcTemplate.queryForList("SELECT conversationID FROM conversationParticipants WHERE userID=?", new Object[]{userID});
         if (conversationList == null) {
             return null;
         }
@@ -101,26 +97,24 @@ public class MessageRepository {
     }
 
     public Conversation getConversation(String cid) {
-        List<Map<String, Object>> memberList = jdbcTemplate.queryForList(
-                "SELECT userID FROM conversationParticipants WHERE conversationID=?", new Object[] { cid });
+        List<Map<String, Object>> memberList = jdbcTemplate.queryForList("SELECT userID FROM conversationParticipants WHERE conversationID=?", new Object[]{cid});
         ArrayList<User> members = new ArrayList<>();
         for (Map<String, Object> o : memberList) {
-            members.add(ur.getUser((String) o.get("userID")));
+            members.add(ur.getUser("id", (String) o.get("userID")));
         }
         ArrayList<Message> messages = getMessages(cid);
-        Conversation conversationObject = jdbcTemplate.queryForObject("SELECT name FROM conversation WHERE id=?",
-                new RowMapper<Conversation>() {
+        Conversation conversationObject = jdbcTemplate.queryForObject("SELECT name FROM conversation WHERE id=?", new RowMapper<Conversation>() {
 
-                    @Override
-                    public Conversation mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        if (rs == null) {
-                            return null;
-                        }
-                        Conversation conversation = new Conversation(cid, rs.getString("name"), members, messages);
-                        return conversation;
-                    }
-
-                }, cid);
+            @Override
+            public Conversation mapRow(ResultSet rs, int rowNum) throws SQLException {
+                if (rs == null) {
+                    return null;
+                }
+                Conversation conversation = new Conversation(cid, rs.getString("name"), members, messages);
+                return conversation;
+            }
+            
+        }, cid);
         return conversationObject;
     }
 

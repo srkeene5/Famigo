@@ -6,6 +6,11 @@
     </header>
     <body>
         <h1>Conversations</h1>
+        <div id="newconvo">
+            <input type="text" id="userid" placeholder="user id"/>
+            <input type="text" id="conversationmember" placeholder="recipient"/>
+            <input type="submit" id="submit" />
+        </div>
         <table th:if="${conversations == null}">
             <tr th:each="conv : ${conversations}">
                 <td><a th:href="@{/message/${conv.getID()}}"><span th:text="${conv.getName()}"></span></a></td>
@@ -15,4 +20,37 @@
             You have no conversations
         </div>
     </body>
+    <script>
+        document.getElementById("submit").addEventListener("click", function() {
+            var user = document.getElementById("userid").value;
+            var convrec = document.getElementById("conversationmember").value;
+            console.log(user, convrec);
+            if (user == "" || convrec == "") {
+                if (document.getElementById("newconvoerror") == null) {
+                    var element = document.createElement("p");
+                    element.setAttribute("value", "You must enter all fields");
+                    element.style.color = "red";
+                    document.getElementById("newconvo").appendChild(element);
+                    return;
+                }
+            }
+            try {
+                const response = fetch("/submitConversation", {
+                    method : "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body : JSON.stringify({
+                        members : [user, convrec]
+                    })
+                }).then((response) => response.json()
+                ).then((response) => {
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/conversations/" + response["cid"];
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    </script>
 </html>

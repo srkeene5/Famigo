@@ -3,17 +3,12 @@ package com.famigo.website.service;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import com.famigo.website.WebsiteApplication;
 import com.famigo.website.model.Comment;
-import com.famigo.website.model.Review;
 import com.famigo.website.repositories.CommentRepository;
-import com.famigo.website.repositories.MessageRepository;
-
-import jnr.ffi.types.caddr_t;
 
 public class CommentSorter {
 
