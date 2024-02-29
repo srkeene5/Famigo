@@ -2,8 +2,6 @@ package com.famigo.website.model;
 
 import java.util.ArrayList;
 
-import org.springframework.stereotype.Component;
-
 //@Component
 public class Conversation {
 

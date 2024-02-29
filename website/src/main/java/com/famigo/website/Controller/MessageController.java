@@ -44,15 +44,14 @@ public class MessageController {
         return "viewConversations";
     }
 
-    @RequestMapping(value="/submitConversation", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/submitConversation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> createConversation(@RequestBody SubConversation members) {
         ArrayList<User> userList = new ArrayList<>();
-        for (String user : members.getMembers()) {   
+        for (String user : members.getMembers()) {
             User u = ur.getUser("id", user);
             if (u != null) {
                 userList.add(u);
-            }
-            else {
+            } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
@@ -62,15 +61,6 @@ public class MessageController {
         result.put("cid", c.getID());
         return new ResponseEntity<Map<String, String>>(result, HttpStatus.OK);
     }
-
-    // for Testing
-    @GetMapping("/conversationsTest")
-    public String getConversationsTest(Model model) {
-        ArrayList<Conversation> c = mr.getConversations("user");
-        model.addAttribute("conversations", c);
-        return "viewConversations";
-    }
-    // for Testing
 
     @GetMapping("/conversations/{cid}")
     public String seeMessages(Model model, @PathVariable String cid) {
