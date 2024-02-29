@@ -19,16 +19,19 @@ public class UserPageController {
 	
 	@GetMapping("/user")
 	public String greeting(Model model) {
+		User user = userRepository.getUser("id", Util.getUserID());
 		model.addAttribute("signup", new Signup());
+		model.addAttribute("userpage", user);
+		model.addAttribute("user_logged_in", user);
+		//Should probably return a different user page or use some th:if statements so that you don't have to return this
         return "userpage";
 	}
 
 	@GetMapping("/user/{username}")
 	public String userPage(@PathVariable String username, Model model) {
 		//UserRepository userRepo = new UserRepository();
-		Util util = new Util();
 		User user_being_viewed = userRepository.getUser("username", username/*util.getUserID()*/); // accidentally made the user always go to their own page, oops
-		User user_logged_in = userRepository.getUser("username", util.getUserID());
+		User user_logged_in = userRepository.getUser("username", Util.getUserID());
 		if (user_being_viewed != null) {
 			System.out.println("username of user's page being viewed: " + user_being_viewed.getUsername());
 			System.out.println("password of user's page being viewed: " + user_being_viewed.getPassword());

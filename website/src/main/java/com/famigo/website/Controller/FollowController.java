@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Signup;
 import com.famigo.website.model.SubConversation;
+import com.famigo.website.model.SubFollow;
 import com.famigo.website.repository.UserRepository;
 import com.famigo.website.utilities.Util;
 import com.famigo.website.model.User;
@@ -30,7 +31,7 @@ public class FollowController {
     UserRepository userRepository;
 
     @PostMapping("/follow")
-    public String followUser(Model model) {
+    public String followUser(Model model, @RequestBody SubFollow members) {
         System.out.println("GOT TO FOLLOW CONTROLLER");
         return "Followed user.";
     }

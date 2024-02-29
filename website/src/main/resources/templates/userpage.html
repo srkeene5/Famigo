@@ -227,7 +227,7 @@
         </button>
     </div>
 
-    <div id="userinfo" class="infoblock" userid="${userpage.username}" userloggedin="${user_logged_in.username}">
+    <div id="userinfo" class="infoblock" th:attr="data-userid=${userpage.getUsername()},data-userloggedin=${user_logged_in.getUsername()}">
         <div class="circle" id="profilepicture">
             <img draggable="false" class="userimage" th:src="@{/images/user.png}"/>
         </div>
@@ -252,8 +252,8 @@
             console.log("button clicked");
             //var user_doing_following = followbutton.parentElement.parentElement.getAttribute("userloggedin");
             //var user_to_be_followed = followbutton.parentElement.parentElement.getAttribute("user-id");
-            var user_to_be_followed = document.getElementById("userinfo").getAttribute("userid");
-            var user_doing_following = document.getElementById("userinfo").getAttribute("userloggedin");
+            var user_to_be_followed = document.getElementById("userinfo").getAttribute('data-userid');
+            var user_doing_following = document.getElementById("userinfo").getAttribute('data-userloggedin');
             var follower_count = 100;
 
             console.log("-->" + document.getElementById("userinfo").value);
