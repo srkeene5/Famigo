@@ -43,4 +43,12 @@ public class PlaceRevsService {
         return revs;
     }
 
+    public int[] getAllRevIds() {
+        int[] ids = new int[reviews.size()];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = reviews.get(i).getRevId();
+        }
+        return ids;
+    }
+
 }

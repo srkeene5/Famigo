@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <title>Review List</title>
 </head>
@@ -8,13 +7,68 @@
 
 <body>
 
-<ul th:each="i, ib : ${userIds}">
-    <li th:text="'User: ' + ${i}"></li>
-    <li th:text="'Rated ' + ${stars[ib.index]} + ' stars'"></li>
-    <li th:text="${text[ib.index]}"></li>
-    <br>
-</ul>
+    <ul th:each="i, ib : ${userIds}">
+        <div class="review">
+            <li th:text="'User: ' + ${i}"></li>
+            <li th:text="'Rated ' + ${stars[ib.index]} + ' stars'"></li>
+            <li th:text="${text[ib.index]}"></li>
+
+            <button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>
+            <button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>
+            <br>
+        </div>
+
+    </ul>
+
+    <script>
+
+        // Ajax setup
+        let script = document.createElement('script');
+        script.src = '//code.jquery.com/jquery-3.6.3.min.js';
+        document.getElementsByTagName('head')[0].appendChild(script);  
+
+        let likeBtns = document.getElementsByClassName("likeBtn");
+        let dislikeBtns = document.getElementsByClassName("dislikeBtn");
+
+        for (let i = 0; i < likeBtns.length; i++) {
+            likeBtns[i].addEventListener("click", function(event) {
+                // Like button pressed
+                // [0] = like ("1") or dislike ("0") button press,
+                // [1] = review number on page (0 or higher)
+                let values = [];
+
+                values[0] = 1;
+
+                // Review number on page (between 0 and max reviews per page - 1)
+                // For now, we'll just return all the reviews at once. We'll separate by page later, if needed.
+                reviewNum = parseInt(event.target.id.substring(5)); // ID# of button
+                values[1] = reviewNum;
+
+                sendLikeOrDislike(values);
+            });
+            dislikeBtns[i].addEventListener("click", function() {
+                // Dislike button logic
+                let values = [];
+                values[0] = 0;
+                reviewNum = parseInt(event.target.id.substring(5)); // ID# of button
+                values[1] = reviewNum;
+
+                sendLikeOrDislike(values);
+            });
+        }
+
+        function sendLikeOrDislike(values) {
+            $.ajax({
+                    type: "POST",
+                    url: "/placeRevs",
+                    data: {vals: values},
+                    timeout: 30,
+                }).done(function (data) {
+                    console.log(data);
+                });
+        }
+
+    </script>
 
 </body>
-
 </html>
