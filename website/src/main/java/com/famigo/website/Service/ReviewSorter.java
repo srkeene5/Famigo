@@ -204,6 +204,8 @@ public class ReviewSorter {
         ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
         ReviewRepository rr = context.getBean(ReviewRepository.class);
 
+        boolean testing = true;
+
         boolean testingTimeStamp = true;
         boolean testingStars = true;
         boolean testingReview = true;
@@ -253,7 +255,7 @@ public class ReviewSorter {
             revs = rr.getReviewsByPlace("place");
         }
         ReviewSorter rs = new ReviewSorter();
-        if (testingTimeStamp) {
+        if (testing && testingTimeStamp) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getTimeStamp());
@@ -269,7 +271,7 @@ public class ReviewSorter {
                 System.out.println(rev.getTimeStamp());
             }
         }
-        if (testingStars) {
+        if (testing && testingStars) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getStars());
@@ -285,7 +287,7 @@ public class ReviewSorter {
                 System.out.println(rev.getStars());
             }
         }
-        if (testingReview) {
+        if (testing && testingReview) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getReview());
@@ -301,7 +303,7 @@ public class ReviewSorter {
                 System.out.println(rev.getReview());
             }
         }
-        if (testingPrime) {
+        if (testing && testingPrime) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
@@ -322,7 +324,7 @@ public class ReviewSorter {
                         + rev.getTimeStamp());
             }
         }
-        if (testingSec) {
+        if (testing && testingSec) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "

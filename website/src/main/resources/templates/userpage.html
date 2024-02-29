@@ -117,7 +117,7 @@
                 </button>
             </form>
 
-            <form action="#" th:action="@{/user}" method="post">
+            <form action="#" th:action="@{/conversationsTest}" method="get">
                 <button class="button" id="chat">
                     <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
                 </button>
@@ -156,6 +156,8 @@
 
         <p>
             Text would go here that gives friends, followers, and possibly info like name and username. 
+            <br>
+            <a th:href="@{'/visitUserPage'}">FriendUser</a>
         </p>
     </div>
 

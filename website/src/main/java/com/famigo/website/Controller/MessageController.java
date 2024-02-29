@@ -30,6 +30,15 @@ public class MessageController {
         return "viewConversations";
     }
 
+    // for Testing
+    @GetMapping("/conversationsTest")
+    public String getConversationsTest(Model model) {
+        ArrayList<Conversation> c = mr.getConversations("user");
+        model.addAttribute("conversations", c);
+        return "viewConversations";
+    }
+    // for Testing
+
     @GetMapping("/conversations/{cid}")
     public String seeMessages(Model model, @PathVariable String cid) {
         conversationID = cid;
