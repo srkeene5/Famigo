@@ -29,6 +29,11 @@
         outline: none;
     }
 
+    .buttonHolder {
+        display: flex;
+        top:0px;
+    }
+
     .image {
         position: relative;
         width: 100%;
@@ -36,12 +41,18 @@
 
     #home, #location, #search, #chat, #settings, #location, #create {
         position: relative;
+        left: 400px;
+        width: 50px;
+        top: -80px;
+        padding-right: 9%;
+        /*
         margin-left: 3%;
         left: 20%;
         top: -60%;
         height: 0px;
         width: 5%;
-        padding-bottom: 5%;
+        padding-bottom: 50px;
+        */
     }
 
     #navigationbar {
@@ -99,30 +110,43 @@
         <p id="famigotext">
             Famigo
         </p>
+        <div class = buttonHolder>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="home">
+                    <img draggable="false" class="image" th:src="@{/images/home.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="home">
-            <img draggable="false" class="image" th:src="@{/images/home.png}"/>
-        </button>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="chat">
+                    <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="chat">
-            <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
-        </button>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="create">
+                    <img draggable="false" class="image" th:src="@{/images/create.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="create">
-            <img draggable="false" class="image" th:src="@{/images/create.png}"/>
-        </button>
+            <form action="#" th:action="@{/places}" method="post">
+                <button class="button" id="location">
+                    <img draggable="false" class="image" th:src="@{/images/location.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="location">
-            <img draggable="false" class="image" th:src="@{/images/location.png}"/>
-        </button>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="search">
+                    <img draggable="false" class="image" th:src="@{/images/search.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="search">
-            <img draggable="false" class="image" th:src="@{/images/search.png}"/>
-        </button>
-
-        <button class="button" id="settings">
-            <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
-        </button>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="settings">
+                    <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
+                </button>
+            </form>
+        </div>
     </div>
 
     <div id="userinfo" class="infoblock">
