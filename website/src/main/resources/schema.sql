@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS conversation (
 
 CREATE TABLE IF NOT EXISTS conversationParticipants(
     conversationID VARCHAR(30),
-    userID VARCHAR(20)
+    userID VARCHAR(10)
 );
 
 CREATE TABLE IF NOT EXISTS message (
@@ -26,4 +26,10 @@ CREATE TABLE IF NOT EXISTS message (
     timestamp DATETIME,
     edited BOOLEAN,
     conversation VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS userStats (
+    username VARCHAR(100) NOT NULL PRIMARY KEY,
+    follower_count INT DEFAULT 0,
+    FOREIGN KEY (username) REFERENCES user(username)
 );

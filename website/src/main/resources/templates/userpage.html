@@ -252,27 +252,32 @@
             console.log("button clicked");
             //var user_doing_following = followbutton.parentElement.parentElement.getAttribute("userloggedin");
             //var user_to_be_followed = followbutton.parentElement.parentElement.getAttribute("user-id");
-            var user_to_be_followed = document.getElementById("userinfo").getAttribute('data-userid');
-            var user_doing_following = document.getElementById("userinfo").getAttribute('data-userloggedin');
-            var follower_count = 100;
+            var userToBeFollowed = document.getElementById("userinfo").getAttribute('data-userid');
+            var userDoingFollowing = document.getElementById("userinfo").getAttribute('data-userloggedin');
+            var followerCount = 100;
+            var isFollowing = true;
 
             console.log("-->" + document.getElementById("userinfo").value);
 
-            console.log(user_doing_following);
-            console.log(user_to_be_followed);
+            console.log(userToBeFollowed);
+            console.log(userDoingFollowing);
             console.log("before follow");
+
+            const formData = new FormData();
+            formData.append('userToBeFollowed', userToBeFollowed);
+            formData.append('userDoingFollowing', userDoingFollowing);
+            formData.append('followerCount', followerCount);
+            formData.append('isFollowing', isFollowing);
+
+            
             const response = fetch("/follow", {
                     method : "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body : JSON.stringify({
-                        members : [user_doing_following, user_to_be_followed, follower_count]
-                    })
+                    body : formData
                 }).then((response) => response.json()
                 ).then((response) => {
                     //window.location.href = window.location.protocol + "//" + window.location.host;
                 });
+
             console.log("after follow");
         });
     </script>
