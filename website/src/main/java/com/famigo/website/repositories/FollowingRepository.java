@@ -85,4 +85,11 @@ public class FollowingRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class, username);
     }
 
+
+    /*public boolean areFriends(String username1, String username2) {
+        User user = userRepository.getUser("username", username1);
+        User user2 = userRepository.getUser("username", username2);
+        List<String> user1Followers = getFollowersList(user.getUsername());
+        return user1Followers.contains(user2.getUsername());
+    }*/
 }

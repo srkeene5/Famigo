@@ -80,6 +80,11 @@ public class FollowController {
                 System.out.println(userDoingFollowing + " aka logged in user follower list");
                 System.out.print(followRepo.getFollowersList(userDoingFollowing));
                 System.out.println();
+
+
+                System.out.println("XXXXXXXXX");
+                //System.out.println("friends?" + followRepo.areFriends(userToBeFollowed, userDoingFollowing));
+                System.out.println("XXXXXXXXX");
                 return "redirect:/user/" + user.getUsername(); // takes user back to their own page; placeholder until i
                                                                // figure out how to redirect to same page
         }
