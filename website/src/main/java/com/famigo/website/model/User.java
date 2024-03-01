@@ -13,6 +13,7 @@ public class User {
     private Visibility visibility;
     private String name;
     private String description;
+    private int followerCount;
     
     public User(String id, String username, String email, String password, String name, String description, Visibility visibility, Role role) {
         this.id = id;
@@ -80,6 +81,13 @@ public class User {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getFollowerCount() {
+        return followerCount;
+    }
+    public void setFollowerCount(int followerCount) {
+        this.followerCount = followerCount;
     }
     
 }

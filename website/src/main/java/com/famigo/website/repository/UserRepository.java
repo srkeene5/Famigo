@@ -37,6 +37,7 @@ public class UserRepository {
             }
             
         });
+        user.setFollowerCount(0);
     }
 
     public User getUser(String column, String value) {
