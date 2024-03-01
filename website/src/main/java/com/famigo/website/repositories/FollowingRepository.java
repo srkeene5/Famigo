@@ -54,7 +54,12 @@ public class FollowingRepository {
 
     public void followUser(String usernameToBeFollowed, String usernameDoingFollowing) {
         jdbcTemplate.update("INSERT INTO followers (id, following_id) VALUES (?, ?)", usernameToBeFollowed,
-                usernameDoingFollowing);
+        usernameDoingFollowing);
+    }
+
+    public void unfollowUser(String usernameToBeUnFollowed, String usernameDoingUnFollowing) {
+        jdbcTemplate.update("DELETE FROM followers WHERE id = ? AND following_id = ?", usernameToBeUnFollowed,
+        usernameDoingUnFollowing);
     }
 
     /*
