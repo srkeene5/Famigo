@@ -8,8 +8,8 @@
         <h1>Conversations</h1>
         <div id="newconvo">
             <div id="selected"></div>
-            <select name="users" id="selectUser">
-                <option th:each="user : ${usernames}" th:value="${user}" th:text="${user}" onclick="addToSelected()"></option>
+            <select name="users" id="selectUser" onchange="addToSelected()">
+                <option th:each="user : ${usernames}" th:value="${user}" th:text="${user}"></option>
             </select>
             <input type="submit" id="submit" />
         </div>
@@ -30,7 +30,6 @@
             convrec.forEach(function(element) {
                 members.push(element.textContent);
             });
-            console.log(convrec);
             if (members == "") {
                 var element = document.createElement("p");
                 element.setAttribute("value", "You must enter all fields");
