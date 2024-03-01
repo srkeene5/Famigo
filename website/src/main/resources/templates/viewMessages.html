@@ -14,14 +14,14 @@
         </table>
         <input type="text" name="content" id="content"/>
         <button type="submit" name="submit" value="submit" id="newmessage">Submit</button>
-        <p id="error" hidden="true" style="color: red"></p>
+        <p id="error" hidden style="color: red"></p>
     </body>
     <script th:inline="javascript">
 
         document.getElementById("newmessage").addEventListener("click", function() {
             console.log("GOT HERE");
             var content = document.getElementById("content").value;
-            document.getElementById("error").hidden = true;
+            document.getElementById("error").setAttribute("hidden", true);
             document.getElementById("error").textContent = "";
             if (content == "") {
                 return;
@@ -39,12 +39,16 @@
                     var tr = document.createElement("tr");
                     tr.innerHTML = '<td style="text-align: right"><span>'+content+'</span></td>';
                     document.getElementById("display").append(tr);
+                }).catch(function(err){
+                    console.log(error);
+                    document.getElementById("error").textContent = "Message unable to send";
+                    document.getElementById("error").removeAttribute("hidden");
                 });
             }
             catch(error) {
                 console.log(error);
                 document.getElementById("error").textContent = "Message unable to send";
-                document.getElementById("error").hidden = false;
+                document.getElementById("error").removeAttribute("hidden");
             }
         });
 
