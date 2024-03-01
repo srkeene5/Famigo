@@ -69,7 +69,10 @@ public class ReviewRepository {
             reviews.add(new Review((String) o.get("userID"),
                     (int) o.get("revID"), (String) o.get("review"),
                     (int) o.get("stars"), (LocalDateTime) o.get("timestamp"),
-                    (boolean) o.get("edited"), pid, (int) o.get("likes"), (int) o.get("dislikes")));
+                    (boolean) o.get("edited"),
+                    pid,
+                    (int) o.get("likes"),
+                    (int) o.get("dislikes")));
         }
         return reviews;
     }
@@ -88,21 +91,22 @@ public class ReviewRepository {
         });
         if (isLike) {
             String sql2 = "UPDATE reviews SET likes = likes + 1 WHERE revID=?";
-            jdbcTemplate.update(sql2, new Object[] {rid});
+            jdbcTemplate.update(sql2, new Object[] { rid });
         } else {
             String sql2 = "UPDATE reviews SET dislikes = dislikes + 1 WHERE revID=?";
-            jdbcTemplate.update(sql2, new Object[] {rid});
+            jdbcTemplate.update(sql2, new Object[] { rid });
         }
     }
 
-    // Returns 1 if the given user has liked the given review, -1 if they disliked, and 0 if they haven't done either.
+    // Returns 1 if the given user has liked the given review, -1 if they disliked,
+    // and 0 if they haven't done either.
     public int[] getUserReviewReactions(String userId, ArrayList<Review> revs) {
         int[] reactions = new int[revs.size()];
         for (int i = 0; i < reactions.length; i++) {
             Map<String, Object> reaction;
             try {
                 reaction = jdbcTemplate.queryForMap("SELECT * FROM reviewReaction WHERE userID=? AND reviewID=?",
-                        new Object[] {userId, revs.get(i).getRevId()});
+                        new Object[] { userId, revs.get(i).getRevId() });
             } catch (DataAccessException e) {
                 reaction = null;
             }

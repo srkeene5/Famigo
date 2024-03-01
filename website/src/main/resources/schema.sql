@@ -76,14 +76,3 @@ CREATE TABLE IF NOT EXISTS followers (
     following_id VARCHAR(100),
     PRIMARY KEY (id, following_id)
 );
-
-CREATE TABLE IF NOT EXISTS userStats (
-    id VARCHAR(100) PRIMARY KEY,
-    follower_count INT DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS followers (
-    id VARCHAR(100),
-    following_id VARCHAR(100),
-    PRIMARY KEY (id, following_id)
-);

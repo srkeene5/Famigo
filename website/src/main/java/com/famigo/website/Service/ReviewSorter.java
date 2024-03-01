@@ -212,8 +212,8 @@ public class ReviewSorter {
         boolean testingPrime = true;
         boolean testingSec = true;
 
-        int addruns = 0;
-        int revLen = 10;
+        int addruns = 10;
+        int revLen = 0;
         String getBy = "place";
         String[] userIds = { "u1", "u2", "u3", "u4", "u5", "u6", "u7", "u8" };
 
