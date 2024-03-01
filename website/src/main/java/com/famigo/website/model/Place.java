@@ -8,11 +8,21 @@ public class Place {
     private String address;
     private String id;
 
+    // Needed for ajax
+    public Place() {}
+
     public Place(String rating, String name, String address) {
         // this.jdbcTemplate = null;
         this.rating = rating;
         this.name = name;
         this.address = address;
+    }
+
+    public Place(String rating, String name, String address, String id) {
+        this.rating = rating;
+        this.name = name;
+        this.address = address;
+        this.id = id;
     }
 
     // Getters

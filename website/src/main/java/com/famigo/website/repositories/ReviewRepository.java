@@ -75,8 +75,8 @@ public class ReviewRepository {
     }
 
     public void addReviewReaction(String uid, int rid, boolean isLike) {
-        String sql = "INSERT INTO reviewReaction (userID, reviewID, isLike) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, new PreparedStatementSetter() {
+        String sql1 = "INSERT INTO reviewReaction (userID, reviewID, isLike) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql1, new PreparedStatementSetter() {
 
             @Override
             public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
@@ -86,14 +86,26 @@ public class ReviewRepository {
             }
 
         });
+        if (isLike) {
+            String sql2 = "UPDATE reviews SET likes = likes + 1 WHERE revID=?";
+            jdbcTemplate.update(sql2, new Object[] {rid});
+        } else {
+            String sql2 = "UPDATE reviews SET dislikes = dislikes + 1 WHERE revID=?";
+            jdbcTemplate.update(sql2, new Object[] {rid});
+        }
     }
 
     // Returns 1 if the given user has liked the given review, -1 if they disliked, and 0 if they haven't done either.
     public int[] getUserReviewReactions(String userId, ArrayList<Review> revs) {
         int[] reactions = new int[revs.size()];
         for (int i = 0; i < reactions.length; i++) {
-            Map<String, Object> reaction = jdbcTemplate.queryForMap("SELECT * FROM reviewReaction WHERE userID=?, reviewID=?",
-                    new Object[] {userId, revs.get(i).getRevId()});
+            Map<String, Object> reaction;
+            try {
+                reaction = jdbcTemplate.queryForMap("SELECT * FROM reviewReaction WHERE userID=? AND reviewID=?",
+                        new Object[] {userId, revs.get(i).getRevId()});
+            } catch (DataAccessException e) {
+                reaction = null;
+            }
 
             if (reaction == null || reaction.isEmpty()) {
                 reactions[i] = 0;
