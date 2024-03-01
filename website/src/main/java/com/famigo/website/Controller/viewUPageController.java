@@ -1,11 +1,8 @@
 package com.famigo.website.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +15,6 @@ import com.famigo.website.model.Comment;
 import com.famigo.website.model.Review;
 import com.famigo.website.repositories.CommentRepository;
 import com.famigo.website.repositories.ReviewRepository;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @SessionAttributes("name")
