@@ -239,6 +239,9 @@
             <br>
             Followers: <span th:text="${follower_count_of_user}"></span>
             <br>
+            <p>
+                <a th:href="@{'/user/' + ${userpage.username} + '/followers'}">View Followers</a>
+            </p>
             Following: <span th:text="${following_count_of_user}"></span>
             <!--testing purposes: Your username: <span th:text="${user_logged_in.username}"></span>-->
         </p>

@@ -59,6 +59,7 @@ public class UserPageController {
 		model.addAttribute("user_logged_in", user_logged_in); // get Username
 		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user_being_viewed.getUsername()));
         model.addAttribute("following_count_of_user", followRepository.getNumFollowing(user_being_viewed.getUsername()));
+		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getUsername()));
 		return "userpage";
 	}
 }

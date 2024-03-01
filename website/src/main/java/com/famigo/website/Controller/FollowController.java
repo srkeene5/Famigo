@@ -27,6 +27,7 @@ import com.famigo.website.repository.UserRepository;
 import com.famigo.website.utilities.Util;
 import com.famigo.website.model.User;
 import java.util.Objects;
+import java.util.List;
 
 @Controller
 public class FollowController {
@@ -35,6 +36,14 @@ public class FollowController {
 
     @Autowired
     FollowingRepository followRepo;
+
+    @GetMapping("/user/{username}/followers")
+    public String followUser(@PathVariable String username, Model model) {
+        List<String> followers = followRepo.getFollowersList(username);
+        System.out.println("the list: " + followers);
+        model.addAttribute("followers", followers);
+        return "followersPage";
+    }
 
     @PostMapping("/follow")
     public String followUser(Model model, @RequestParam("userDoingFollowing") String userDoingFollowing,
@@ -75,6 +84,8 @@ public class FollowController {
         System.out.println();
         return "redirect:/user/" + user.getUsername(); // takes user back to their own page; placeholder until i figure out how to redirect to same page
     }
+
+
 }
 
         
