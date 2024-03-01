@@ -89,17 +89,21 @@ public class ReviewRepository {
     }
 
     // Returns 1 if the given user has liked the given review, -1 if they disliked, and 0 if they haven't done either.
-    public int getUserReviewReaction(String uid, int rid) {
-        Map<String, Object> reaction = jdbcTemplate.queryForMap("SELECT * FROM reviewReaction WHERE userID=?, reviewID=?",
-                new Object[] {uid, rid});
+    public int[] getUserReviewReactions(String userId, ArrayList<Review> revs) {
+        int[] reactions = new int[revs.size()];
+        for (int i = 0; i < reactions.length; i++) {
+            Map<String, Object> reaction = jdbcTemplate.queryForMap("SELECT * FROM reviewReaction WHERE userID=?, reviewID=?",
+                    new Object[] {userId, revs.get(i).getRevId()});
 
-        if (reaction == null || reaction.isEmpty()) {
-            return 0;
+            if (reaction == null || reaction.isEmpty()) {
+                reactions[i] = 0;
+            } else if ((boolean) reaction.get("isLike") == true) {
+                reactions[i] = 1;
+            } else {
+                reactions[i] = -1;
+            }
         }
-        if ((boolean) reaction.get("isLike") == true) {
-            return 1;
-        }
-        return -1;
+        return reactions;
     }
 
 }

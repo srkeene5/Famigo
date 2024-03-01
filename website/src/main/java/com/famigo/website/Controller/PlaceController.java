@@ -18,6 +18,7 @@ import com.famigo.website.model.Place;
 import com.famigo.website.repositories.PlaceRepository;
 import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.model.Review;
+import com.famigo.website.utilities.Util;
 
 @Controller
 public class PlaceController {
@@ -40,16 +41,16 @@ public class PlaceController {
 
         // Get reviews for this place
         ArrayList<Review> reviews = rr.getReviewsByPlace(place.getId());
-        String[] uIds = Review.getUserIdArr(reviews);
-        int[] stars = Review.getStarArr(reviews);
-        String[] textArr = Review.getTextArr(reviews);
-        // TODO: Must get likes/dislikes from database
+        if (reviews != null) {
+            model.addAttribute("reviews", reviews.toArray());
+            int[] userReactions = rr.getUserReviewReactions(Util.getUserID(), reviews);
+            model.addAttribute("userReactions", userReactions);
+        } else {
+            model.addAttribute("reviews", new Review[0]);
+            model.addAttribute("userReactions", new int[0]);
+        }
 
-        System.out.println(place.getName() + "this is the name");
-        System.out.println(place.getRating() + "this is the rate");
-        System.out.println(place.getAddress() + "this is the address");
         return "place-details";
-
     }
 
     @PostMapping("/places")
@@ -61,6 +62,7 @@ public class PlaceController {
 
     }
 
+    /*
     @RequestMapping(value = "/placeRevs", method = RequestMethod.POST)
     public ResponseEntity<String> likeOrDislike(@RequestParam(value="vals[]") int[] vals) {
 
@@ -78,4 +80,5 @@ public class PlaceController {
 
         return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
     }
+    */
 }

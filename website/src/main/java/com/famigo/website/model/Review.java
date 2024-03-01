@@ -1,7 +1,6 @@
 package com.famigo.website.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Review {
     private String userId;
@@ -84,38 +83,6 @@ public class Review {
 
     public int getDislikes() {
         return dislikes;
-    }
-
-    public static String[] getUserIdArr(ArrayList<Review> revs) {
-        String[] ids = new String[revs.size()];
-        for (int i = 0; i < ids.length; i++) {
-            ids[i] = revs.get(i).getUserId();
-        }
-        return ids;
-    }
-
-    public static int[] getStarArr(ArrayList<Review> revs) {
-        int[] ratings = new int[revs.size()];
-        for (int i = 0; i < ratings.length; i++) {
-            ratings[i] = revs.get(i).getStars();
-        }
-        return ratings;
-    }
-
-    public static String[] getTextArr(ArrayList<Review> revs) {
-        String[] textArr = new String[revs.size()];
-        for (int i = 0; i < textArr.length; i++) {
-            textArr[i] = revs.get(i).getReview();
-        }
-        return textArr;
-    }
-
-    public static int[] getRevIdArr(ArrayList<Review> revs) {
-        int[] ids = new int[revs.size()];
-        for (int i = 0; i < ids.length; i++) {
-            ids[i] = revs.get(i).getRevId();
-        }
-        return ids;
     }
 
     // Main for testing
