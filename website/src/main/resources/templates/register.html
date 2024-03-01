@@ -133,7 +133,7 @@
     <form action="#" th:action="@{/login}" th:object="${login}" method="post">
     	<p><input type="text" placeholder="Username or Email" th:field="*{username}" /></p>
         <p><input type="password" placeholder="Password" th:field="*{password}" /></p>
-        <p><input type="submit" value="Login" class="login"/></p>
+        <p><input type="submit" value="Login" class="login" onclick="CheckValidity();"/></p>
     </form>
 
     <button class="signup">Sign Up</button>
@@ -142,5 +142,11 @@
     document.getElementsByClassName("signup")[0].addEventListener("click", function() {
         window.location.href = window.location.protocol + "//" + window.location.host + "/signup";
     });
+
+    function CheckValidity() {
+        if (window.location.href.indexOf("error") > -1) {
+            alert("Incorrect username or password. Please try again.");
+        }
+    }
 </script>
 </html>

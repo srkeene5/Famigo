@@ -389,6 +389,9 @@
                 //TODO: change password in the database
                 ResetSettings();
             } else {
+                document.getElementById("currentpassword").value = "";
+                document.getElementById("password").value = "";
+                document.getElementById("confirmpassword").value = "";
                 alert("Passwords do not match. Please try again.");
             }
         }
@@ -402,6 +405,8 @@
                 ResetSettings();
             } else {
                 alert("Usernames do not match. Please try again.");
+                document.getElementById("username").value = "";
+                document.getElementById("confirmusername").value = "";
             }
         }
 
@@ -416,8 +421,11 @@
             RemoveClass("addon");
             RemoveClass("theme");
             AddClass("settingsbutton");
+            document.getElementById("currentpassword").value = "";
             document.getElementById("password").value = "";
             document.getElementById("confirmpassword").value = "";
+            document.getElementById("username").value = "";
+            document.getElementById("confirmusername").value = "";
         }
 
         function PasswordReset() {
@@ -449,7 +457,7 @@
         }
 
         function setDarkMode() {
-            changeTheme("#1F2544", "#A25D8B", "#CC3366");
+            changeTheme("#1F2544", "#A25D8B", "#A9637C");
         }
 
         function setHalloweenMode() {
