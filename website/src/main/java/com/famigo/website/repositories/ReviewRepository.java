@@ -23,7 +23,7 @@ public class ReviewRepository {
     private JdbcTemplate jdbcTemplate;
 
     public void addReview(Review review) {
-        String sql = "INSERT INTO reviews (revID, userID, review, stars, timestamp, edited, placeID) VALUES (?, ?, ?, ?, CAST(? AS DATETIME), ?, ?)";
+        String sql = "INSERT INTO reviews (revID, userID, review, stars, timestamp, edited, placeID, likes, dislikes) VALUES (?, ?, ?, ?, CAST(? AS DATETIME), ?, ?, ?, ?)";
         jdbcTemplate.update(sql, new PreparedStatementSetter() {
 
             @Override
@@ -35,6 +35,8 @@ public class ReviewRepository {
                 ps.setTimestamp(5, Timestamp.valueOf(review.getTimeStamp()));
                 ps.setBoolean(6, review.isEdited());
                 ps.setString(7, review.getPlaceId());
+                ps.setInt(8, 0);
+                ps.setInt(9, 0);
             }
 
         });
@@ -51,7 +53,7 @@ public class ReviewRepository {
             reviews.add(new Review(uid, (int) o.get("revID"),
                     (String) o.get("review"), (int) o.get("stars"),
                     (LocalDateTime) o.get("timestamp"), (boolean) o.get("edited"),
-                    (String) o.get("placeID")));
+                    (String) o.get("placeID"), (int) o.get("likes"), (int) o.get("dislikes")));
         }
         return reviews;
     }
@@ -67,9 +69,37 @@ public class ReviewRepository {
             reviews.add(new Review((String) o.get("userID"),
                     (int) o.get("revID"), (String) o.get("review"),
                     (int) o.get("stars"), (LocalDateTime) o.get("timestamp"),
-                    (boolean) o.get("edited"), pid));
+                    (boolean) o.get("edited"), pid, (int) o.get("likes"), (int) o.get("dislikes")));
         }
         return reviews;
+    }
+
+    public void addReviewReaction(String uid, int rid, boolean isLike) {
+        String sql = "INSERT INTO reviewReaction (userID, reviewID, isLike) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
+                ps.setString(1, uid);
+                ps.setInt(2, rid);
+                ps.setBoolean(3, isLike);
+            }
+
+        });
+    }
+
+    // Returns 1 if the given user has liked the given review, -1 if they disliked, and 0 if they haven't done either.
+    public int getUserReviewReaction(String uid, int rid) {
+        Map<String, Object> reaction = jdbcTemplate.queryForMap("SELECT * FROM reviewReaction WHERE userID=?, reviewID=?",
+                new Object[] {uid, rid});
+
+        if (reaction == null || reaction.isEmpty()) {
+            return 0;
+        }
+        if ((boolean) reaction.get("isLike") == true) {
+            return 1;
+        }
+        return -1;
     }
 
 }

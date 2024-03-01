@@ -20,7 +20,7 @@ public class Place {
         return rating;
     }
 
-    protected String getId() {
+    public String getId() {
         return id;
     }
 

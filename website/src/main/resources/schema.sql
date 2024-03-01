@@ -36,6 +36,8 @@ CREATE TABLE IF NOT EXISTS reviews (
     timestamp DATETIME,
     edited BOOLEAN,
     placeID VARCHAR(20),
+    likes INTEGER,
+    dislikes INTEGER,
     PRIMARY KEY (revID)
 );
 
@@ -55,4 +57,10 @@ CREATE TABLE IF NOT EXISTS place (
     name VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
     rating VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS reviewReaction (
+    userID VARCHAR(20) NOT NULL,
+    reviewID VARCHAR(20),
+    isLike BOOLEAN
 );
