@@ -5,15 +5,64 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </header>
     <body>
-        <h1>Conversations</h1>
-        <table>
-            <tr th:each="message : ${messages}">
-                <td><span th:text="${message.getContent()}"></span></td>
+        <h1>Messages</h1>
+        <table style="width: 100%" id="display">
+            <tr th:each="message : ${messages}" th:attr="data-timestamp=${message.getTimestamp()}">
+                <td th:if="${message.getSender() == user}" style="text-align: right"><span th:text="${message.getContent()}"></span></td>
+                <td th:unless="${message.getSender() == user}" style="text-align: left"><span th:text="${message.getContent()}"></span></td>
             </tr>
         </table>
-        <form action="#" method="post">
-            <input type="text" name="content"/>
-            <input type="submit" name="submit" value="submit" />
-        </form>
+        <input type="text" name="content" id="content"/>
+        <button type="submit" name="submit" value="submit" id="newmessage">Submit</button>
+        <p id="error" hidden="true" style="color: red"></p>
     </body>
+    <script th:inline="javascript">
+
+        document.getElementById("newmessage").addEventListener("click", function() {
+            console.log("GOT HERE");
+            var content = document.getElementById("content").value;
+            document.getElementById("error").hidden = true;
+            document.getElementById("error").textContent = "";
+            if (content == "") {
+                return;
+            }
+            try {
+                const response = fetch(window.location.href, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        content : content
+                    })
+                }).then((response) => {
+                    var tr = document.createElement("tr");
+                    tr.innerHTML = '<td style="text-align: right"><span>'+content+'</span></td>';
+                    document.getElementById("display").append(tr);
+                });
+            }
+            catch(error) {
+                console.log(error);
+                document.getElementById("error").textContent = "Message unable to send";
+                document.getElementById("error").hidden = false;
+            }
+        });
+
+        /*
+        function updateDisplay() {
+            const response = fetch("/getupdates", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    content: document.getElementById("display").lastElementChild.getAttribute('data-timestamp')
+                })
+            }).then((response) => response.json())
+            .then((response) => {
+                for ()
+            });
+        }
+        */
+    </script>
 </html>

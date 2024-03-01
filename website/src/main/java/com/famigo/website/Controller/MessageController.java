@@ -14,15 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
 import com.famigo.website.model.SubConversation;
+import com.famigo.website.model.SubMessage;
 import com.famigo.website.model.User;
 import com.famigo.website.repositories.MessageRepository;
 import com.famigo.website.repositories.UserRepository;
@@ -42,6 +40,7 @@ public class MessageController {
         String userID = Utilities.getUserID();
         ArrayList<Conversation> c = mr.getConversations(userID);
         ArrayList<String> users = ur.getAllUsernames();
+        users.remove(Utilities.getUserID());
         model.addAttribute("conversations", c);
         model.addAttribute("usernames", users);
         return "viewConversations";
@@ -69,21 +68,24 @@ public class MessageController {
     @GetMapping("/conversations/{cid}")
     public String seeMessages(Model model, @PathVariable String cid) {
         ArrayList<Message> m = mr.getMessages(cid);
+        model.addAttribute("user", Utilities.getUserID());
         model.addAttribute("messages", m);
         return "viewMessages";
     }
 
-    @GetMapping("/newMessage")
-    public String newMessage(Model model) {
-        return "message";
+    @RequestMapping(value="/conversations/{cid}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> sendMessage(Model model, @PathVariable String cid, @RequestBody SubMessage content) {
+        String username = Utilities.getUserID();
+        Message m = new Message(Utilities.generateID(50), username, content.getContent(), LocalDateTime.now(), false, cid);
+        mr.addMessage(m);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @PostMapping("/conversations/{cid}")
-    public String sendMessage(Model model, @PathVariable String cid, @RequestParam String content) {
-        String username = Utilities.getUserID();
-        Message m = new Message(Utilities.generateID(50), username, content, LocalDateTime.now(), false, cid);
-        mr.addMessage(m);
-        return "redirect:/conversations/" + cid;
+    /*
+    @RequestMapping(value="/conversations/{cid}/getupdates", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> updateMessages(@PathVariable String cid, @RequestBody SubMessage timestamp) {
+
     }
+    */
 
 }

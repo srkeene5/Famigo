@@ -48,7 +48,7 @@ public class MessageRepository {
     }
 
     public ArrayList<Message> getMessages(String cid) {
-        List<Map<String, Object>> messageList = jdbcTemplate.queryForList("SELECT * FROM message WHERE conversation=? ORDER BY timestamp DESC", new Object[]{cid});
+        List<Map<String, Object>> messageList = jdbcTemplate.queryForList("SELECT * FROM message WHERE conversation=? ORDER BY timestamp", new Object[]{cid});
         if (messageList == null || messageList.isEmpty()) {
             return null;
         }
