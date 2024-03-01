@@ -9,7 +9,8 @@
         <div id="newconvo">
             <div id="selected"></div>
             <select name="users" id="selectUser" onchange="addToSelected()">
-                <option th:each="user : ${usernames}" th:value="${user}" th:text="${user}"></option>
+                <option disabled selected value>Select Users</option>
+                <option th:each="user : ${usernames}" th:value="${user}" th:text="${user}" th:id="${user}"></option>
             </select>
             <input type="submit" id="submit" />
         </div>
@@ -59,11 +60,14 @@
         function addToSelected() {
             var select = document.getElementById("selectUser");
             var user = select.options[select.selectedIndex].text;
+            select.options[select.selectedIndex].setAttribute("hidden", true);
             var selectedDiv = document.getElementById("selected");
             var removebutton = document.createElement("button");
             removebutton.className = "member";
             removebutton.textContent = user;
             removebutton.addEventListener("click", function(e) {
+                var username = e.target.textContent;
+                document.getElementById(username).hidden = false;
                 e.target.remove();
             });
             selectedDiv.append(removebutton);
