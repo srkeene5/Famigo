@@ -103,7 +103,7 @@
 
     #home, #location, #search, #chat, #settings, #location, #create {
         position: relative;
-        left: 400px;
+        left: 350px;
         width: 50px;
         top: -80px;
         padding-right: 9%;
@@ -289,8 +289,8 @@
                 </button>
             </form>
 
-            <form action="#" th:action="@{/user}" method="post">
-                <button class="button" id="settings">
+            <form action="#">
+                <button class="button" id="settings" onclick="ShowSettings();">
                     <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
                 </button>
             </form>
