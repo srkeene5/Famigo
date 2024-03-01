@@ -308,8 +308,11 @@
         </p>
         <p th:if="${userpage != null}">
             Username: <span th:text="${userpage.username}"></span>
-
-            testing purposes: Your username: <span th:text="${user_logged_in.username}"></span>
+            <br>
+            Followers: <span th:text="${follower_count_of_user}"></span>
+            <br>
+            Following: <span th:text="${following_count_of_user}"></span>
+            <!--testing purposes: Your username: <span th:text="${user_logged_in.username}"></span>-->
         </p>
         <p th:if="${userpage == null}">
             User does not exist.

@@ -13,9 +13,15 @@ public class User {
     private Visibility visibility;
     private String name;
     private String description;
+<<<<<<< HEAD
 
     public User(String id, String username, String email, String password, String name, String description,
             Visibility visibility, Role role) {
+=======
+    private int followerCount;
+    
+    public User(String id, String username, String email, String password, String name, String description, Visibility visibility, Role role) {
+>>>>>>> origin/Following-evan-work-2
         this.id = id;
         this.username = username;
         this.email = email;
@@ -86,4 +92,14 @@ public class User {
         this.description = description;
     }
 
+<<<<<<< HEAD
+=======
+    public int getFollowerCount() {
+        return followerCount;
+    }
+    public void setFollowerCount(int followerCount) {
+        this.followerCount = followerCount;
+    }
+    
+>>>>>>> origin/Following-evan-work-2
 }
