@@ -2,7 +2,6 @@ package com.famigo.website.model;
 
 import java.util.ArrayList;
 
-//@Component
 public class Conversation {
 
     private String id;
@@ -15,9 +14,6 @@ public class Conversation {
         this.name = name;
         this.members = members;
         this.messages = messages;
-    }
-
-    public Conversation() {
     }
 
     public String getID() {

@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class Util {
+public class Utilities {
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
