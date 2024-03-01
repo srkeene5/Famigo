@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.famigo.website.repositories.FollowingRepository;
 import com.famigo.website.repositories.UserRepository;
-import com.famigo.website.utilities.Util;
+import com.famigo.website.utilities.Utilities;
 import com.famigo.website.model.User;
 
 @Controller
@@ -21,7 +21,7 @@ public class FollowController {
             @RequestParam("userToBeFollowed") String userToBeFollowed,
             @RequestParam("followerCount") int followerCount,
             @RequestParam("isFollowing") Boolean isFollowing) {
-        User user = userRepository.getUser("username", Util.getUserID());
+        User user = userRepository.getUser("username", Utilities.getUserID());
 
         System.out.println("GOT TO FOLLOW CONTROLLER");
         System.out.println("This is the user doing the following: " + userDoingFollowing);

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.famigo.website.model.Signup;
-import com.famigo.website.utilities.Util;
+import com.famigo.website.utilities.Utilities;
 
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.repositories.FollowingRepository;
@@ -25,7 +25,7 @@ public class UserPageController {
 
 	@GetMapping("/user")
 	public String greeting(Model model) {
-		User user = userRepository.getUser("id", Util.getUserID());
+		User user = userRepository.getUser("id", Utilities.getUserID());
 		model.addAttribute("signup", new Signup());
 		model.addAttribute("userpage", user);
 		model.addAttribute("user_logged_in", user);
@@ -42,7 +42,7 @@ public class UserPageController {
 																										// always go to
 																										// their own
 																										// page, oops
-		User user_logged_in = userRepository.getUser("username", Util.getUserID());
+		User user_logged_in = userRepository.getUser("username", Utilities.getUserID());
 		SubFollow followerCount = new SubFollow();
 		followerCount.setFollowerCount(followRepository.getFollowerCount(user_being_viewed.getUsername()));
 		if (user_being_viewed != null) {
