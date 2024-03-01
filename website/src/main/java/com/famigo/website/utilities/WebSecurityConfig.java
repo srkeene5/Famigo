@@ -17,20 +17,20 @@ public class WebSecurityConfig {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/", "/home", "/signup", "/logout")
-                .permitAll()
-                .anyRequest()
-                .authenticated())
-            .formLogin((form) -> form
-                .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/user", true))
-            .logout((logout) -> logout.permitAll())
-            .csrf(AbstractHttpConfigurer::disable);
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/", "/home", "/signup", "/logout")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .formLogin((form) -> form
+                        .loginPage("/login").permitAll()
+                        .defaultSuccessUrl("/user", true))
+                .logout((logout) -> logout.permitAll())
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
