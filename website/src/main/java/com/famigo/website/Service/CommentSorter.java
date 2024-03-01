@@ -204,6 +204,8 @@ public class CommentSorter {
         ApplicationContext context = SpringApplication.run(WebsiteApplication.class, args);
         CommentRepository cr = context.getBean(CommentRepository.class);
 
+        boolean testing = true;
+
         boolean testingTimeStamp = true;
         boolean testingLikes = true;
         boolean testingComment = true;
@@ -257,7 +259,7 @@ public class CommentSorter {
         }
 
         CommentSorter cs = new CommentSorter();
-        if (testingTimeStamp) {
+        if (testing && testingTimeStamp) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getTimeStamp());
@@ -273,7 +275,7 @@ public class CommentSorter {
                 System.out.println(com.getTimeStamp());
             }
         }
-        if (testingLikes) {
+        if (testing && testingLikes) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getLikes());
@@ -289,7 +291,7 @@ public class CommentSorter {
                 System.out.println(com.getLikes());
             }
         }
-        if (testingComment) {
+        if (testing && testingComment) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getComment());
@@ -305,7 +307,7 @@ public class CommentSorter {
                 System.out.println(com.getComment());
             }
         }
-        if (testingPrime) {
+        if (testing && testingPrime) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
@@ -326,7 +328,7 @@ public class CommentSorter {
                         + com.getTimeStamp());
             }
         }
-        if (testingSec) {
+        if (testing && testingSec) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "

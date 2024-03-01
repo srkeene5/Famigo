@@ -1,17 +1,23 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
+
 <style>
+    
+    
     body {
-        background-color: #25528F;
+        --primary-color: #FFF7F1;
+        --secondary-color: #F3D7CA;
+        --tertiary-color: #FFF8E3;
+        background-color: var(--primary-color);
     }
 
     .infoblock {
-        background-color: #EDCECD;
+        background-color: var(--secondary-color);
         border: 2px solid;
     }
 
-    .settingsbutton, input[type=password], input[type=submit] {
-        background-color: #EDCECD;
+    .settingsbutton, .theme, input[type=password], input[type=submit], input[type=text] {
+        background-color: var(--secondary-color);
         border: 2px solid;
         font-size: xx-large;
         width: 75%;
@@ -21,9 +27,13 @@
         margin-left: 12.5%;
     }
 
-    .settingsbutton:hover, input[type=password]:hover, input[type=submit]:hover {
-        background-color: #25528F;
+    .settingsbutton:hover, .theme:hover, input[type=password]:hover, input[type=submit]:hover, input[type=text]:hover {
+        background-color: blue;
         color: white;
+    }
+
+    .theme {
+        margin-top: 5%;
     }
 
     .circle {
@@ -45,6 +55,11 @@
         outline: none;
     }
 
+    .buttonHolder {
+        display: flex;
+        top:0px;
+    }
+
     .image {
         position: relative;
         width: 100%;
@@ -56,7 +71,7 @@
         border-bottom-left-radius: 0px;
         border-top-right-radius: 25px;
         border: 2px solid;
-        background-color: #EDCECD;
+        background-color: var(--secondary-color);;
         width: 25%;
         height: 10%; 
 
@@ -68,7 +83,7 @@
     }
 
     #FormBox {
-        background-color: #F8E6D0;
+        background-color: var(--tertiary-color);;
         border: 2px solid;
         width: 25%;
         height: 60%;
@@ -88,12 +103,18 @@
 
     #home, #location, #search, #chat, #settings, #location, #create {
         position: relative;
+        left: 400px;
+        width: 50px;
+        top: -80px;
+        padding-right: 9%;
+        /*
         margin-left: 3%;
         left: 20%;
         top: -60%;
         height: 0px;
         width: 5%;
-        padding-bottom: 5%;
+        padding-bottom: 50px;
+        */
     }
 
     #navigationbar {
@@ -145,7 +166,11 @@
         margin-left: 25%;
     }
 
-    #password {
+    #currentpassword {
+        margin-top: 30%;
+    }
+
+    #username {
         margin-top: 35%;
     }
 
@@ -157,8 +182,12 @@
         display: none;
     }
 
-    #resetpassword {
+    #settingsbuttons {
         margin-top: 10%;
+    }
+
+    #lightbutton {
+        margin-top: 15%;
     }
 
     #profilepicture {
@@ -175,24 +204,51 @@
     <title>Homepage</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
-<body>
+<body id="body">
     <div id="settingspage" class="contents">
         <div id="Logo">
             <p id="LogoText">Settings</p>
         </div>
         <div id="FormBox">
-            <button class="settingsbutton" id="resetpassword" onclick="PasswordReset();">
+            <button class="settingsbutton" id="settingsbuttons" onclick="PasswordReset();">
                 Change Password
+            </button>
+
+            <button class="settingsbutton" id="settingsbuttons" onclick="UsernameReset();">
+                Change Username
+            </button>
+
+            <button class="settingsbutton" id="settingsbuttons" onclick="ThemeReset();">
+                Change Theme
             </button>
 
             <button class="addon" id="backbutton" onclick="ResetSettings()";>
                 <img draggable="false" class="image" th:src="@{/images/backarrow.png}"/>
             </button>
 
+            <button class="theme" id="lightbutton" onclick="setLightMode();">
+                Light Mode
+            </button>
+
+            <button class="theme" id="darkbutton" onclick="setDarkMode();">
+                Dark Mode
+            </button>
+
+            <button class="theme" id="halloweenbutton" onclick="setHalloweenMode();">
+                Spooky Mode
+            </button>
+
             <form class="addon" id="resetfields" onsubmit="return false">
-                <p><input id="password" type="password" placeholder="Password"/></p>
+                <p><input id="currentpassword" type="password" placeholder="Current Password"/></p>
+                <p><input id="password" type="password" placeholder="New Password"/></p>
                 <p><input id="confirmpassword" type="password" placeholder="Confirm Password"/></p>
                 <p><input onclick="ValidatePassword();" type="submit" value="Change Password"/></p>
+            </form>
+
+            <form class="addon" id="userResetfields" onsubmit="return false">
+                <p><input id="username" type="text" placeholder="New Username"/></p>
+                <p><input id="confirmusername" type="text" placeholder="Confirm Username"/></p>
+                <p><input onclick="ValidateUsername();" type="submit" value="Change Username"/></p>
             </form>
         </div>
     </div>
@@ -202,29 +258,43 @@
             Famigo
         </p>
 
-        <button class="button" id="home">
-            <img draggable="false" class="image" th:src="@{/images/home.png}"/>
-        </button>
+        <div class = buttonHolder>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="home">
+                    <img draggable="false" class="image" th:src="@{/images/home.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="chat">
-            <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
-        </button>
+            <form action="#" th:action="@{/conversations}" method="get">
+                <button class="button" id="chat">
+                    <img draggable="false" class="image" th:src="@{/images/chat.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="create">
-            <img draggable="false" class="image" th:src="@{/images/create.png}"/>
-        </button>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="create">
+                    <img draggable="false" class="image" th:src="@{/images/create.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="location">
-            <img draggable="false" class="image" th:src="@{/images/location.png}"/>
-        </button>
+            <form action="#" th:action="@{/places}" method="post">
+                <button class="button" id="location">
+                    <img draggable="false" class="image" th:src="@{/images/location.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="search">
-            <img draggable="false" class="image" th:src="@{/images/search.png}"/>
-        </button>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="search">
+                    <img draggable="false" class="image" th:src="@{/images/search.png}"/>
+                </button>
+            </form>
 
-        <button class="button" id="settings" onclick="ShowSettings();">
-            <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
-        </button>
+            <form action="#" th:action="@{/user}" method="post">
+                <button class="button" id="settings">
+                    <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
+                </button>
+            </form>
+        </div>
     </div>
 
     <div id="userinfo" class="infoblock">
@@ -234,6 +304,8 @@
 
         <p>
             Text would go here that gives friends, followers, and possibly info like name and username. 
+            <br>
+            <a th:href="@{'/visitUserPage'}">FriendUser</a>
         </p>
     </div>
 
@@ -244,6 +316,7 @@
     </div>
 
     <script>
+        
         function RemoveClass(contents) {
             var content = document.getElementsByClassName(contents);
             for (let i = 0; i < content.length; i++) {
@@ -263,13 +336,27 @@
         }
 
         function ValidatePassword() {
+            var currentPassword = document.getElementById("currentpassword").value;
             var password = document.getElementById("password").value;
             var confirmPassword = document.getElementById("confirmpassword").value;
-            if (password == confirmPassword && password != "") {
+            
+            if ((password == confirmPassword) && password != "") {
                 //TODO: change password in the database
                 ResetSettings();
             } else {
                 alert("Passwords do not match. Please try again.");
+            }
+        }
+
+        function ValidateUsername() {
+            var username = document.getElementById("username").value;
+            var confirmUsername = document.getElementById("confirmusername").value;
+            
+            if (username == confirmUsername && username != "") {
+                //TODO: check if the username exists already
+                ResetSettings();
+            } else {
+                alert("Usernames do not match. Please try again.");
             }
         }
 
@@ -282,6 +369,7 @@
 
         function ResetSettings() {
             RemoveClass("addon");
+            RemoveClass("theme");
             AddClass("settingsbutton");
             document.getElementById("password").value = "";
             document.getElementById("confirmpassword").value = "";
@@ -291,6 +379,36 @@
             RemoveClass("settingsbutton");
             AddElement("resetfields");
             AddElement("backbutton");
+        }
+
+        function UsernameReset() {
+            RemoveClass("settingsbutton");
+            AddElement("userResetfields");
+            AddElement("backbutton");
+        }
+
+        function ThemeReset() {
+            RemoveClass("settingsbutton");
+            AddClass("theme");
+            AddElement("backbutton");
+        }
+
+        function changeTheme(primary, secondary, tertiary) {
+            document.getElementsByTagName("BODY")[0].style.setProperty('--primary-color', primary);
+            document.getElementsByTagName("BODY")[0].style.setProperty('--secondary-color', secondary);
+            document.getElementsByTagName("BODY")[0].style.setProperty('--tertiary-color', tertiary);
+        }
+
+        function setLightMode() {
+            changeTheme("#FFF7F1", "#F3D7CA", "#FFF8E3");
+        }
+
+        function setDarkMode() {
+            changeTheme("#1F2544", "#A25D8B", "#CC3366");
+        }
+
+        function setHalloweenMode() {
+            changeTheme("#353935", "#CF9FFF", "#FFBF00");
         }
     </script>
 </body>

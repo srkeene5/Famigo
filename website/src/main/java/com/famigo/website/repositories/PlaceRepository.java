@@ -62,12 +62,13 @@ public class PlaceRepository {
             return null;
         }
         Place place = new Place(null, null, null);
+        // int count = 0;
         for (Map<String, Object> o : placeList) {
             if (name.equals(o.get("name"))) {
                 place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"));
             }
+            // count++;
         }
         return place;
     }
-
 }
