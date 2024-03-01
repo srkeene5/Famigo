@@ -1,4 +1,4 @@
-package com.famigo.website.Service;
+package com.famigo.website.service;
 
 import java.util.ArrayList;
 import java.util.Random;
