@@ -23,11 +23,18 @@ public class FollowController {
         FollowingRepository followRepo;
 
         @GetMapping("/user/{username}/followers")
-        public String followUser(@PathVariable String username, Model model) {
+        public String followerList(@PathVariable String username, Model model) {
                 List<String> followers = followRepo.getFollowersList(username);
                 System.out.println("the list: " + followers);
                 model.addAttribute("followers", followers);
                 return "followersPage";
+        }
+        @GetMapping("/user/{username}/following")
+        public String followingList(@PathVariable String username, Model model) {
+                List<String> followings = followRepo.getFollowingList(username);
+                System.out.println("the list: " + followings);
+                model.addAttribute("followings", followings);
+                return "followingPage";
         }
 
         @PostMapping("/follow")
@@ -73,8 +80,38 @@ public class FollowController {
                 System.out.println(userDoingFollowing + " aka logged in user follower list");
                 System.out.print(followRepo.getFollowersList(userDoingFollowing));
                 System.out.println();
+
+
+                System.out.println("XXXXXXXXX");
+                //System.out.println("friends?" + followRepo.areFriends(userToBeFollowed, userDoingFollowing));
+                System.out.println("XXXXXXXXX");
                 return "redirect:/user/" + user.getUsername(); // takes user back to their own page; placeholder until i
                                                                // figure out how to redirect to same page
+        }
+
+        @PostMapping("/unfollow")
+        public String unfollowUser(Model model, @RequestParam("userDoingUnFollowing") String userDoingUnFollowing,
+                        @RequestParam("userToBeUnFollowed") String userToBeUnFollowed,
+                        @RequestParam("followerCount") int followerCount,
+                        @RequestParam("isFollowing") Boolean isFollowing) {
+                //User user = userRepository.getUser("username", Utilities.getUserID());
+
+                followRepo.unfollowUser(userToBeUnFollowed, userDoingUnFollowing);
+
+            
+
+                System.out.print("(testing out of curiousity) user doing unfollow aka " + userDoingUnFollowing + " has...");
+                System.out.print(followRepo.getNumFollowers(userDoingUnFollowing) + "followers\n");
+
+                System.out.println("----------------------");
+
+                System.out.println(userToBeUnFollowed + " aka user to be unfollowed follower list");
+                System.out.print(followRepo.getFollowersList(userToBeUnFollowed));
+                System.out.println();
+                System.out.println(userDoingUnFollowing + " aka logged in user follower list");
+                System.out.print(followRepo.getFollowersList(userToBeUnFollowed));
+                System.out.println();
+                return "Unfollow successful";
         }
 
 }

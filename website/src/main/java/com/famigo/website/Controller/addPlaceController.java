@@ -34,4 +34,6 @@ public class addPlaceController {
         System.out.println("List:\n" + placeRepository.getPlaces());
         return new ResponseEntity<String>(HttpStatus.OK);
     }
+
+    
 }

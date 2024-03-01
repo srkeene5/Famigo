@@ -31,6 +31,10 @@ public class UserPageController {
 		model.addAttribute("user_logged_in", user);
 		// Should probably return a different user page or use some th:if statements so
 		// that you don't have to return this
+		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user.getUsername()));
+		model.addAttribute("following_count_of_user",
+				followRepository.getNumFollowing(user.getUsername()));
+		model.addAttribute("followlist", followRepository.getFollowersList(user.getUsername()));
 		return "userpage";
 	}
 

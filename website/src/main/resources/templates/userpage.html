@@ -315,12 +315,16 @@
                 <a th:href="@{'/user/' + ${userpage.username} + '/followers'}">View Followers</a>
             </p>
             Following: <span th:text="${following_count_of_user}"></span>
+            <p>
+                <a th:href="@{'/user/' + ${userpage.username} + '/following'}">View Following</a>
+            </p>
             <!--testing purposes: Your username: <span th:text="${user_logged_in.username}"></span>-->
         </p>
         <p th:if="${userpage == null}">
             User does not exist.
         </p>
-        <p>
+        <!-- users shouldnt follow themselves-->
+        <p th:if="${userpage.username} != ${user_logged_in.username}">
             <button id="followbutton" type="button" >Follow</button>
         </p>
     </div>
@@ -357,6 +361,9 @@
                 });
 
             console.log("after follow");
+            
+            // reload to see follow
+            location.reload();
         });
     </script>
 

@@ -53,8 +53,13 @@ CREATE TABLE IF NOT EXISTS comments (
 );
 
 CREATE TABLE IF NOT EXISTS place (
+<<<<<<< HEAD
     id INTEGER NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
+=======
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+>>>>>>> origin/evan-work-4
     address VARCHAR(255) NOT NULL,
     rating VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)

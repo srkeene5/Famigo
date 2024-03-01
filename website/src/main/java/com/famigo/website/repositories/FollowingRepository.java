@@ -54,7 +54,12 @@ public class FollowingRepository {
 
     public void followUser(String usernameToBeFollowed, String usernameDoingFollowing) {
         jdbcTemplate.update("INSERT INTO followers (id, following_id) VALUES (?, ?)", usernameToBeFollowed,
-                usernameDoingFollowing);
+        usernameDoingFollowing);
+    }
+
+    public void unfollowUser(String usernameToBeUnFollowed, String usernameDoingUnFollowing) {
+        jdbcTemplate.update("DELETE FROM followers WHERE id = ? AND following_id = ?", usernameToBeUnFollowed,
+        usernameDoingUnFollowing);
     }
 
     /*
@@ -80,4 +85,11 @@ public class FollowingRepository {
         return jdbcTemplate.queryForObject(sql, Integer.class, username);
     }
 
+
+    /*public boolean areFriends(String username1, String username2) {
+        User user = userRepository.getUser("username", username1);
+        User user2 = userRepository.getUser("username", username2);
+        List<String> user1Followers = getFollowersList(user.getUsername());
+        return user1Followers.contains(user2.getUsername());
+    }*/
 }
