@@ -1,6 +1,6 @@
 package com.famigo.website.repositories;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +39,7 @@ public class MessageRepository {
                 ps.setString(1, message.getId());
                 ps.setString(2, message.getSender());
                 ps.setString(3, message.getContent());
-                ps.setDate(4, Date.valueOf(message.getTimestamp().toLocalDate()));
+                ps.setTimestamp(4, Timestamp.valueOf(message.getTimestamp()));
                 ps.setBoolean(5, message.getEdited());
                 ps.setString(6, message.getConversation());
             }
@@ -48,7 +48,7 @@ public class MessageRepository {
     }
 
     public ArrayList<Message> getMessages(String cid) {
-        List<Map<String, Object>> messageList = jdbcTemplate.queryForList("SELECT * FROM message WHERE conversation=?", new Object[]{cid});
+        List<Map<String, Object>> messageList = jdbcTemplate.queryForList("SELECT * FROM message WHERE conversation=? ORDER BY timestamp DESC", new Object[]{cid});
         if (messageList == null || messageList.isEmpty()) {
             return null;
         }

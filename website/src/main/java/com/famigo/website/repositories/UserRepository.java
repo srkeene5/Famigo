@@ -3,6 +3,9 @@ package com.famigo.website.repositories;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -60,5 +63,24 @@ public class UserRepository {
         catch (Exception e) {
             return null;
         }
+    }
+
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> users = new ArrayList<>();
+        List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT * FROM user");
+        for (Map<String, Object> user : userList) {
+            User u = new User((String) user.get("id"), (String) user.get("username"), (String) user.get("email"), (String) user.get("password"), (String) user.get("name"), (String) user.get("description"), Visibility.valueOf((String) user.get("visibility")), Role.valueOf((String) user.get("role")));
+            users.add(u);
+        }
+        return users;
+    }
+
+    public ArrayList<String> getAllUsernames() {
+        ArrayList<String> users = new ArrayList<>();
+        List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT username FROM user");
+        for (Map<String, Object> user : userList) {
+            users.add((String) user.get("username"));
+        }
+        return users;
     }
 }

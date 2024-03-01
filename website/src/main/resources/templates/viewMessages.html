@@ -11,6 +11,9 @@
                 <td><span th:text="${message.getContent()}"></span></td>
             </tr>
         </table>
-        <a href="/newMessage"><button>New Message</button></a>
+        <form action="#" method="post">
+            <input type="text" name="content"/>
+            <input type="submit" name="submit" value="submit" />
+        </form>
     </body>
 </html>

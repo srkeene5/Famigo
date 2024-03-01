@@ -16,9 +16,6 @@ public class Conversation {
         this.messages = messages;
     }
 
-    public Conversation() {
-    }
-
     public String getID() {
         return id;
     }

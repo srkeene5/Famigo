@@ -7,32 +7,36 @@
     <body>
         <h1>Conversations</h1>
         <div id="newconvo">
-            <input type="text" id="userid" placeholder="user id"/>
-            <input type="text" id="conversationmember" placeholder="recipient"/>
+            <div id="selected"></div>
+            <select name="users" id="selectUser">
+                <option th:each="user : ${usernames}" th:value="${user}" th:text="${user}" onclick="addToSelected()"></option>
+            </select>
             <input type="submit" id="submit" />
         </div>
-        <table th:if="${conversations == null}">
+        <table th:if="${conversations != null}">
             <tr th:each="conv : ${conversations}">
-                <td><a th:href="@{/message/${conv.getID()}}"><span th:text="${conv.getName()}"></span></a></td>
+                <td><a th:href="@{'/conversations/'+${conv.getID()}}"><span th:text="${conv.getName()}"></span></a></td>
+                <td><a th:each="member : ${conv.getMembers()}" th:href="@{'/user/'+${member.getUsername()}}" th:text="${member.getUsername()} + ' '"></a></td>
             </tr>
         </table>
-        <div th:unless="${conversations == null}">
+        <div th:unless="${conversations != null}">
             You have no conversations
         </div>
     </body>
     <script>
         document.getElementById("submit").addEventListener("click", function() {
-            var user = document.getElementById("userid").value;
-            var convrec = document.getElementById("conversationmember").value;
-            console.log(user, convrec);
-            if (user == "" || convrec == "") {
-                if (document.getElementById("newconvoerror") == null) {
-                    var element = document.createElement("p");
-                    element.setAttribute("value", "You must enter all fields");
-                    element.style.color = "red";
-                    document.getElementById("newconvo").appendChild(element);
-                    return;
-                }
+            var convrec = document.querySelectorAll(".member");
+            var members = [];
+            convrec.forEach(function(element) {
+                members.push(element.textContent);
+            });
+            console.log(convrec);
+            if (members == "") {
+                var element = document.createElement("p");
+                element.setAttribute("value", "You must enter all fields");
+                element.style.color = "red";
+                document.getElementById("newconvo").appendChild(element);
+                return;
             }
             try {
                 const response = fetch("/submitConversation", {
@@ -41,7 +45,7 @@
                         "Content-Type": "application/json",
                     },
                     body : JSON.stringify({
-                        members : [user, convrec]
+                        members : members
                     })
                 }).then((response) => response.json()
                 ).then((response) => {
@@ -52,5 +56,18 @@
                 console.log(error);
             }
         });
+
+        function addToSelected() {
+            var select = document.getElementById("selectUser");
+            var user = select.options[select.selectedIndex].text;
+            var selectedDiv = document.getElementById("selected");
+            var removebutton = document.createElement("button");
+            removebutton.className = "member";
+            removebutton.textContent = user;
+            removebutton.addEventListener("click", function(e) {
+                e.target.remove();
+            });
+            selectedDiv.append(removebutton);
+        }
     </script>
 </html>
