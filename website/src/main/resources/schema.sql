@@ -28,6 +28,12 @@ CREATE TABLE IF NOT EXISTS message (
     conversation VARCHAR(30)
 );
 
+CREATE TABLE IF NOT EXISTS unread (
+    messageID VARCHAR(50),
+    conversationID VARCHAR(30),
+    userID VARCHAR(10)
+);
+
 CREATE TABLE IF NOT EXISTS reviews (
     revID int NOT NULL AUTO_INCREMENT,
     userID VARCHAR(20) NOT NULL,

@@ -17,6 +17,7 @@
         <p id="error" hidden style="color: red"></p>
     </body>
     <script th:inline="javascript">
+        var myInterval = setInterval(updateDisplay, 500);
 
         document.getElementById("newmessage").addEventListener("click", function() {
             console.log("GOT HERE");
@@ -35,10 +36,6 @@
                     body: JSON.stringify({
                         content : content
                     })
-                }).then((response) => {
-                    var tr = document.createElement("tr");
-                    tr.innerHTML = '<td style="text-align: right"><span>'+content+'</span></td>';
-                    document.getElementById("display").append(tr);
                 }).catch(function(err){
                     console.log(error);
                     document.getElementById("error").textContent = "Message unable to send";
@@ -52,21 +49,39 @@
             }
         });
 
-        /*
         function updateDisplay() {
-            const response = fetch("/getupdates", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    content: document.getElementById("display").lastElementChild.getAttribute('data-timestamp')
-                })
-            }).then((response) => response.json())
-            .then((response) => {
-                for ()
-            });
+            try {
+                const response = fetch(window.location.href + "/getupdates", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                }).then(function(response) {
+                    if (response.status == 204) {
+                        return null;
+                    }
+                    else {
+                        return response.json();
+                    }
+                }).then(function(data) {
+                    if (data == null) {
+                        return;
+                    }
+                    var user = /*[[${user}]]*/ "";
+                    for (var i = 0; i < data.length; i++) {
+                        var tr = document.createElement("tr");
+                        if (data[i]["sender"] == user) {
+                            tr.innerHTML = '<td style="text-align: right"><span>'+data[i]["content"]+'</span></td>';
+                        }
+                        else {
+                            tr.innerHTML = '<td style="text-align: left"><span>'+data[i]["content"]+'</span></td>';
+                        }
+                        document.getElementById("display").append(tr);
+                    }
+                });
+            } catch(error) {
+                clearInterval(myInterval);
+            }
         }
-        */
     </script>
 </html>
