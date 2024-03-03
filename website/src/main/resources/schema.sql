@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS user (
     name VARCHAR(100),
     description TEXT,
     visibility VARCHAR(20) NOT NULL,
-    role VARCHAR(20) NOT NULL
+    role VARCHAR(20) NOT NULL,
+    enabled BOOLEAN DEFAULT 1 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS conversation (

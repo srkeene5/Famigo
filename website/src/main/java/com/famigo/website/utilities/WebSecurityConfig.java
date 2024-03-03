@@ -38,7 +38,7 @@ public class WebSecurityConfig {
     public UserDetailsService userDetailsService() {
         JdbcDaoImpl users = new JdbcDaoImpl();
         users.setJdbcTemplate(jdbcTemplate);
-        users.setUsersByUsernameQuery("SELECT id,password,'true' FROM user WHERE username=?");
+        users.setUsersByUsernameQuery("SELECT id,password,enabled FROM user WHERE username=?");
         users.setAuthoritiesByUsernameQuery("SELECT id,role FROM user WHERE username=?");
         return users;
     }

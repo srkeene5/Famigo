@@ -109,4 +109,23 @@ public class UserRepository {
             return null;
         }
     }
+
+    public String getPassword(String userID) {
+        String password = jdbcTemplate.queryForObject("SELECT password FROM user WHERE id=?", new RowMapper<String>() {
+
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // TODO Auto-generated method stub
+                return rs.getString("password");
+            }
+            
+        }, userID);
+        return password;
+    }
+
+    public void deleteAccount(String userID) {
+        jdbcTemplate.update("UPDATE user SET enabled=0 WHERE id=?", userID);
+        jdbcTemplate.update("DELETE FROM unread WHERE userID=?", userID);
+        jdbcTemplate.update("DELETE FROM followers WHERE id=? OR following_id=?", userID, userID);
+    }
 }
