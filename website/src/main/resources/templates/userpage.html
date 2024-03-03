@@ -103,7 +103,7 @@
 
     #home, #location, #search, #chat, #settings, #location, #create {
         position: relative;
-        left: 400px;
+        left: 350px;
         width: 50px;
         top: -80px;
         padding-right: 9%;
@@ -259,7 +259,7 @@
         </p>
 
         <div class = buttonHolder>
-            <form action="#" th:action="@{/user}" method="post">
+            <form action="#" th:action="@{/user}" method="get">
                 <button class="button" id="home">
                     <img draggable="false" class="image" th:src="@{/images/home.png}"/>
                 </button>
@@ -271,7 +271,7 @@
                 </button>
             </form>
 
-            <form action="#" th:action="@{/user}" method="post">
+            <form action="#" th:action="@{/addplace}" method="get">
                 <button class="button" id="create">
                     <img draggable="false" class="image" th:src="@{/images/create.png}"/>
                 </button>
@@ -283,31 +283,89 @@
                 </button>
             </form>
 
-            <form action="#" th:action="@{/user}" method="post">
+            <form action="#" th:action="@{/user}" method="get">
                 <button class="button" id="search">
                     <img draggable="false" class="image" th:src="@{/images/search.png}"/>
                 </button>
             </form>
 
-            <form action="#" th:action="@{/user}" method="post">
-                <button class="button" id="settings">
+            <div>
+                <button class="button" id="settings" onclick="ShowSettings();">
                     <img draggable="false" class="image" th:src="@{/images/settings.png}"/>
                 </button>
-            </form>
+            </div>
         </div>
     </div>
 
-    <div id="userinfo" class="infoblock">
+    <div id="userinfo" class="infoblock" th:attr="data-userid=${userpage.getUsername()},data-userloggedin=${user_logged_in.getUsername()}">
         <div class="circle" id="profilepicture">
             <img draggable="false" class="userimage" th:src="@{/images/user.png}"/>
         </div>
-
         <p>
             Text would go here that gives friends, followers, and possibly info like name and username. 
-            <br>
+            <br><br>
             <a th:href="@{'/visitUserPage'}">FriendUser</a>
         </p>
+        <p th:if="${userpage != null}">
+            Username: <span th:text="${userpage.username}"></span>
+            <br>
+            Followers: <span th:text="${follower_count_of_user}"></span>
+            <br>
+            <p>
+                <a th:href="@{'/user/' + ${userpage.username} + '/followers'}">View Followers</a>
+            </p>
+            Following: <span th:text="${following_count_of_user}"></span>
+            <p>
+                <a th:href="@{'/user/' + ${userpage.username} + '/following'}">View Following</a>
+            </p>
+            <!--testing purposes: Your username: <span th:text="${user_logged_in.username}"></span>-->
+        </p>
+        <p th:if="${userpage == null}">
+            User does not exist.
+        </p>
+        <!-- users shouldnt follow themselves-->
+        <p th:if="${userpage.username} != ${user_logged_in.username}">
+            <button id="followbutton" type="button" >Follow</button>
+        </p>
     </div>
+    
+    <script>
+        document.getElementById("followbutton").addEventListener("click", function() {
+            console.log("button clicked");
+            //var user_doing_following = followbutton.parentElement.parentElement.getAttribute("userloggedin");
+            //var user_to_be_followed = followbutton.parentElement.parentElement.getAttribute("user-id");
+            var userToBeFollowed = document.getElementById("userinfo").getAttribute('data-userid');
+            var userDoingFollowing = document.getElementById("userinfo").getAttribute('data-userloggedin');
+            var followerCount = 100;
+            var isFollowing = true;
+
+            console.log("-->" + document.getElementById("userinfo").value);
+
+            console.log(userToBeFollowed);
+            console.log(userDoingFollowing);
+            console.log("before follow");
+
+            const formData = new FormData();
+            formData.append('userToBeFollowed', userToBeFollowed);
+            formData.append('userDoingFollowing', userDoingFollowing);
+            formData.append('followerCount', followerCount);
+            formData.append('isFollowing', isFollowing);
+
+            
+            const response = fetch("/follow", {
+                    method : "POST",
+                    body : formData
+                }).then((response) => response.json()
+                ).then((response) => {
+                    //window.location.href = window.location.protocol + "//" + window.location.host;
+                });
+
+            console.log("after follow");
+            
+            // reload to see follow
+            location.reload();
+        });
+    </script>
 
     <div id="userlinks" class="infoblock">
         <p>
@@ -344,6 +402,9 @@
                 //TODO: change password in the database
                 ResetSettings();
             } else {
+                document.getElementById("currentpassword").value = "";
+                document.getElementById("password").value = "";
+                document.getElementById("confirmpassword").value = "";
                 alert("Passwords do not match. Please try again.");
             }
         }
@@ -357,6 +418,8 @@
                 ResetSettings();
             } else {
                 alert("Usernames do not match. Please try again.");
+                document.getElementById("username").value = "";
+                document.getElementById("confirmusername").value = "";
             }
         }
 
@@ -371,8 +434,11 @@
             RemoveClass("addon");
             RemoveClass("theme");
             AddClass("settingsbutton");
+            document.getElementById("currentpassword").value = "";
             document.getElementById("password").value = "";
             document.getElementById("confirmpassword").value = "";
+            document.getElementById("username").value = "";
+            document.getElementById("confirmusername").value = "";
         }
 
         function PasswordReset() {
@@ -404,7 +470,7 @@
         }
 
         function setDarkMode() {
-            changeTheme("#1F2544", "#A25D8B", "#CC3366");
+            changeTheme("#1F2544", "#A25D8B", "#A9637C");
         }
 
         function setHalloweenMode() {

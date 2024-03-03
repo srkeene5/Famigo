@@ -19,27 +19,29 @@ import com.famigo.website.utilities.Visibility;
 
 @Repository
 public class UserRepository {
-    
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public void createUser(User user) {
-        jdbcTemplate.update("INSERT INTO user (id, username, email, password, name, description, visibility, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", new PreparedStatementSetter() {
+        jdbcTemplate.update(
+                "INSERT INTO user (id, username, email, password, name, description, visibility, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                new PreparedStatementSetter() {
 
-            @Override
-            public void setValues(PreparedStatement ps) throws SQLException {
-                // TODO Auto-generated method stub
-                ps.setString(1, user.getID());
-                ps.setString(2, user.getUsername());
-                ps.setString(3, user.getEmail());
-                ps.setString(4, user.getPassword());
-                ps.setString(5, user.getName());
-                ps.setString(6, user.getDescription());
-                ps.setString(7, user.getVisibility().toString());
-                ps.setString(8, user.getRole().toString());
-            }
-            
-        });
+                    @Override
+                    public void setValues(PreparedStatement ps) throws SQLException {
+                        // TODO Auto-generated method stub
+                        ps.setString(1, user.getID());
+                        ps.setString(2, user.getUsername());
+                        ps.setString(3, user.getEmail());
+                        ps.setString(4, user.getPassword());
+                        ps.setString(5, user.getName());
+                        ps.setString(6, user.getDescription());
+                        ps.setString(7, user.getVisibility().toString());
+                        ps.setString(8, user.getRole().toString());
+                    }
+
+                });
     }
 
     public User getUser(String column, String value) {
@@ -49,18 +51,18 @@ public class UserRepository {
                 @Override
                 public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                     try {
-                        User newUser = new User(rs.getString("id"), rs.getString("username"), rs.getString("email"), rs.getString("password"), rs.getString("name"), rs.getString("description"), Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
+                        User newUser = new User(rs.getString("id"), rs.getString("username"), rs.getString("email"),
+                                rs.getString("password"), rs.getString("name"), rs.getString("description"),
+                                Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
                         return newUser;
-                    }
-                    catch(Exception e) {
+                    } catch (Exception e) {
                         return null;
                     }
                 }
-                
+
             }, value);
             return user;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -69,7 +71,9 @@ public class UserRepository {
         ArrayList<User> users = new ArrayList<>();
         List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT * FROM user");
         for (Map<String, Object> user : userList) {
-            User u = new User((String) user.get("id"), (String) user.get("username"), (String) user.get("email"), (String) user.get("password"), (String) user.get("name"), (String) user.get("description"), Visibility.valueOf((String) user.get("visibility")), Role.valueOf((String) user.get("role")));
+            User u = new User((String) user.get("id"), (String) user.get("username"), (String) user.get("email"),
+                    (String) user.get("password"), (String) user.get("name"), (String) user.get("description"),
+                    Visibility.valueOf((String) user.get("visibility")), Role.valueOf((String) user.get("role")));
             users.add(u);
         }
         return users;
@@ -82,5 +86,27 @@ public class UserRepository {
             users.add((String) user.get("username"));
         }
         return users;
+    }
+
+    public User getUserByUsername(String userID) {
+        try {
+            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE id=?", new RowMapper<User>() {
+                @Override
+                public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    try {
+                        User newUser = new User(rs.getString("id"), rs.getString("username"), rs.getString("email"),
+                                rs.getString("password"), rs.getString("name"), rs.getString("description"),
+                                Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
+                        return newUser;
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+
+            }, userID);
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

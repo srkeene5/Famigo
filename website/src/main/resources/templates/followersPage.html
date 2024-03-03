@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Followers</title>
+</head>
+<body>
+    <h3>Followers</h3>
+    
+    <ul th:if="${followers}">
+        <li th:each="follower : ${followers}" th:text="${follower}"></li>
+    </ul>
+</body>
+</html>

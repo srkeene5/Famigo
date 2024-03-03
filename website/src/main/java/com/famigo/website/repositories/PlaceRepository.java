@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,13 +22,12 @@ public class PlaceRepository {
 
     public void addPlace(Place place) {
         String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
-        String id = Integer.toString(new Random().nextInt(1000));
+
         jdbcTemplate.update(sql, new PreparedStatementSetter() {
 
             @Override
             public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
-                // TODO Auto-generated method stub
-                ps.setString(1, id);
+                ps.setInt(1, 0);
                 ps.setString(2, place.getName());
                 ps.setString(3, place.getAddress());
                 ps.setString(4, place.getRating());
@@ -57,15 +55,15 @@ public class PlaceRepository {
     }
 
     public Place getPlaceByName(String name) {
-        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT name FROM place", new Object[] {});
+        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT * FROM place WHERE name=?", new Object[] {name});
         if (placeList == null || placeList.isEmpty()) {
             return null;
         }
-        Place place = new Place(null, null, null);
+        Place place = null;
         // int count = 0;
         for (Map<String, Object> o : placeList) {
             if (name.equals(o.get("name"))) {
-                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"));
+                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), String.valueOf((int) o.get("id")));
             }
             // count++;
         }

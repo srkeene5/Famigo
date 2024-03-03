@@ -258,8 +258,13 @@ public class CommentSorter {
             coms = cr.getCommentsByReview("review");
         }
 
+        if (coms == null) {
+            testing = false;
+            System.out.println("No Comments");
+        }
+
         CommentSorter cs = new CommentSorter();
-        if (testing && testingTimeStamp) {
+        if (testing && testingTimeStamp && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getTimeStamp());
@@ -275,7 +280,7 @@ public class CommentSorter {
                 System.out.println(com.getTimeStamp());
             }
         }
-        if (testing && testingLikes) {
+        if (testing && testingLikes && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getLikes());
@@ -291,7 +296,7 @@ public class CommentSorter {
                 System.out.println(com.getLikes());
             }
         }
-        if (testing && testingComment) {
+        if (testing && testingComment && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getComment());
@@ -307,7 +312,7 @@ public class CommentSorter {
                 System.out.println(com.getComment());
             }
         }
-        if (testing && testingPrime) {
+        if (testing && testingPrime && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
@@ -328,7 +333,7 @@ public class CommentSorter {
                         + com.getTimeStamp());
             }
         }
-        if (testing && testingSec) {
+        if (testing && testingSec && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "

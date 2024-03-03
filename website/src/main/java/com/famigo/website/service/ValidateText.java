@@ -27,7 +27,8 @@ public class ValidateText {
         return true;
     }
 
-    //This function checks if a given text has only the basic ascii characters and a few supplimentary characters (unicode 0-255)
+    // This function checks if a given text has only the basic ascii characters and
+    // a few supplimentary characters (unicode 0-255)
     public static String SanitizeText(String text) {
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) > 255) {

@@ -3,12 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <title>Place Details</title>
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .popup {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none;
+        }
+        .popup-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888888;
+            width: 30%;
+            font-weight: bolder;
+        }
+        .popup-content button {
+            display: block;
+            margin: 0 auto;
+        }
+        .show {
+            display: block;
+        }
+        h1 {
+            color: #5898FF;
+        }
+        textarea {
+            position: relative;
+            resize: none;
+            width: 100%;
+            height: 20%;
+        }
+        .button-container {
+            display: flex;
+        }
+        .formClear {
+            clear:left;
+            height: 5px;
+        }
+        .checked {
+            color: orange;
+        }
+    </style>
 </head>
+
 <body>
     <h1>Place Details</h1>
     <!-- details -->
+    <p id="placeId">[[${placeId}]]</p>
     <p>Place Name: <span th:text="${selectedPlace.name}"></span></p>
     <p>Place Rating: <span th:text="${selectedPlace.rating}"></span></p>
     <p>Place Address: <span th:text="${selectedPlace.address}"></span></p>
+    <br>
+    <h2>Reviews</h2>
+    
+    <button id="addReview">Add Review</button>
+    <div id="myPopup" class="popup">
+        <div class="popup-content">
+            <h3>Review Here:</h3>
+            <span id="error"></span>
+
+            <textarea id="Review" name="ReviewName"></textarea>
+            <div class="formClear"></div>
+            
+            <div class="rating">
+                <span class="fa fa-star" id="st1" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st2" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st3" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st4" name="rating" value="0"></span>
+                <span class="fa fa-star" id="st5" name="rating" value="0"></span>
+            </div>
+
+            <div class="formClear"></div>
+            <div class="button-container">
+                <button id="cancel">Cancel</button>
+                <button id="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reviewList">
+        <ul th:each="i, ib : ${reviews}">
+            <div class="reviewBlock" th:object="${i}">
+                <p th:id="'rev' + ${ib.index}" class="revId">[[*{revId}]]</p>
+                <li th:text="'User: ' + *{userId}"></li>
+                <li th:text="'Rated ' + *{stars} + ' stars'"></li>
+                <li th:text="*{review}"></li>
+    
+                <li><button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>  <p style="display:inline-block" th:text="*{likes}"></p></li>
+                <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p style="display:inline-block" th:text="*{dislikes}"></p></li>
+                <br>
+            </div>
+    
+        </ul>
+    </div>
+
+    <script>
+
+        // Ajax setup
+        let script = document.createElement('script');
+        script.src = '//code.jquery.com/jquery-3.6.3.min.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+        /* - - - Add Review Popup - - - */
+
+        let place = document.getElementById("placeId").innerHTML;
+
+        document.getElementById("placeId").style.display = "none";
+        let revIds = document.getElementsByClassName("revId");
+        for (let i = 0; i < revIds.length; i++) {
+            revIds[i].style.display = "none";
+        }
+
+        let stval = 0;
+        addReview.addEventListener("click",function(){
+            myPopup.classList.add("show");
+        });
+        cancel.addEventListener("click",function(){
+            resetRevPop();
+        });
+        submit.addEventListener("click",function(){
+            let revText = Review.value;
+            let revStVal = stval;
+            if (revText == "" || revStVal == 0){
+                let error = document.getElementById("error");
+                error.textContent = "Review must contain Text and Rating";
+                error.style.color = "red";
+            } else {
+                let send = {
+                    rText : revText,
+                    rStar : revStVal,
+                    rPlace : place
+                }
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "${placePath}/addRev",
+                    data: JSON.stringify(send),
+                    dataType: "json",
+                    timeout: 60,
+                }).done(function (data) {
+                    console.log(data);
+                });
+                
+                resetRevPop();
+            }
+        });
+        const e1 = document.getElementById("st1");
+        const e2 = document.getElementById("st2");
+        const e3 = document.getElementById("st3");
+        const e4 = document.getElementById("st4");
+        const e5 = document.getElementById("st5");
+        e1.addEventListener("click",function(event){
+            if (event.target == st1) {
+                st1.classList.add("checked");
+                st2.classList.remove("checked");
+                st3.classList.remove("checked");
+                st4.classList.remove("checked");
+                st5.classList.remove("checked");
+                stval = 1;
+            }
+        });
+        e2.addEventListener("click",function(event){
+            if (event.target == st2) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.remove("checked");
+                st4.classList.remove("checked");
+                st5.classList.remove("checked");
+                stval = 2;
+            }
+        });
+        e3.addEventListener("click",function(event){
+            if (event.target == st3) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.add("checked");
+                st4.classList.remove("checked");
+                st5.classList.remove("checked");
+                stval = 3;
+            }
+        });
+        e4.addEventListener("click",function(event){
+            if (event.target == st4) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.add("checked");
+                st4.classList.add("checked");
+                st5.classList.remove("checked");
+                stval = 4;
+            }
+        });
+        e5.addEventListener("click",function(event){
+            if (event.target == st5) {
+                st1.classList.add("checked");
+                st2.classList.add("checked");
+                st3.classList.add("checked");
+                st4.classList.add("checked");
+                st5.classList.add("checked");
+                stval = 5;
+            }
+        });
+        function resetRevPop(){
+            myPopup.classList.remove("show");
+            Review.value = "";
+            stval = 0;
+            error.textContent = "";
+            st1.classList.remove("checked");
+            st2.classList.remove("checked");
+            st3.classList.remove("checked");
+            st4.classList.remove("checked");
+            st5.classList.remove("checked");
+        }
+
+        /* - - - Reivew List - - - */
+
+        let likeBtns = document.getElementsByClassName("likeBtn");
+        let dislikeBtns = document.getElementsByClassName("dislikeBtn");
+
+        for (let i = 0; i < likeBtns.length; i++) {
+            likeBtns[i].addEventListener("click", function(event) {
+                // Like button pressed
+                // [0] = like ("1") or dislike ("0") button press,
+                // [1] = review number on page (0 or higher)
+                let values = [];
+
+                values[0] = 1;
+
+                // Review number on page (between 0 and max reviews per page - 1)
+                // For now, we'll just return all the reviews at once. We'll separate by page later, if needed.
+                reviewNum = event.target.id.substring(5); // ID# of button
+                console.log("rev" + reviewNum);
+                console.log(document.getElementById("rev" + reviewNum));
+                reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
+                console.log(reviewId);
+                values[1] = reviewId;
+
+                sendLikeOrDislike(values);
+            });
+            dislikeBtns[i].addEventListener("click", function() {
+                // Dislike button logic
+                let values = [];
+                values[0] = 0;
+                reviewNum = event.target.id.substring(5); // ID# of button
+                reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
+                console.log(reviewId);
+                values[1] = reviewId;
+
+                sendLikeOrDislike(values);
+            });
+        }
+
+        function sendLikeOrDislike(values) {
+
+            console.log("Sending like/dislike data...");
+
+            $.ajax({
+                    type: "POST",
+                    url: "${placePath}/addRevReact",
+                    data: {vals: values},
+                    timeout: 30,
+                }).done(function (data) {
+                    console.log(data);
+                });
+        }
+
+    </script>
 </body>
+
 </html>

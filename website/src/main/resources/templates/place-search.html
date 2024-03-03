@@ -22,13 +22,21 @@
                 place.style.display = display;
             });
         }
+
+        function selectFirstOption() {
+            var firstOption = document.querySelector("ul li a");
+            if (firstOption) {
+                firstOption.click();
+            }
+        }
+
     </script>
 </head>
 <body>
     <h1>Search Places</h1>
 
     <!-- Search form -->
-    <form action="/places" method="get">
+    <form action="/places" method="post" onsubmit="selectFirstOption(); return false">
         <label for="placeSearch">Search for a place:</label>
         <input type="text" id="placeSearch" name="placeSearch" placeholder="Enter place name" oninput="filterPlaces()">
         <button type="submit">Search</button>

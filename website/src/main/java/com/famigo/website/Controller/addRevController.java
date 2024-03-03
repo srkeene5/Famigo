@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.famigo.website.model.*;
 import com.famigo.website.repositories.ReviewRepository;
+import com.famigo.website.utilities.Utilities;
 
 @Controller
 @SessionAttributes("name")
@@ -33,10 +34,18 @@ public class addRevController {
     @RequestMapping(value = "/addRev", method = RequestMethod.POST)
     public ResponseEntity<String> submitReview(@RequestBody SubReview sr) {
         // System.out.println("Received");
-        rr.addReview(new Review(sr.getrUser(), sr.getrPlace(),
-                sr.getrText(), Integer.parseInt(sr.getrStar())));
+        Review rev = new Review(Utilities.getUserID(), sr.getrPlace(),
+                sr.getrText(), Integer.parseInt(sr.getrStar()));
+        rr.addReview(rev);
+        System.out.println("User: " + rev.getUserId());
+        System.out.println("ReviewID: " + rev.getRevId());
+        System.out.println("Review: " + rev.getReview());
+        System.out.println("Stars: " + rev.getStars());
+        System.out.println("PlaceID: " + rev.getPlaceId());
+        System.out.println("Likes: " + rev.getLikes());
+        System.out.println("Dislikes: " + rev.getDislikes());
         if (testing) {
-            ArrayList<Review> uRevArr = rr.getReviewsByUser(sr.getrUser());
+            ArrayList<Review> uRevArr = rr.getReviewsByUser(Utilities.getUserID());
             ArrayList<Review> pRevArr = rr.getReviewsByPlace(sr.getrPlace());
             System.out.println("_____Print Review By UserID_____");
             for (Review uRev : uRevArr) {
