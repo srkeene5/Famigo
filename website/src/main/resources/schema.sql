@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS user (
     name VARCHAR(100),
     description TEXT,
     visibility VARCHAR(20) NOT NULL,
-    role VARCHAR(20) NOT NULL
+    role VARCHAR(20) NOT NULL,
+    enabled BOOLEAN DEFAULT 1 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS conversation (
@@ -26,6 +27,12 @@ CREATE TABLE IF NOT EXISTS message (
     timestamp DATETIME,
     edited BOOLEAN,
     conversation VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS unread (
+    messageID VARCHAR(50),
+    conversationID VARCHAR(30),
+    userID VARCHAR(10)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (

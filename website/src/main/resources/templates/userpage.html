@@ -222,6 +222,10 @@
                 Change Theme
             </button>
 
+            <button class="settingsbutton" id="settingsbuttons" onclick="DeleteField()">
+                Delete Account
+            </button>
+
             <button class="addon" id="backbutton" onclick="ResetSettings()";>
                 <img draggable="false" class="image" th:src="@{/images/backarrow.png}"/>
             </button>
@@ -249,6 +253,12 @@
                 <p><input id="username" type="text" placeholder="New Username"/></p>
                 <p><input id="confirmusername" type="text" placeholder="Confirm Username"/></p>
                 <p><input onclick="ValidateUsername();" type="submit" value="Change Username"/></p>
+            </form>
+
+            <form action="#" class="addon" id="userDeletefield" th:action="@{/delete-account}" method="post">
+                <p>Are you sure you want to delete your account?</p>
+                <p><input type="password" name="passwordDelete" placeholder="Enter Password"/></p>
+                <p><input type="submit" value="Confirm"/></p>
             </form>
         </div>
     </div>
@@ -456,6 +466,12 @@
         function ThemeReset() {
             RemoveClass("settingsbutton");
             AddClass("theme");
+            AddElement("backbutton");
+        }
+
+        function DeleteField() {
+            RemoveClass("settingsbutton");
+            AddElement("userDeletefield");
             AddElement("backbutton");
         }
 
