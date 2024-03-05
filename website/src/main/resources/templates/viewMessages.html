@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
+    <style>
+        #display {
+            margin: auto;
+            width: 50%;
+            height: 80%;
+            border-style: solid;
+        }
+        .messageRow {
+            margin: 5px;
+        }
+        .message {
+            padding: 5px;
+        }
+        .message-recieved {
+            background-color: grey;
+        }
+        .message-sent {
+            background-color: lime;
+        }
+    </style>
     <header>
         <title>Message</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </header>
     <body>
         <h1>Messages</h1>
-        <table style="width: 100%" id="display">
-            <tr th:each="message : ${messages}" th:attr="data-timestamp=${message.getTimestamp()}">
-                <td th:if="${message.getSender() == user}" style="text-align: right"><span th:text="${message.getContent()}"></span></td>
-                <td th:unless="${message.getSender() == user}" style="text-align: left"><span th:text="${message.getContent()}"></span></td>
+        <table id="display">
+            <tr th:each="message : ${messages}" th:attr="data-timestamp=${message.getTimestamp()}" class="messageRow">
+                <td th:if="${message.getSender() == user}" style="text-align: right"><span th:text="${message.getContent()}" class="message message-sent"></span></td>
+                <td th:unless="${message.getSender() == user}" style="text-align: left"><span th:text="${message.getContent()}" class="message message-recieved"></span></td>
             </tr>
         </table>
         <input type="text" name="content" id="content"/>
@@ -70,11 +90,12 @@
                     var user = /*[[${user}]]*/ "";
                     for (var i = 0; i < data.length; i++) {
                         var tr = document.createElement("tr");
+                        tr.className = "messageRow";
                         if (data[i]["sender"] == user) {
-                            tr.innerHTML = '<td style="text-align: right"><span>'+data[i]["content"]+'</span></td>';
+                            tr.innerHTML = '<td style="text-align: right"><span class="message message-sent">'+data[i]["content"]+'</span></td>';
                         }
                         else {
-                            tr.innerHTML = '<td style="text-align: left"><span>'+data[i]["content"]+'</span></td>';
+                            tr.innerHTML = '<td style="text-align: left"><span class="message message-recieved">'+data[i]["content"]+'</span></td>';
                         }
                         document.getElementById("display").append(tr);
                     }
