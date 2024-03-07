@@ -41,7 +41,7 @@ public class UserPageController {
 	@GetMapping("/user/{username}")
 	public String userPage(@PathVariable String username, Model model) {
 		// UserRepository userRepo = new UserRepository();
-		User user_being_viewed = userRepository.getUser("id", username/* util.getUserID() */); // accidentally
+		User user_being_viewed = userRepository.getUser("username", username/* util.getUserID() */); // accidentally
 																										// made the user
 																										// always go to
 																										// their own
