@@ -56,6 +56,9 @@ public class FollowController {
 
                 // followRepo.followUser(followerCount);
 
+                userToBeFollowed = userRepository.getUserByUsername(userToBeFollowed).getID();
+                userDoingFollowing = userRepository.getUserByUsername(userDoingFollowing).getID();
+
                 followRepo.followUser(userToBeFollowed, userDoingFollowing);
 
                 System.out.print("user being followed aka " + userToBeFollowed + " has...");
