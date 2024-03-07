@@ -128,4 +128,17 @@ public class UserRepository {
         jdbcTemplate.update("DELETE FROM unread WHERE userID=?", userID);
         jdbcTemplate.update("DELETE FROM followers WHERE id=? OR following_id=?", userID, userID);
     }
+
+    public boolean isUserID(String userID) {
+        boolean answer = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM user WHERE id=?", new RowMapper<Boolean>() {
+
+            @Override
+            public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // TODO Auto-generated method stub
+                return rs.getBoolean(1);
+            }
+            
+        }, userID);
+        return answer;
+    }
 }

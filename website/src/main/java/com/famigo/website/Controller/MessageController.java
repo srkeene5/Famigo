@@ -27,6 +27,7 @@ import com.famigo.website.model.User;
 import com.famigo.website.repositories.MessageRepository;
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.utilities.Utilities;
+import com.famigo.website.utilities.IDSize;
 import com.famigo.website.utilities.Status;
 
 @Controller
@@ -42,7 +43,7 @@ public class MessageController {
         String userID = Utilities.getUserID();
         ArrayList<Conversation> c = mr.getConversations(userID);
         ArrayList<String> users = ur.getAllUsernames();
-        users.remove(Utilities.getUserID());
+        users.remove(Utilities.getUsername());
         model.addAttribute("conversations", c);
         model.addAttribute("usernames", users);
         return "viewConversations";
@@ -52,8 +53,8 @@ public class MessageController {
     public ResponseEntity<Map<String, String>> createConversation(@RequestBody SubConversation members) {
         ArrayList<User> userList = new ArrayList<>();
         userList.add(ur.getUser("id", Utilities.getUserID()));
-        for (String user : members.getMembers()) {   
-            User u = ur.getUser("id", user);
+        for (String user : members.getMembers()) {
+            User u = ur.getUser("username", user);
             if (u != null) {
                 userList.add(u);
             } else {
@@ -79,7 +80,7 @@ public class MessageController {
     @RequestMapping(value="/conversations/{cid}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sendMessage(Model model, @PathVariable String cid, @RequestBody SubMessage content) {
         String username = Utilities.getUserID();
-        Message m = new Message(Utilities.generateID(50), username, content.getContent(), LocalDateTime.now(), false, cid, Status.UNREAD);
+        Message m = new Message(Utilities.generateID(IDSize.MESSAGEID), username, content.getContent(), LocalDateTime.now(), false, cid, Status.UNREAD);
         mr.addMessage(m);
         mr.addToUnread(m, mr.getConversation(cid), username);
         return new ResponseEntity<String>(HttpStatus.OK);

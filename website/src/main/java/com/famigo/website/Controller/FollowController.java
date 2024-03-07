@@ -42,7 +42,7 @@ public class FollowController {
                         @RequestParam("userToBeFollowed") String userToBeFollowed,
                         @RequestParam("followerCount") int followerCount,
                         @RequestParam("isFollowing") Boolean isFollowing) {
-                User user = userRepository.getUser("username", Utilities.getUserID());
+                User user = userRepository.getUser("id", Utilities.getUserID());
 
                 System.out.println("GOT TO FOLLOW CONTROLLER");
                 System.out.println("This is the user doing the following: " + userDoingFollowing);

@@ -12,8 +12,10 @@ import com.famigo.website.model.Signup;
 import com.famigo.website.model.User;
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.utilities.Role;
+import com.famigo.website.utilities.Utilities;
 import com.famigo.website.utilities.ValidateText;
 import com.famigo.website.utilities.Visibility;
+import com.famigo.website.utilities.IDSize;
 
 @Controller
 public class SignupController {
@@ -39,7 +41,11 @@ public class SignupController {
 				User existing = userRepository.getUser("username", signup.getUsername());
 				if (existing == null) {
 					String password = "{bcrypt}"+BCrypt.hashpw(signup.getPassword(), BCrypt.gensalt());
-					User user = new User(signup.getUsername(), signup.getUsername(), signup.getEmail(), password, signup.getFirstName().concat(" " + signup.getLastName()), "", Visibility.ALL, Role.USER);
+					String userID = Utilities.generateID(IDSize.USERID);
+					while (userRepository.isUserID(userID)) {
+						userID = Utilities.generateID(IDSize.USERID);
+					}
+					User user = new User(userID, signup.getUsername(), signup.getEmail(), password, signup.getFirstName().concat(" " + signup.getLastName()), "", Visibility.ALL, Role.USER);
 					userRepository.createUser(user);
 					return "redirect:/user";
 				}
