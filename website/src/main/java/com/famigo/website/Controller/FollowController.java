@@ -94,7 +94,7 @@ public class FollowController {
                         @RequestParam("userToBeUnFollowed") String userToBeUnFollowed,
                         @RequestParam("followerCount") int followerCount,
                         @RequestParam("isFollowing") Boolean isFollowing) {
-                //User user = userRepository.getUser("username", Utilities.getUserID());
+                //User user = userRepository.getUser("id", Utilities.getUserID());
 
                 followRepo.unfollowUser(userToBeUnFollowed, userDoingUnFollowing);
 
