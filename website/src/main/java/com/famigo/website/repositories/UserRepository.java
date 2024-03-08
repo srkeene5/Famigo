@@ -90,7 +90,7 @@ public class UserRepository {
 
     public User getUserByUsername(String userID) {
         try {
-            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE id=?", new RowMapper<User>() {
+            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE username=?", new RowMapper<User>() {
                 @Override
                 public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                     try {
@@ -99,6 +99,7 @@ public class UserRepository {
                                 Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
                         return newUser;
                     } catch (Exception e) {
+                        System.out.println(e);
                         return null;
                     }
                 }

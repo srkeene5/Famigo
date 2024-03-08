@@ -61,18 +61,18 @@ public class UserPageController {
 			// user_being_viewed.getFollowerCount());
 		}
 		System.out.println("~~~~~~~user page controller~~~~~~~~~~~");
-		System.out.println("Follower count: " + followRepository.getNumFollowers(user_being_viewed.getUsername()));
-		System.out.println("Following count " + followRepository.getNumFollowing(user_being_viewed.getUsername()));
-		System.out.println("Followers list " + followRepository.getFollowersList(user_being_viewed.getUsername()));
-		System.out.println("Following list " + followRepository.getFollowingList(user_being_viewed.getUsername()));
+		System.out.println("Follower count: " + followRepository.getNumFollowers(user_being_viewed.getID()));
+		System.out.println("Following count " + followRepository.getNumFollowing(user_being_viewed.getID()));
+		System.out.println("Followers list " + followRepository.getFollowersList(user_being_viewed.getID()));
+		System.out.println("Following list " + followRepository.getFollowingList(user_being_viewed.getID()));
 		System.out.println("~~~~~~~~~~~~~~~~~~");
 
 		model.addAttribute("userpage", user_being_viewed); // get Username
 		model.addAttribute("user_logged_in", user_logged_in); // get Username
-		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user_being_viewed.getUsername()));
+		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user_being_viewed.getID()));
 		model.addAttribute("following_count_of_user",
-				followRepository.getNumFollowing(user_being_viewed.getUsername()));
-		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getUsername()));
+				followRepository.getNumFollowing(user_being_viewed.getID()));
+		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getID()));
 		return "userpage";
 	}
 }
