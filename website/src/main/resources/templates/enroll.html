@@ -4,105 +4,97 @@
     body {
         background: linear-gradient(#F9F8F5, #E5AD70);
         background-attachment: fixed;
-        background-size: 100% 100%;
+        background-size: 100vw 100vh;
         background-repeat: no-repeat;
+    }
+    
+    .input {
+        background-color: #D2E1F1;
+        border: 2px solid;
+        width: 15.63vw;
+        font-size: calc(2.5vh);
+        height: 3.45vh;
+        border-radius: 5px;
+        position: absolute;
+        top: 15vh;
+        left: 50vw;
+        margin-left: -7.8vw;
+    }
+
+    .input:hover {
+        background-color: #A6C4E5;
     }
 
     #FamigoText {
-        margin: auto;
-        font-size: 100px;
+        font-size: calc(0.75vw + 6vh);
         font-weight: 700;
+        margin: auto;
+        overflow-x: hidden;
+        overflow-y: hidden;
         text-align: center;
     }
 
     #FamigoLogo {
         border-top-left-radius: 25px;
-        border-bottom-right-radius: 0px;
-        border-bottom-left-radius: 0px;
         border-top-right-radius: 25px;
-        border: 2px solid;
-        background-color: #A6C4E5;
-        padding: 20px;
-        width: 600px;
-        height: 150px; 
+        background: #A6C4E5;
 
+        top: 14vh;
+        width: 25vw;
+        height: 12vh;
+        border: 2px solid; 
+        left: 37.5vw;
         position: absolute;
-        top: 15%;
-        left: 50%;
-        margin-left: -320px;
     }
 
     #FormBox {
         background-color: #D2E1F1;
         border: 2px solid;
-        width: 640px;
-        height: 700px;
-
+        width: 25vw;
+        height: 56vh;
         position: absolute;
-        top: 15%;
-        left: 50%;
-        margin-left: -320px;
-        margin-top: 150px;
+        top: 15vh;
+        left: 50vw;
+        margin-left: -12.5vw;
+        margin-top: 11vh;
     }
 
-    input[type=text], input[type=password], #gender, input[type=submit] {
-        background-color: #D2E1F1;
-        border: 2px solid;
-        width: 400px;
-        font-size: 25px;
-        height: 50px;
-        border-radius: 5px;
-
-        position: absolute;
-        top: 15%;
-        left: 50%;
-        margin-left: -200px;
+    #firstName {
+        width: 7.25vw;
+        margin-top: 14.45vh;
     }
 
-    #firstname {
-        width: 190px;
-        margin-top: 185px;
+    #lastName {
+        width: 7.25vw;
+        margin-top: 14.45vh;
+        margin-left: 0.6vw;
     }
 
-    #lastname {
-        width: 190px;
-        margin-top: 185px;
-        margin-left: 10px;
+    #username {
+        margin-top: 21.45vh;
     }
 
-    .username {
-        margin-top: 270px;
+    #email {
+        margin-top: 28.45vh;
     }
 
-    .email {
-        margin-top: 355px;
+    #password {
+        margin-top: 35.45vh;
     }
 
-    .password {
-        margin-top: 440px;
-    }
-
-    .confirmpassword {
-        margin-top: 525px;
+    #confirmPassword {
+        margin-top: 42.45vh;
     }
 
     #gender {
-        width: 408px;
-        height: 56px;
-        margin-top: 610px;
+        margin-top: 49.45vh;
+        width: 15.94vw;
+        height: 3.94vh;
     }
 
-    input[type=submit] {
-        width: 200px;
-        height: 50px;
-        margin-top: 750px;
-        margin-left: -100px;
+    #createAccount {
+        margin-top: 57vh;
     }
-
-    input[type=submit]:hover, input[type=password]:hover, input[type=text]:hover {
-        background-color: #A6C4E5;
-    }
-
 </style>
 
 <head> 
@@ -119,20 +111,20 @@
     <div id="FormBox"></div>
 
     <form action="#" th:action="@{/signup}" th:object="${signup}" method="post">
-        <p><input id="firstname" type="text" placeholder="First Name" th:field="*{firstName}" /></p>
-        <p><input id="lastname" type="text" placeholder="Last Name" th:field="*{lastName}" /></p>
-        <p><input class="username" type="text" placeholder="Username" th:field="*{username}" /></p>
-        <p><input class="email" type="text" placeholder="Email" th:field="*{email}" /></p>
-        <p><input class="password" type="password" placeholder="Password" th:field="*{password}" /></p>
-        <p><input class="confirmpassword" type="password" placeholder="Confirm Password" th:field="*{confirmPassword}" /></p>
-        <select name="gender" id="gender" th:field="*{gender}">
+        <p><input class="input" id="firstName" type="text" placeholder="First Name" th:field="*{firstName}" /></p>
+        <p><input class="input" id="lastName" type="text" placeholder="Last Name" th:field="*{lastName}" /></p>
+        <p><input class="input" id="username" type="text" placeholder="Username" th:field="*{username}" /></p>
+        <p><input class="input" id="email" type="text" placeholder="Email" th:field="*{email}" /></p>
+        <p><input class="input" id="password" type="password" placeholder="Password" th:field="*{password}" /></p>
+        <p><input class="input" id="confirmPassword" type="password" placeholder="Confirm Password" th:field="*{confirmPassword}" /></p>
+        <select name="gender" class="input" id="gender" th:field="*{gender}">
             <option value="" selected>Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Non-Binary">Non-Binary</option>
             <option value="N/A">Prefer not to disclose</option>
         </select>
-        <p><input type="submit" value="Create Account" class="create"/></p>
+        <p><input  class="input" id="createAccount" type="submit" value="Create Account"/></p>
     </form>
 </body>
 </html>

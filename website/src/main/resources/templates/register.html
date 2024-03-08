@@ -4,25 +4,70 @@
     body {
         background: linear-gradient(#F9F8F5, #E5AD70);
         background-attachment: fixed;
-        background-size: 100% 100%;
+        background-size: 100vw 100vh;
         background-repeat: no-repeat;
     }
     
+    .text {
+        margin: auto;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        text-align: center;
+    }
+
+    .infoBox {
+        padding: 20px;
+        width: 23.44vw;
+        height: 12.66vh;
+        border: 2px solid; 
+        left: 19vw;
+        position: relative;
+    }
+    
+    .inputBox {
+        background-color: #D2E1F1;
+        border: 2px solid;
+        font-size: calc(3vh);
+        height: 3.95vh;
+        border-radius: 5px;
+        position: absolute;
+        left: 54vw;
+        top: 50vh;
+    }
+    
+    .submit {
+        background-color: #D1E0F0;
+        border: 2px solid;
+        border-radius: 5px;
+        font-size: calc(2vh);
+        position: absolute;
+        left: 54vw;
+        top: 50vh;
+        overflow: hidden;
+    }
+
+    .submit:hover, .inputBox:hover {
+        background-color: #A6C4E5;
+    }
+
+    input[type=text] {
+        width: 15.63vw;
+        margin-top: -18vh;
+    }
+
+    input[type=password] {
+        width: 11.5vw;
+        margin-top: -10.92vh;
+    }
+
     #FamigoLogo {
         border-top-left-radius: 25px;
         border-bottom-right-radius: 25px;
         border-bottom-left-radius: 0px;
         border-top-right-radius: 0px;
-        border: 2px solid;
         background: #A6C4E5;
-        padding: 20px;
-        width: 600px;
-        height: 150px; 
 
-        position: absolute;
-        top: 50%;
-        left: 23%;
-        margin-top: -250px;
+        top: 29.5vh;
     }
 
     #FamigoSlogan {
@@ -30,86 +75,30 @@
         border-bottom-right-radius: 0px;
         border-bottom-left-radius: 25px;
         border-top-right-radius: 25px;
-        border: 2px solid;
         background: #D2E1F1;
-        padding: 20px;
-        width: 600px;
-        height: 150px;
 
-        position: absolute;
-        left: 23%;
-        top: 50%;
+        top: 32.89vh;
     }
 
     #FamigoText {
-        margin: auto;
-        font-size: 100px;
+        font-size: calc(0.75vw + 6vh);
         font-weight: 700;
-        text-align: center;
     }
 
     #SloganText {
-        margin: auto;
-        font-size: 35px;
-        text-align: center;
+        font-size: calc(1vw + 1vh);
     }
 
-    input[type=text] {
-        background-color: #D2E1F1;
-        border: 2px solid;
-        width: 400px;
-        font-size: 25px;
-        height: 50px;
-        border-radius: 5px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        margin-top: -235px;
+    #signup {
+        width: 5.86vw;
+        height: 3.93vh;
     }
 
-    input[type=password] {
-        background-color: #D2E1F1;
-        border: 2px solid;
-        font-size: 25px;
-        width: 308px;
-        height: 50px;
-        border-radius: 5px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        margin-top: -140px;
-    }
-
-    .signup {
-        background-color: #D1E0F0;
-        border: 2px solid;
-        border-radius: 5px;
-        font-size: 25px;
-        width: 150px;
-        height: 50px;
-
-        position: absolute;
-        left: 50%;
-        top: 50%;
-    }
-
-    .login {
-        background-color: #D1E0F0;
-        width: 75px;
-        font-size: 25px;
-        height: 56px;
-        border: 2px solid;
-        border-radius: 5px;
-
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        margin-top: -140px;
-        margin-left: 333px;
-    }
-
-    .login:hover, input[type=password]:hover, input[type=text]:hover, .signup:hover {
-        background-color: #A6C4E5;
+    #login {
+        width: 2.93vw;
+        height: 4.38vh;
+        margin-top: -10.9vh;
+        margin-left: 13vw;
     }
 </style>
 
@@ -118,33 +107,37 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <div id="FamigoLogo">
-        <p id="FamigoText">
+    <div id="FamigoLogo" class="infoBox">
+        <p id="FamigoText" class="text">
             Famigo
         </p>
     </div>
 
-    <div id="FamigoSlogan">
-        <p id="SloganText">
+    <div id="FamigoSlogan" class = "infoBox">
+        <p id="SloganText" class="text">
             The one-stop destination for planning vacations for and with the people you cherish the most
         </p>
     </div>
 
     <form action="#" th:action="@{/login}" th:object="${login}" method="post">
-    	<p><input type="text" placeholder="Username or Email" th:field="*{username}" /></p>
-        <p><input type="password" placeholder="Password" th:field="*{password}" /></p>
-        <p><input type="submit" value="Login" class="login" onclick="CheckValidity();"/></p>
+    	<p><input class="inputBox" type="text" placeholder="Username or Email" th:field="*{username}" /></p>
+        <p><input class="inputBox" type="password" placeholder="Password" th:field="*{password}" /></p>
+        <p><input type="submit" value="Login" class="submit" id="login" onclick="CheckValidity();"/></p>
     </form>
 
-    <button class="signup">Sign Up</button>
+    <button class="submit" id="signup">Sign Up</button>
 </body>
 <script>
-    document.getElementsByClassName("signup")[0].addEventListener("click", function() {
+    document.getElementById("signup").addEventListener("click", function() {
         window.location.href = window.location.protocol + "//" + window.location.host + "/signup";
     });
 
+    function wait(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
     function CheckValidity() {
-        if (window.location.href.indexOf("error") > -1) {
+         if (window.location.href.indexOf("error") > -1) {
             alert("Incorrect username or password. Please try again.");
         }
     }

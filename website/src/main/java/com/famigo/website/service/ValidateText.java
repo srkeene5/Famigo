@@ -1,4 +1,4 @@
-package com.famigo.website.service;
+package com.famigo.website.Service;
 
 public class ValidateText {
     // This function checks a password to ensure that it has at least one uppercase
@@ -28,7 +28,7 @@ public class ValidateText {
     }
 
     // This function checks if a given text has only the basic ascii characters and
-    // a few supplimentary characters (unicode 0-255)
+    // a few supplimentary characters (unicode 0-255) if not, it replaces invalid characters with ? and returns the snitized text
     public static String SanitizeText(String text) {
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) > 255) {

@@ -22,10 +22,11 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/signup", "/logout")
+                        .requestMatchers("/", "/resources/**", "/home", "/signup", "/logout")
                         .permitAll()
                         .anyRequest()
-                        .authenticated())
+                        .authenticated()
+                        )
                 .formLogin((form) -> form
                         .loginPage("/login").permitAll()
                         .defaultSuccessUrl("/user", true))
