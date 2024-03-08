@@ -62,6 +62,7 @@ public class UserPageController {
 		System.out.println("Followers list " + followRepository.getFollowersList(user_being_viewed.getUsername()));
 		System.out.println("Following list " + followRepository.getFollowingList(user_being_viewed.getUsername()));
 		System.out.println("ARE YOU FOLLOWING THIS USER? " + followRepository.isFollowing(user_logged_in.getUsername(), user_being_viewed.getUsername()));
+		System.out.println("ARE THESE USERS FRIENDS??? " + followRepository.areFriends(user_logged_in.getUsername(), user_being_viewed.getUsername()));
 		System.out.println("~~~~~~~~~~~~~~~~~~");
 
 		model.addAttribute("userpage", user_being_viewed); // get Username

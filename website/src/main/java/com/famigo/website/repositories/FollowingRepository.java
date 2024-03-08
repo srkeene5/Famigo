@@ -94,10 +94,15 @@ public class FollowingRepository {
     }
 
 
-    /*public boolean areFriends(String username1, String username2) {
-        User user = userRepository.getUser("username", username1);
-        User user2 = userRepository.getUser("username", username2);
-        List<String> user1Followers = getFollowersList(user.getUsername());
-        return user1Followers.contains(user2.getUsername());
-    }*/
+    public boolean areFriends(String username1, String username2) {
+        //User user = userRepository.getUser("username", username1);
+        //User user2 = userRepository.getUser("username", username2);
+        List<String> user1Followers = getFollowersList(username1);
+        List<String> user2Followers = getFollowersList(username2);
+        return user1Followers.contains(username2) && user2Followers.contains(username1);
+        /*if (user1Followers.contains(username2) && user2Followers.contains(username1)) {
+            return true;
+        }
+        return user1Followers.contains(user2.getUsername());*/
+    }
 }
