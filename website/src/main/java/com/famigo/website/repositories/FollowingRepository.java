@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.User;
 
-import java.util.List;
 
 @Repository
 public class FollowingRepository {
@@ -104,5 +104,22 @@ public class FollowingRepository {
             return true;
         }
         return user1Followers.contains(user2.getUsername());*/
+    }
+
+    public  List<String> getFriendsList(String username) {
+        List<String> friendsList = new ArrayList<>();
+        int numFollowers = getNumFollowers(username);
+        List<String> userFollowers = getFollowersList(username);
+        for (int i = 0; i < numFollowers; i++) {
+            String follower = userFollowers.get(i);
+            if (areFriends(username, follower)) {
+                friendsList.add(follower);
+            }
+        }
+        return friendsList;
+    }
+
+    public int getFriendsCount(String username) {
+        return getFriendsList(username).size();
     }
 }

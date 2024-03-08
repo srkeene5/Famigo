@@ -35,6 +35,13 @@ public class FollowController {
                 System.out.println("the list: " + followings);
                 model.addAttribute("followings", followings);
                 return "followingPage";
+        }       
+        @GetMapping("/user/{username}/friends")
+        public String friendList(@PathVariable String username, Model model) {
+                List<String> friends = followRepo.getFriendsList(username);
+                System.out.println("the FRIENDS list: " + friends);
+                model.addAttribute("friends", friends);
+                return "friendPage";
         }
 
         @PostMapping("/follow")

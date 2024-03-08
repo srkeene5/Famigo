@@ -35,6 +35,11 @@ public class UserPageController {
 		model.addAttribute("following_count_of_user",
 				followRepository.getNumFollowing(user.getUsername()));
 		model.addAttribute("followlist", followRepository.getFollowersList(user.getUsername()));
+
+		model.addAttribute("friendCountOfUser", followRepository.getFriendsCount(user.getUsername()));
+		//model.addAttribute("friendList", followRepository.getFriendsList(user.getUsername()));
+
+
 		return "userpage";
 	}
 
@@ -63,6 +68,8 @@ public class UserPageController {
 		System.out.println("Following list " + followRepository.getFollowingList(user_being_viewed.getUsername()));
 		System.out.println("ARE YOU FOLLOWING THIS USER? " + followRepository.isFollowing(user_logged_in.getUsername(), user_being_viewed.getUsername()));
 		System.out.println("ARE THESE USERS FRIENDS??? " + followRepository.areFriends(user_logged_in.getUsername(), user_being_viewed.getUsername()));
+		System.out.println("FRIENDS LIST FOR " + user_being_viewed.getUsername() + " = " + followRepository.getFriendsList(user_being_viewed.getUsername()));
+		System.out.println("FRIENDS LIST FOR " + user_logged_in.getUsername() + " = " + followRepository.getFriendsList(user_logged_in.getUsername()));
 		System.out.println("~~~~~~~~~~~~~~~~~~");
 
 		model.addAttribute("userpage", user_being_viewed); // get Username
@@ -70,8 +77,10 @@ public class UserPageController {
 		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user_being_viewed.getUsername()));
 		model.addAttribute("following_count_of_user",
 				followRepository.getNumFollowing(user_being_viewed.getUsername()));
+		model.addAttribute("friendCountOfUser", followRepository.getFriendsCount(username));
 		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getUsername()));
 		//model.addAttribute("followingStatus", followRepository.getFollowersList(user_being_viewed.getUsername()));
+		model.addAttribute("friendList", followRepository.getFriendsList(user_being_viewed.getUsername()));
 		model.addAttribute("isFollowing", followRepository.isFollowing(user_logged_in.getUsername(), user_being_viewed.getUsername()));
 		return "userpage";
 	}
