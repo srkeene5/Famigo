@@ -39,16 +39,17 @@ public class FollowController {
 
         @PostMapping("/follow")
         public String followUser(Model model, @RequestParam("userDoingFollowing") String userDoingFollowing,
-                        @RequestParam("userToBeFollowed") String userToBeFollowed,
-                        @RequestParam("followerCount") int followerCount,
-                        @RequestParam("isFollowing") Boolean isFollowing) {
+                        @RequestParam("userToBeFollowed") String userToBeFollowed//,
+                        /*@RequestParam("followerCount") int followerCount,*/
+                        /*@RequestParam("isFollowing") Boolean isFollowing*/) {
+                System.out.println("FOLLOW REACHED");
                 User user = userRepository.getUser("username", Utilities.getUserID());
 
                 System.out.println("GOT TO FOLLOW CONTROLLER");
                 System.out.println("This is the user doing the following: " + userDoingFollowing);
                 System.out.println("This is the user being followed: " + userToBeFollowed);
-                System.out.println("This is the follower count: " + followerCount);
-                System.out.println("Is the user following? " + isFollowing);
+                //System.out.println("This is the follower count: " + followerCount);
+                //System.out.println("Is the user following? " + isFollowing);
 
                 System.out.println("USERNAME::::" + (userRepository.getUserByUsername(userToBeFollowed)).getUsername());
 
@@ -56,8 +57,10 @@ public class FollowController {
 
                 // followRepo.followUser(followerCount);
 
+                // Function for actually following, adds to repo
                 followRepo.followUser(userToBeFollowed, userDoingFollowing);
-
+                
+                // rest of this is debugging to see follow stuff
                 System.out.print("user being followed aka " + userToBeFollowed + " has...");
                 System.out.print(followRepo.getNumFollowers(userToBeFollowed) + " followers\n");
                 System.out.println();
@@ -84,18 +87,19 @@ public class FollowController {
 
                 System.out.println("XXXXXXXXX");
                 //System.out.println("friends?" + followRepo.areFriends(userToBeFollowed, userDoingFollowing));
+                System.out.println("FOLLOW CONTROLLER follow check status" + followRepo.isFollowing(userDoingFollowing, userToBeFollowed));
                 System.out.println("XXXXXXXXX");
                 return "redirect:/user/" + user.getUsername(); // takes user back to their own page; placeholder until i
                                                                // figure out how to redirect to same page
         }
 
         @PostMapping("/unfollow")
-        public String unfollowUser(Model model, @RequestParam("userDoingUnFollowing") String userDoingUnFollowing,
-                        @RequestParam("userToBeUnFollowed") String userToBeUnFollowed,
-                        @RequestParam("followerCount") int followerCount,
-                        @RequestParam("isFollowing") Boolean isFollowing) {
+        public String unfollowUser(Model model, @RequestParam("userDoingFollowing") String userDoingUnFollowing,
+                        @RequestParam("userToBeFollowed") String userToBeUnFollowed//,
+                        /*@RequestParam("followerCount") int followerCount,*/
+                        /*@RequestParam("isFollowing") Boolean isFollowing*/) {
                 //User user = userRepository.getUser("username", Utilities.getUserID());
-
+                System.out.println("UNFOLLOW REACHED");
                 followRepo.unfollowUser(userToBeUnFollowed, userDoingUnFollowing);
 
             

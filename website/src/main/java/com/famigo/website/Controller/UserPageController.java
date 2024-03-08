@@ -41,11 +41,7 @@ public class UserPageController {
 	@GetMapping("/user/{username}")
 	public String userPage(@PathVariable String username, Model model) {
 		// UserRepository userRepo = new UserRepository();
-		User user_being_viewed = userRepository.getUser("username", username/* util.getUserID() */); // accidentally
-																										// made the user
-																										// always go to
-																										// their own
-																										// page, oops
+		User user_being_viewed = userRepository.getUser("username", username/* util.getUserID() */);
 		User user_logged_in = userRepository.getUser("username", Utilities.getUserID());
 		SubFollow followerCount = new SubFollow();
 		// followerCount.setFollowerCount(followRepository.getFollowerCount(user_being_viewed.getUsername()));
@@ -65,6 +61,7 @@ public class UserPageController {
 		System.out.println("Following count " + followRepository.getNumFollowing(user_being_viewed.getUsername()));
 		System.out.println("Followers list " + followRepository.getFollowersList(user_being_viewed.getUsername()));
 		System.out.println("Following list " + followRepository.getFollowingList(user_being_viewed.getUsername()));
+		System.out.println("ARE YOU FOLLOWING THIS USER? " + followRepository.isFollowing(user_logged_in.getUsername(), user_being_viewed.getUsername()));
 		System.out.println("~~~~~~~~~~~~~~~~~~");
 
 		model.addAttribute("userpage", user_being_viewed); // get Username
@@ -73,6 +70,8 @@ public class UserPageController {
 		model.addAttribute("following_count_of_user",
 				followRepository.getNumFollowing(user_being_viewed.getUsername()));
 		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getUsername()));
+		//model.addAttribute("followingStatus", followRepository.getFollowersList(user_being_viewed.getUsername()));
+		model.addAttribute("isFollowing", followRepository.isFollowing(user_logged_in.getUsername(), user_being_viewed.getUsername()));
 		return "userpage";
 	}
 }

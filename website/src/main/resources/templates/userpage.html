@@ -243,9 +243,9 @@
             </button>
 
             <form class="addon" id="resetfields" onsubmit="return false">
-                <p><input id="currentpassword" type="password" placeholder="Current Password"/></p>
-                <p><input id="password" type="password" placeholder="New Password"/></p>
-                <p><input id="confirmpassword" type="password" placeholder="Confirm Password"/></p>
+                <p><input id="currentpassword" type="password" placeholder="Current Password" autocomplete="off"/></p>
+                <p><input id="password" type="password" placeholder="New Password" autocomplete="off"/></p>
+                <p><input id="confirmpassword" type="password" placeholder="Confirm Password" autocomplete="off"/></p>
                 <p><input onclick="ValidatePassword();" type="submit" value="Change Password"/></p>
             </form>
 
@@ -307,7 +307,7 @@
         </div>
     </div>
 
-    <div id="userinfo" class="infoblock" th:attr="data-userid=${userpage.getUsername()},data-userloggedin=${user_logged_in.getUsername()}">
+    <div id="userinfo" class="infoblock" th:attr="data-userid=${userpage.getUsername()},data-userloggedin=${user_logged_in.getUsername()},data-isFollowing=${isFollowing}">
         <div class="circle" id="profilepicture">
             <img draggable="false" class="userimage" th:src="@{/images/user.png}"/>
         </div>
@@ -346,10 +346,19 @@
             //var user_to_be_followed = followbutton.parentElement.parentElement.getAttribute("user-id");
             var userToBeFollowed = document.getElementById("userinfo").getAttribute('data-userid');
             var userDoingFollowing = document.getElementById("userinfo").getAttribute('data-userloggedin');
-            var followerCount = 100;
-            var isFollowing = true;
+            //var followerCount = 100;
+            //var isFollowing = true;
 
-            console.log("-->" + document.getElementById("userinfo").value);
+            //var isFollowing = document.getElementById("userinfo").getAttribute('isFollowing');
+            //var userInfo = document.getElementById("userinfo");
+            var isFollowing = document.getElementById("userinfo").getAttribute('data-isFollowing');;
+            console.log("isFollowing = " + isFollowing);
+            //var boolIsFollowing = Boolean(isFollowing);
+            //console.log("bool version of isFollowing = " + boolIsFollowing);
+            //console.log("1 if not following, 2 if following:" + isFollowing);
+            
+            //console.log("\n");*/
+            //console.log("-->" + document.getElementById("userinfo").value);
 
             console.log(userToBeFollowed);
             console.log(userDoingFollowing);
@@ -358,19 +367,36 @@
             const formData = new FormData();
             formData.append('userToBeFollowed', userToBeFollowed);
             formData.append('userDoingFollowing', userDoingFollowing);
-            formData.append('followerCount', followerCount);
-            formData.append('isFollowing', isFollowing);
-
-            
-            const response = fetch("/follow", {
-                    method : "POST",
-                    body : formData
-                }).then((response) => response.json()
-                ).then((response) => {
-                    //window.location.href = window.location.protocol + "//" + window.location.host;
-                });
+            //formData.append('followerCount', followerCount);
+            //formData.append('isFollowing', isFollowing);
+            //console.log(boolIsFollowing);
+            if (isFollowing === "false") {
+                console.log("following response reached");
+                const response = fetch("/follow", {
+                        method : "POST",
+                        body : formData
+                    }).then((response) => response.json()
+                    ).then((response) => {
+                        //window.location.href = window.location.protocol + "//" + window.location.host;
+                    });
+                //document.getElementById("userinfo").setAttribute('isFollowing', ' ');
+                //formData.append('isFollowing', true.toString());
+            } else {
+                console.log("UNfollowing response reached");
+                //formData.append('isFollowing', userDoingFollowing);
+                const response = fetch("/unfollow", {
+                        method : "POST",
+                        body : formData
+                    }).then((response) => response.json()
+                    ).then((response) => {
+                        //window.location.href = window.location.protocol + "//" + window.location.host;
+                    });
+                //formData.append('isFollowing', false.toString());
+                //document.getElementById("userinfo").removeAttribute('isFollowing');
+            }
 
             console.log("after follow");
+            console.log("hello world")
             
             // reload to see follow
             location.reload();

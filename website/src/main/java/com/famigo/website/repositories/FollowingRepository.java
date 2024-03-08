@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.User;
 
+import java.util.List;
+
 @Repository
 public class FollowingRepository {
 
@@ -50,6 +52,12 @@ public class FollowingRepository {
 
     public List<String> getFollowingList(String username) {
         return jdbcTemplate.queryForList("SELECT id FROM followers WHERE following_id = ?", String.class, username);
+    }
+
+    public Boolean isFollowing(String userLoggedIn, String userBeingViewed) {
+        int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM followers WHERE id = ? AND following_id = ?", Integer.class, userBeingViewed, userLoggedIn);
+        System.out.println("does user follow (1=yes,0=no)? -->" + count);
+        return count > 0;
     }
 
     public void followUser(String usernameToBeFollowed, String usernameDoingFollowing) {
