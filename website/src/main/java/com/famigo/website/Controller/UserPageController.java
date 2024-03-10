@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.famigo.website.model.Signup;
 import com.famigo.website.utilities.Utilities;
 
+import ch.qos.logback.classic.pattern.Util;
+
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.repositories.FollowingRepository;
+import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.model.User;
 import com.famigo.website.model.SubFollow;
 
@@ -19,9 +22,10 @@ public class UserPageController {
 
 	@Autowired
 	UserRepository userRepository;
-
 	@Autowired
 	FollowingRepository followRepository;
+	@Autowired
+	ReviewRepository revRepo;
 
 	@GetMapping("/user")
 	public String greeting(Model model) {
@@ -40,7 +44,7 @@ public class UserPageController {
 
 	@GetMapping("/user/{username}")
 	public String userPage(@PathVariable String username, Model model) {
-		// UserRepository userRepo = new UserRepository();
+		System.out.println(username);
 		User user_being_viewed = userRepository.getUser("username", username/* util.getUserID() */); // accidentally
 																										// made the user
 																										// always go to
@@ -74,5 +78,15 @@ public class UserPageController {
 				followRepository.getNumFollowing(user_being_viewed.getUsername()));
 		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getUsername()));
 		return "userpage";
+	}
+
+	@GetMapping("/user/{username}/review-data")
+	public String userReviewStats(@PathVariable String username, /*@RequestParam(value = "<webVarName>") <varType> <localVarName>*/ Model model) {
+		User curUser = userRepository.getUser("id", Utilities.getUserID());
+		// User chosenUser = userRepository.getUser("id", <localVarName>);
+
+
+
+		return "userReviews";
 	}
 }
