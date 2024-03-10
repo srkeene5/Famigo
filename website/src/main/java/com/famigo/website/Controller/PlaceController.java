@@ -49,8 +49,8 @@ public class PlaceController {
         } else {
             model.addAttribute("reviews", reviews.toArray());
 
-            int[] userReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
-            model.addAttribute("userReactions", userReactions);
+            int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
+            model.addAttribute("revReactions", revReactions);
         }
         return "place-details";
     }
@@ -98,10 +98,10 @@ public class PlaceController {
         // vals[0] = like (1) or dislike (0), and values[1] = review ID
         if (vals[0] == 1) {
             // Like button pressed
-            rr.addReviewReaction(Utilities.getUserID(), vals[1], true);
+            rr.alterReviewReaction(Utilities.getUserID(), vals[1], true);
         } else {
             // Dislike button pressed
-            rr.addReviewReaction(Utilities.getUserID(), vals[1], false);
+            rr.alterReviewReaction(Utilities.getUserID(), vals[1], false);
         }
 
         return new ResponseEntity<>("\"Success\"", HttpStatus.OK);

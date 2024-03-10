@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS place (
 
 CREATE TABLE IF NOT EXISTS reviewReaction (
     userID VARCHAR(20) NOT NULL,
-    reviewID VARCHAR(20),
+    reviewID INTEGER NOT NULL,
     isLike BOOLEAN
 );
 

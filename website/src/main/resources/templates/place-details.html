@@ -56,6 +56,30 @@
         .checked {
             color: orange;
         }
+        .likeBtn {
+            background-color: lightgray;
+        }
+        .dislikeBtn {
+            background-color: lightgray;
+        }
+        .likeBtn:hover {
+            background-color: gray;
+        }
+        .dislikeBtn:hover {
+            background-color: gray;
+        }
+        .liked {
+            background-color: lightblue;
+        }
+        .disliked {
+            background-color: pink;
+        }
+        .liked:hover {
+            background-color: gray;
+        }
+        .disliked:hover {
+            background-color: gray;
+        }
     </style>
 </head>
 
@@ -102,8 +126,9 @@
                 <li th:text="'Rated ' + *{stars} + ' stars'"></li>
                 <li th:text="*{review}"></li>
     
-                <li><button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>  <p style="display:inline-block" th:text="*{likes}"></p></li>
-                <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p style="display:inline-block" th:text="*{dislikes}"></p></li>
+                <li><button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>  <p th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></p></li>
+                <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p></li>
+                <p th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></p>
                 <br>
             </div>
     
@@ -117,15 +142,19 @@
         script.src = '//code.jquery.com/jquery-3.6.3.min.js';
         document.getElementsByTagName('head')[0].appendChild(script);
 
-        /* - - - Add Review Popup - - - */
+        document.getElementById("placeId").style.display = "none";
 
         let place = document.getElementById("placeId").innerHTML;
-
-        document.getElementById("placeId").style.display = "none";
         let revIds = document.getElementsByClassName("revId");
         for (let i = 0; i < revIds.length; i++) {
             revIds[i].style.display = "none";
         }
+        let revReacts = document.getElementsByClassName("revReaction");
+        for (let i = 0; i < revReacts.length; i++) {
+            revReacts[i].style.display = "none";
+        }
+
+        /* - - - Add Review Popup - - - */
 
         let stval = 0;
         addReview.addEventListener("click",function(){
@@ -245,31 +274,74 @@
                 // Review number on page (between 0 and max reviews per page - 1)
                 // For now, we'll just return all the reviews at once. We'll separate by page later, if needed.
                 reviewNum = event.target.id.substring(5); // ID# of button
-                console.log("rev" + reviewNum);
-                console.log(document.getElementById("rev" + reviewNum));
                 reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
-                console.log(reviewId);
                 values[1] = reviewId;
 
+                // Update like number and button color
+                if (revReacts[i].innerHTML == 1) {
+                    likeBtns[i].classList.remove("liked");
+                    let likeText = document.getElementById("likes" + i);
+                    likeText.innerHTML = parseInt(likeText.innerHTML) - 1;
+                    revReacts[i].innerHTML = 0;
+                } else if (revReacts[i].innerHTML == -1) {
+                    likeBtns[i].classList.add("liked");
+                    dislikeBtns[i].classList.remove("disliked");
+                    let likeText = document.getElementById("likes" + i);
+                    likeText.innerHTML = parseInt(likeText.innerHTML) + 1;
+                    let dislikeText = document.getElementById("dislikes" + i);
+                    dislikeText.innerHTML = parseInt(dislikeText.innerHTML) - 1;
+                    revReacts[i].innerHTML = 1;
+                } else {
+                    likeBtns[i].classList.add("liked");
+                    let likeText = document.getElementById("likes" + i);
+                    likeText.innerHTML = parseInt(likeText.innerHTML) + 1;
+                    revReacts[i].innerHTML = 1;
+                }
                 sendLikeOrDislike(values);
             });
+
             dislikeBtns[i].addEventListener("click", function() {
                 // Dislike button logic
                 let values = [];
                 values[0] = 0;
                 reviewNum = event.target.id.substring(5); // ID# of button
                 reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
-                console.log(reviewId);
                 values[1] = reviewId;
 
+                // Update dislike number and button color
+                if (revReacts[i].innerHTML == -1) {
+                    dislikeBtns[i].classList.remove("disliked");
+                    let dislikeText = document.getElementById("dislikes" + i);
+                    dislikeText.innerHTML = parseInt(dislikeText.innerHTML) - 1;
+                    revReacts[i].innerHTML = 0;
+                } else if (revReacts[i].innerHTML == 1) {
+                    dislikeBtns[i].classList.add("disliked");
+                    likeBtns[i].classList.remove("liked");
+                    let likeText = document.getElementById("likes" + i);
+                    likeText.innerHTML = parseInt(likeText.innerHTML) - 1;
+                    let dislikeText = document.getElementById("dislikes" + i);
+                    dislikeText.innerHTML = parseInt(dislikeText.innerHTML) + 1;
+                    revReacts[i].innerHTML = -1;
+                } else {
+                    dislikeBtns[i].classList.add("disliked");
+                    let dislikeText = document.getElementById("dislikes" + i);
+                    dislikeText.innerHTML = parseInt(dislikeText.innerHTML) + 1;
+                    revReacts[i].innerHTML = -1;
+                }
                 sendLikeOrDislike(values);
             });
+
+            // This block sets the like/dislike button colors on page load
+            if (revReacts[i].innerHTML == 1) {
+                // User has liked this review
+                likeBtns[i].classList.add("liked");
+            } else if (revReacts[i].innerHTML == -1) {
+                // User has disliked this review
+                dislikeBtns[i].classList.add("disliked");
+            }
         }
 
         function sendLikeOrDislike(values) {
-
-            console.log("Sending like/dislike data...");
-
             $.ajax({
                     type: "POST",
                     url: "${placePath}/addRevReact",
