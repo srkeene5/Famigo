@@ -49,8 +49,8 @@ public class PlaceController {
         } else {
             model.addAttribute("reviews", reviews.toArray());
 
-            int[] userReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
-            model.addAttribute("userReactions", userReactions);
+            int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
+            model.addAttribute("revReactions", revReactions);
         }
         return "place-details";
     }

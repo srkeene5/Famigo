@@ -144,7 +144,7 @@ public class ReviewRepository {
         }
     }
 
-    // Returns 1 if the given user has liked the given review, -1 if they disliked,
+    // For each review, returns 1 if the given user has liked the given review, -1 if they disliked,
     // and 0 if they haven't done either.
     public int[] getUserReviewReactions(String userId, ArrayList<Review> revs) {
         int[] reactions = new int[revs.size()];
