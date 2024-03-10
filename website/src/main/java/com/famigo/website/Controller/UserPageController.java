@@ -54,7 +54,7 @@ public class UserPageController {
 			System.out.println("username of user's page being viewed: " + user_being_viewed.getUsername());
 			// System.out.println("password of user's page being viewed: " +
 			// user_being_viewed.getPassword());
-			System.out.println("Logged in user: " + user_logged_in.getUsername());
+			System.out.println("Logged in user: " + user_logged_in.getID());
 			// System.out.println("Num followers of logged-in user: " +
 			// user_logged_in.getFollowerCount());
 			// System.out.println("Num followers of USER BEING VIEWED: " +
