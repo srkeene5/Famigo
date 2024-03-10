@@ -18,6 +18,14 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
+    public void createResponse(String userEmail) {
+        String addr = userEmail;
+        String subj = "Verify Account!";
+        String body = "To verify your account, please click here : ";
+
+        sendEmail(addr, subj, body);
+    }
+
     @Async
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
