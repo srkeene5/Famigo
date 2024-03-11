@@ -299,11 +299,13 @@
                 </button>
             </form>
 
-            <form action="#" th:action="@{/modPage}" method="get">
-                <button class="button" id="modPage">
-                    Modderation Page
-                </button>
-            </form>
+            <span th:if="${user_logged_in.role} == 'MODERATOR'">
+                <form action="#" th:action="@{/modPage}" method="get">
+                    <button class="button" id="modPage">
+                        Moderation Page
+                    </button>
+                </form>
+            </span>
 
             <div>
                 <button class="button" id="settings" onclick="ShowSettings();">
@@ -324,6 +326,8 @@
         </p>
         <p th:if="${userpage != null}">
             Username: <span th:text="${userpage.username}"></span>
+            <br>
+            Role: <span th:text="${userpage.role}"></span>
             <br>
             Followers: <span th:text="${follower_count_of_user}"></span>
             <br>
@@ -385,7 +389,15 @@
 
     <div id="userlinks" class="infoblock">
         <p>
-            This is where the section links (like detailed stats) would go. How said content is structured is 100% up to the person implementing but should be placed in the center section.
+            <h3>Stats:</h3>
+            <br>
+            <p>Stars: <span th:text="${stats.totStars}"></span></p>
+            <p>Likes: <span th:text="${stats.totLikes}"></span></p>
+            <p>Dislikes: <span th:text="${stats.totDis}"></span></p>
+            <p>Average Stars: <span th:text="${stats.avgStars}"></span></p>
+            <p>Average Likes: <span th:text="${stats.avgLikes}"></span></p>
+            <p>Average Dislikes: <span th:text="${stats.avgDis}"></span></p>
+            <br>
         </p>
     </div>
 

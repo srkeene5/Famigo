@@ -1,16 +1,24 @@
 package com.famigo.website.controller;
 
 import org.springframework.ui.Model;
+
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.famigo.website.model.Comment;
+import com.famigo.website.model.Review;
 import com.famigo.website.model.Signup;
 import com.famigo.website.utilities.Utilities;
 
 import com.famigo.website.repositories.UserRepository;
+import com.famigo.website.service.Stats;
+import com.famigo.website.repositories.CommentRepository;
 import com.famigo.website.repositories.FollowingRepository;
+import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.model.User;
 //import com.famigo.website.model.SubFollow;
 
@@ -23,12 +31,22 @@ public class UserPageController {
 	@Autowired
 	FollowingRepository followRepository;
 
+	@Autowired
+	private CommentRepository cr;
+
+	@Autowired
+	private ReviewRepository rr;
+
 	@GetMapping("/user")
 	public String greeting(Model model) {
 		User user = userRepository.getUser("id", Utilities.getUserID());
 		model.addAttribute("signup", new Signup());
 		model.addAttribute("userpage", user);
 		model.addAttribute("user_logged_in", user);
+		String uID = user.getID();
+		ArrayList<Review> reviews = rr.getReviewsByUser(uID);
+		ArrayList<Comment> comments = cr.getCommentsByUser(uID);
+		model.addAttribute("stats", new Stats(uID, reviews, comments));
 		// Should probably return a different user page or use some th:if statements so
 		// that you don't have to return this
 		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user.getUsername()));
@@ -69,6 +87,10 @@ public class UserPageController {
 
 		model.addAttribute("userpage", user_being_viewed); // get Username
 		model.addAttribute("user_logged_in", user_logged_in); // get Username
+		String uID = user_being_viewed.getID();
+		ArrayList<Review> reviews = rr.getReviewsByUser(uID);
+		ArrayList<Comment> comments = cr.getCommentsByUser(uID);
+		model.addAttribute("stats", new Stats(uID, reviews, comments));
 		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user_being_viewed.getUsername()));
 		model.addAttribute("following_count_of_user",
 				followRepository.getNumFollowing(user_being_viewed.getUsername()));
