@@ -69,4 +69,26 @@ public class PlaceRepository {
         }
         return place;
     }
+
+    public ArrayList<Place> getPlacesFromNames(ArrayList<String> placeNames) {
+        ArrayList<Place> places = new ArrayList<>();
+        for (int i = 0; i < placeNames.size(); i++) {
+            places.add(getPlaceByName(placeNames.get(i)));
+        }
+        return places;
+    }
+
+    public Place getPlaceById(String id) {
+        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT * FROM place WHERE id=?", new Object[] {id});
+        if (placeList == null || placeList.isEmpty()) {
+            return null;
+        }
+        Place place = null;
+        // int count = 0;
+        for (Map<String, Object> o : placeList) {
+            place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), String.valueOf((int) o.get("id")));
+            // count++;
+        }
+        return place;
+    }
 }

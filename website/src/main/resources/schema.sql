@@ -95,3 +95,15 @@ CREATE TABLE IF NOT EXISTS followers (
     following_id VARCHAR(100),
     PRIMARY KEY (id, following_id)
 );
+
+CREATE TABLE IF NOT EXISTS event (
+    id VARCHAR(50),
+    name TEXT,
+    creator VARCHAR(20),
+    FOREIGN KEY (creator) REFERENCES user(id),
+    place INTEGER NOT NULL,
+    FOREIGN KEY (place) REFERENCES place(id),
+    start DATETIME,
+    end DATETIME,
+    description TEXT
+);
