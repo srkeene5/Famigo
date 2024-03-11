@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS comments (
     likes INTEGER,
     timestamp DATETIME,
     edited BOOLEAN,
-    reviewID VARCHAR(20),
+    reviewID INTEGER NOT NULL,
     PRIMARY KEY (comID)
 );
 

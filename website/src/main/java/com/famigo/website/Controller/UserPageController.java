@@ -1,5 +1,8 @@
 package com.famigo.website.controller;
 
+import ch.qos.logback.classic.pattern.Util;
+import java.util.ArrayList;
+
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,13 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.famigo.website.model.Signup;
 import com.famigo.website.utilities.Utilities;
 
-import ch.qos.logback.classic.pattern.Util;
-
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.repositories.FollowingRepository;
 import com.famigo.website.repositories.ReviewRepository;
+import com.famigo.website.repositories.CommentRepository;
 import com.famigo.website.model.User;
 import com.famigo.website.model.SubFollow;
+import com.famigo.website.model.Review;
+import com.famigo.website.model.Comment;
 
 @Controller
 public class UserPageController {
@@ -26,6 +30,8 @@ public class UserPageController {
 	FollowingRepository followRepository;
 	@Autowired
 	ReviewRepository revRepo;
+	@Autowired
+	CommentRepository comRepo;
 
 	@GetMapping("/user")
 	public String greeting(Model model) {
@@ -83,9 +89,33 @@ public class UserPageController {
 	@GetMapping("/user/{username}/review-data")
 	public String userReviewStats(@PathVariable String username, /*@RequestParam(value = "<webVarName>") <varType> <localVarName>*/ Model model) {
 		User curUser = userRepository.getUser("id", Utilities.getUserID());
-		// User chosenUser = userRepository.getUser("id", <localVarName>);
+		User chosenUser = userRepository.getUser("username", username);
 
+		ArrayList<Review> revs = revRepo.getReviewsByUser(chosenUser.getID());
+		model.addAttribute("reviews", revs);
+		model.addAttribute("revCount", revs.size());
 
+		ArrayList<ArrayList<Comment>> revComments = new ArrayList<ArrayList<Comment>>();
+		int totalRevLikes = 0;
+		int totalComLikes = 0;
+		for (Review r : revs) {
+			totalRevLikes += r.getLikes();
+			// Insert ArrayList of comments from that review into 2D comment ArrayList
+			ArrayList<Comment> coms = comRepo.getCommentsByReview(r.getRevId());
+			revComments.add(coms);
+			for (Comment c : coms) {
+				totalComLikes += c.getLikes();
+			}
+		}
+
+		model.addAttribute("totalRevLikes", totalRevLikes);
+		float avgRevLikes = (float) totalRevLikes / revs.size();
+		model.addAttribute("avgRevLikes", avgRevLikes);
+		model.addAttribute("comments", revComments);
+		model.addAttribute("comCount", revComments.size());
+		model.addAttribute("totalComLikes", totalComLikes);
+		float avgComLikes = (float) totalComLikes / revComments.size();
+		model.addAttribute("avgComLikes", avgComLikes);
 
 		return "userReviews";
 	}
