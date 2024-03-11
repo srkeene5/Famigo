@@ -6,9 +6,9 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public class Utilities {
 
@@ -20,8 +20,22 @@ public class Utilities {
     @Bean
     public static String getUserID() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails user = (UserDetails) auth.getPrincipal();
+        UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();
+        return user.getID();
+    }
+
+    public static String getUsername() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();
         return user.getUsername();
+    }
+
+    public static void setUsername(String username) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl user = (UserDetailsImpl) auth.getPrincipal();
+        UserDetailsImpl user2 = new UserDetailsImpl(username, null, user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(), user.isAccountNonLocked(), user.getAuthorities(), user.getID());
+        UsernamePasswordAuthenticationToken auth2 = new UsernamePasswordAuthenticationToken(user2, auth.getCredentials());
+        SecurityContextHolder.getContext().setAuthentication(auth2);
     }
     
     public static String generateID(int size) {

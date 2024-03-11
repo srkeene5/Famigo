@@ -42,7 +42,6 @@ public class FollowController {
                         @RequestParam("userToBeFollowed") String userToBeFollowed,
                         @RequestParam("followerCount") int followerCount,
                         @RequestParam("isFollowing") Boolean isFollowing) {
-                User user = userRepository.getUser("username", Utilities.getUserID());
 
                 System.out.println("GOT TO FOLLOW CONTROLLER");
                 System.out.println("This is the user doing the following: " + userDoingFollowing);
@@ -52,9 +51,14 @@ public class FollowController {
 
                 System.out.println("USERNAME::::" + (userRepository.getUserByUsername(userToBeFollowed)).getUsername());
 
+                User user = userRepository.getUser("id", Utilities.getUserID());
+
                 // followRepo.createFollow(userRepository.getUserByUsername(userToBeFollowed));
 
                 // followRepo.followUser(followerCount);
+
+                userToBeFollowed = userRepository.getUserByUsername(userToBeFollowed).getID();
+                userDoingFollowing = userRepository.getUserByUsername(userDoingFollowing).getID();
 
                 followRepo.followUser(userToBeFollowed, userDoingFollowing);
 
@@ -94,7 +98,7 @@ public class FollowController {
                         @RequestParam("userToBeUnFollowed") String userToBeUnFollowed,
                         @RequestParam("followerCount") int followerCount,
                         @RequestParam("isFollowing") Boolean isFollowing) {
-                //User user = userRepository.getUser("username", Utilities.getUserID());
+                //User user = userRepository.getUser("id", Utilities.getUserID());
 
                 followRepo.unfollowUser(userToBeUnFollowed, userDoingUnFollowing);
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.famigo.website.model.Place;
+import com.famigo.website.model.SubPlace;
 import com.famigo.website.repositories.PlaceRepository;
 
 @Controller
@@ -25,7 +26,7 @@ public class addPlaceController {
     }
 
     @RequestMapping(value = "/addplace", method = RequestMethod.POST)
-    public ResponseEntity<String> submit_place(@RequestBody Place place) {
+    public ResponseEntity<String> submit_place(@RequestBody SubPlace place) {
         System.out.println(place.getName());
         Place placeObject = new Place("0", place.getName(), "100");
         System.out.println("BEFORE");
