@@ -19,6 +19,7 @@ public class EmailService {
     }
 
     public void createResponse(String userEmail) {
+        //ConfirmationToken confirmationToken = new ConfirmationToken(user);
         String addr = userEmail;
         String subj = "Verify Account!";
         String body = "To verify your account, please click here : ";
