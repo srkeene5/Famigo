@@ -54,8 +54,23 @@ public class PlaceRepository {
         return placeNames;
     }
 
+    public Place getPlaceByID(int pid) {
+        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT * FROM place WHERE id=?",
+                new Object[] { pid });
+        if (placeList == null || placeList.isEmpty()) {
+            return null;
+        }
+        Place place = null;
+        for (Map<String, Object> o : placeList) {
+            place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"),
+                    (int) o.get("id"));
+        }
+        return place;
+    }
+
     public Place getPlaceByName(String name) {
-        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT * FROM place WHERE name=?", new Object[] {name});
+        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT * FROM place WHERE name=?",
+                new Object[] { name });
         if (placeList == null || placeList.isEmpty()) {
             return null;
         }
@@ -63,7 +78,8 @@ public class PlaceRepository {
         // int count = 0;
         for (Map<String, Object> o : placeList) {
             if (name.equals(o.get("name"))) {
-                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), String.valueOf((int) o.get("id")));
+                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"),
+                        (int) o.get("id"));
             }
             // count++;
         }

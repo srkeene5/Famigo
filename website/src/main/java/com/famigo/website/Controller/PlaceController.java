@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.famigo.website.model.Place;
+import com.famigo.website.model.Report;
 import com.famigo.website.repositories.PlaceRepository;
+import com.famigo.website.repositories.ReportRepository;
 import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.model.Review;
 import com.famigo.website.model.SubReview;
@@ -31,6 +33,8 @@ public class PlaceController {
     private PlaceRepository placeRepository;
     @Autowired
     private ReviewRepository rr;
+    @Autowired
+    private ReportRepository repR;
 
     @GetMapping("/places/{name}")
     public String showPlaceDetails(@PathVariable String name, Model model) {
@@ -104,6 +108,12 @@ public class PlaceController {
             rr.addReviewReaction(Utilities.getUserID(), vals[1], false);
         }
 
+        return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/places/{name}/reportRevReact", method = RequestMethod.POST)
+    public ResponseEntity<String> report(@RequestParam(value = "vals[]") String[] vals) {
+        repR.addReport(new Report(Utilities.getUserID(), rr.getReviewByID(Integer.valueOf(vals[1])), vals[0]));
         return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
     }
 }

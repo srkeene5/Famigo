@@ -3,7 +3,7 @@ package com.famigo.website.model;
 public class SubReview {
     private String rText;
     private String rStar;
-    private String rPlace;
+    private int rPlace;
 
     public String getrStar() {
         return rStar;
@@ -13,7 +13,7 @@ public class SubReview {
         return rText;
     }
 
-    public String getrPlace() {
+    public int getrPlace() {
         return rPlace;
     }
 }

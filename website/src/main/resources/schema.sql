@@ -35,10 +35,21 @@ CREATE TABLE IF NOT EXISTS reviews (
     stars INTEGER,
     timestamp DATETIME,
     edited BOOLEAN,
-    placeID VARCHAR(20),
+    placeID INTEGER,
     likes INTEGER,
     dislikes INTEGER,
     PRIMARY KEY (revID)
+);
+
+CREATE TABLE IF NOT EXISTS reports (
+    repID int NOT NULL AUTO_INCREMENT,
+    userID VARCHAR(20),
+    repText TEXT,
+    timestamp DATETIME,
+    placeID INTEGER,
+    revID INTEGER,
+    comID INTEGER,
+    PRIMARY KEY (repID)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -48,7 +59,7 @@ CREATE TABLE IF NOT EXISTS comments (
     likes INTEGER,
     timestamp DATETIME,
     edited BOOLEAN,
-    reviewID VARCHAR(20),
+    reviewID INTEGER,
     PRIMARY KEY (comID)
 );
 

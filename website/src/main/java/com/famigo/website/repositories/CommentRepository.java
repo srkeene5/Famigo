@@ -34,7 +34,7 @@ public class CommentRepository {
                 ps.setInt(4, comment.getLikes());
                 ps.setTimestamp(5, Timestamp.valueOf(comment.getTimeStamp()));
                 ps.setBoolean(6, comment.isEdited());
-                ps.setString(7, comment.getReviewId());
+                ps.setInt(7, comment.getReviewId());
             }
 
         });
@@ -51,12 +51,12 @@ public class CommentRepository {
             comments.add(new Comment(uid, (int) o.get("comID"),
                     (String) o.get("comment"), (int) o.get("likes"),
                     (LocalDateTime) o.get("timestamp"), (boolean) o.get("edited"),
-                    (String) o.get("reviewID")));
+                    (int) o.get("reviewID")));
         }
         return comments;
     }
 
-    public ArrayList<Comment> getCommentsByReview(String rid) {
+    public ArrayList<Comment> getCommentsByReview(int rid) {
         List<Map<String, Object>> commentList = jdbcTemplate.queryForList("SELECT * FROM comments WHERE reviewID=?",
                 new Object[] { rid });
         if (commentList == null || commentList.isEmpty()) {
@@ -70,6 +70,22 @@ public class CommentRepository {
                     (boolean) o.get("edited"), rid));
         }
         return comments;
+    }
+
+    public Comment getCommentByID(int cid) {
+        List<Map<String, Object>> commentList = jdbcTemplate.queryForList("SELECT * FROM comments WHERE comID=?",
+                new Object[] { cid });
+        if (commentList == null || commentList.isEmpty()) {
+            return null;
+        }
+        Comment comment = null;
+        for (Map<String, Object> o : commentList) {
+            comment = new Comment((String) o.get("userID"),
+                    cid, (String) o.get("comment"), (int) o.get("likes"),
+                    (LocalDateTime) o.get("timestamp"), (boolean) o.get("edited"),
+                    (int) o.get("reviewID"));
+        }
+        return comment;
     }
 
 }

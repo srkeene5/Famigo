@@ -212,8 +212,8 @@ public class ReviewSorter {
         boolean testingPrime = true;
         boolean testingSec = true;
 
-        int addruns = 10;
-        int revLen = 0;
+        int addruns = 0;
+        int revLen = 20;
         String getBy = "place";
         String[] userIds = { "u1", "u2", "u3", "u4", "u5", "u6", "u7", "u8" };
 
@@ -241,7 +241,7 @@ public class ReviewSorter {
                 for (int j = 0; j < revLen; j++) {
                     buffer.append((char) rand.nextInt(97, 123));
                 }
-                rr.addReview(new Review(userId, "place", buffer.toString(), rand.nextInt(1, 6)));
+                rr.addReview(new Review(userId, 0, buffer.toString(), rand.nextInt(1, 6)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
@@ -252,7 +252,7 @@ public class ReviewSorter {
         if (getBy.equals("user")) {
             revs = rr.getReviewsByUser("user");
         } else {
-            revs = rr.getReviewsByPlace("place");
+            revs = rr.getReviewsByPlace(0);
         }
 
         if (revs == null) {

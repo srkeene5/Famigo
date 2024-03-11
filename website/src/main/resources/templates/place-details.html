@@ -94,6 +94,22 @@
         </div>
     </div>
 
+    <div id="myReport" class="popup">
+        <div class="popup-content">
+            <h3>Report Here:</h3>
+            <span id="repError"></span>
+
+            <textarea id="Rep" name="ReportName"></textarea>
+            <div class="formClear"></div>
+
+            <div class="formClear"></div>
+            <div class="button-container">
+                <button id="cancelRep">Cancel</button>
+                <button id="submitRep">Submit</button>
+            </div>
+        </div>
+    </div>
+
     <div id="reviewList">
         <ul th:each="i, ib : ${reviews}">
             <div class="reviewBlock" th:object="${i}">
@@ -104,6 +120,7 @@
     
                 <li><button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>  <p style="display:inline-block" th:text="*{likes}"></p></li>
                 <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p style="display:inline-block" th:text="*{dislikes}"></p></li>
+                <li><button th:id="'rpBtn' + ${ib.index}" class="reportBtn">Report</button>
                 <br>
             </div>
     
@@ -232,7 +249,9 @@
 
         let likeBtns = document.getElementsByClassName("likeBtn");
         let dislikeBtns = document.getElementsByClassName("dislikeBtn");
+        let reportBtns = document.getElementsByClassName("reportBtn");
 
+        reviewNum = "";
         for (let i = 0; i < likeBtns.length; i++) {
             likeBtns[i].addEventListener("click", function(event) {
                 // Like button pressed
@@ -264,6 +283,53 @@
 
                 sendLikeOrDislike(values);
             });
+            reportBtns[i].addEventListener("click", function(){
+                console.log("0");
+                myReport.classList.add("show");
+                console.log("1");
+                // Report button logic
+                reviewNum = event.target.id.substring(5); // ID# of button
+                console.log("2");
+            });
+        }
+        submitRep.addEventListener("click", function(){
+            let repText = Rep.value;
+            if (repText == "") {
+                let repError = document.getElementById("repError");
+                repError.textContent = "Report must contain Text";
+                repError.style.color = "red";
+            } else {
+                let values = [];
+                values[0] = repText;
+                console.log("3");
+                reportId = parseInt(document.getElementById("rev"+reviewNum).innerHTML);
+                console.log("4 " + reportId);
+                values[1] = reportId.toString();
+                console.log("5");
+                sendReport(values);
+            }
+        });
+        
+        cancelRep.addEventListener("click", function(){
+            resetRepPop();
+        });
+
+        function resetRepPop(){
+            myReport.classList.remove("show");
+            Rep.value = "";
+            repError.textContent = "";
+        }
+
+        function sendReport(values) {
+            $.ajax({
+                type: "POST",
+                url: "${placePath}/reportRevReact",
+                data: {vals: values},
+                timeout: 60,
+            }).done(function (data) {
+                console.log(data);
+            });
+            resetRepPop();
         }
 
         function sendLikeOrDislike(values) {

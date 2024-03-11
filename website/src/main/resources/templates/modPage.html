@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Place Details</title>
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .popup {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none;
+        }
+        .popup-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888888;
+            width: 30%;
+            font-weight: bolder;
+        }
+        .popup-content button {
+            display: block;
+            margin: 0 auto;
+        }
+        .show {
+            display: block;
+        }
+        h1 {
+            color: #5898FF;
+        }
+        textarea {
+            position: relative;
+            resize: none;
+            width: 100%;
+            height: 20%;
+        }
+        .button-container {
+            display: flex;
+        }
+        .formClear {
+            clear:left;
+            height: 5px;
+        }
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Mod Page</h1>
+    <!-- details -->
+    <br>
+    <h2>Reports</h2>
+
+    <div id="reportList">
+        <ul th:each="i, ib : ${reports}">
+            <div class="reportBlock" th:object="${i}">
+                <p th:id="'rep' + ${ib.index}" class="repID">[[*{reportID}]]</p>
+                <li th:text="'User: ' + *{userID}"></li>
+                <li th:text="'Report: ' + ${i.getExplanation()}"></li>
+                <li th:text="'Reported Content: ' + ${i.getReportedText()}">
+    
+                <li><button th:id="'ignoreBtn' + ${ib.index}" class="ignBtn">Reject Report</button>
+                <li><button th:id="'deleteBtn' + ${ib.index}" class="delBtn">Delete Reported Content</button>
+                <li><button th:id="'delBanBtn' + ${ib.index}" class="delBanBtn">Delete Content and Ban User</button>
+                <br>
+            </div>
+    
+        </ul>
+    </div>
+
+    <script>
+
+        // Ajax setup
+        let script = document.createElement('script');
+        script.src = '//code.jquery.com/jquery-3.6.3.min.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+        /* - - - Add Review Popup - - - */
+
+        let place = document.getElementById("placeId").innerHTML;
+
+        document.getElementById("placeId").style.display = "none";
+        let repIds = document.getElementsByClassName("repId");
+        for (let i = 0; i < repIds.length; i++) {
+            repIds[i].style.display = "none";
+        }
+         
+
+        /* - - - Reivew List - - - */
+
+        
+        let ignBtns = document.getElementsByClassName("ignBtn");
+        let delBtns = document.getElementsByClassName("delBtn");
+        let delBanBtn = document.getElementsByClassName("delBanBtn");
+
+        reportNum = "";
+        for (let i = 0; i < ignBtns.length; i++) {
+            ignBtns[i].addEventListener("click", function(event) {
+                /*
+                let values = [];
+
+                values[0] = 1;
+
+                // Review number on page (between 0 and max reviews per page - 1)
+                // For now, we'll just return all the reviews at once. We'll separate by page later, if needed.
+                reviewNum = event.target.id.substring(5); // ID# of button
+                console.log("rev" + reviewNum);
+                console.log(document.getElementById("rev" + reviewNum));
+                reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
+                console.log(reviewId);
+                values[1] = reviewId;
+
+                sendLikeOrDislike(values);
+                */
+            });
+            delBtns[i].addEventListener("click", function() {
+                /*
+                // Dislike button logic
+                let values = [];
+                values[0] = 0;
+                reviewNum = event.target.id.substring(5); // ID# of button
+                reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
+                console.log(reviewId);
+                values[1] = reviewId;
+
+                sendLikeOrDislike(values);
+                */
+            });
+            delBanBtn[i].addEventListener("click", function(){
+                /*
+                console.log("0");
+                myReport.classList.add("show");
+                console.log("1");
+                // Report button logic
+                reviewNum = event.target.id.substring(5); // ID# of button
+                console.log("2");
+                */
+            });
+        }
+        /*
+        submitRep.addEventListener("click", function(){
+            let repText = Rep.value;
+            if (repText == "") {
+                let repError = document.getElementById("repError");
+                repError.textContent = "Report must contain Text";
+                repError.style.color = "red";
+            } else {
+                let values = [];
+                values[0] = repText;
+                console.log("3");
+                reportId = parseInt(document.getElementById("rev"+reviewNum).innerHTML);
+                console.log("4 " + reportId);
+                values[1] = reportId.toString();
+                console.log("5");
+                sendReport(values);
+            }
+        });
+        
+        cancelRep.addEventListener("click", function(){
+            resetRepPop();
+        });
+
+        function resetRepPop(){
+            myReport.classList.remove("show");
+            Rep.value = "";
+            repError.textContent = "";
+        }
+
+        function sendReport(values) {
+            $.ajax({
+                type: "POST",
+                url: "${placePath}/reportRevReact",
+                data: {vals: values},
+                timeout: 60,
+            }).done(function (data) {
+                console.log(data);
+            });
+            resetRepPop();
+        }
+
+        function sendLikeOrDislike(values) {
+
+            console.log("Sending like/dislike data...");
+
+            $.ajax({
+                    type: "POST",
+                    url: "${placePath}/addRevReact",
+                    data: {vals: values},
+                    timeout: 30,
+                }).done(function (data) {
+                    console.log(data);
+                });
+        }
+        */
+    </script>
+</body>
+
+</html>
