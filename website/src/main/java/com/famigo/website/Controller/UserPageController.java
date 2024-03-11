@@ -12,7 +12,7 @@ import com.famigo.website.utilities.Utilities;
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.repositories.FollowingRepository;
 import com.famigo.website.model.User;
-import com.famigo.website.model.SubFollow;
+//import com.famigo.website.model.SubFollow;
 
 @Controller
 public class UserPageController {
@@ -47,7 +47,7 @@ public class UserPageController {
 																										// their own
 																										// page, oops
 		User user_logged_in = userRepository.getUser("username", Utilities.getUserID());
-		SubFollow followerCount = new SubFollow();
+		// SubFollow followerCount = new SubFollow();
 		// followerCount.setFollowerCount(followRepository.getFollowerCount(user_being_viewed.getUsername()));
 		// debugging
 		if (user_being_viewed != null) {
