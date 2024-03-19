@@ -53,7 +53,7 @@ public class ReviewRepository {
             reviews.add(new Review(uid, (int) o.get("revID"),
                     (String) o.get("review"), (int) o.get("stars"),
                     (LocalDateTime) o.get("timestamp"), (boolean) o.get("edited"),
-                    (String) o.get("placeID"), (int) o.get("likes"), (int) o.get("dislikes")));
+                    (String) o.get("placeID").toString(), (int) o.get("likes"), (int) o.get("dislikes")));
         }
         return reviews;
     }

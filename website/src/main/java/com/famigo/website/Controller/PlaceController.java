@@ -45,7 +45,7 @@ public class PlaceController {
         ArrayList<Review> reviews = rr.getReviewsByPlace(place.getId());
         if (reviews == null || reviews.isEmpty()) {
             model.addAttribute("reviews", new Review[0]);
-            model.addAttribute("userReactions", new int[0]);
+            model.addAttribute("revReactions", new int[0]);
         } else {
             model.addAttribute("reviews", reviews.toArray());
 

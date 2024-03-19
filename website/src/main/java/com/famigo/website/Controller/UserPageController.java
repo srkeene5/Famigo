@@ -5,9 +5,14 @@ import java.util.ArrayList;
 
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.famigo.website.model.Signup;
 import com.famigo.website.utilities.Utilities;
@@ -92,6 +97,9 @@ public class UserPageController {
 		User chosenUser = userRepository.getUser("username", username);
 
 		ArrayList<Review> revs = revRepo.getReviewsByUser(chosenUser.getID());
+		if (revs == null) {
+			revs = new ArrayList<Review>();
+		}
 		model.addAttribute("reviews", revs);
 		model.addAttribute("revCount", revs.size());
 
@@ -102,21 +110,48 @@ public class UserPageController {
 			totalRevLikes += r.getLikes();
 			// Insert ArrayList of comments from that review into 2D comment ArrayList
 			ArrayList<Comment> coms = comRepo.getCommentsByReview(r.getRevId());
+			if (coms == null) {
+				coms = new ArrayList<Comment>();
+			}
 			revComments.add(coms);
 			for (Comment c : coms) {
 				totalComLikes += c.getLikes();
 			}
 		}
 
+		int[] revReactions = revRepo.getUserReviewReactions(Utilities.getUserID(), revs);
+        model.addAttribute("revReactions", revReactions);
+
 		model.addAttribute("totalRevLikes", totalRevLikes);
-		float avgRevLikes = (float) totalRevLikes / revs.size();
+		float avgRevLikes = 0;
+		if (revs.size() > 0) {
+			avgRevLikes = (float) totalRevLikes / revs.size();
+		}
 		model.addAttribute("avgRevLikes", avgRevLikes);
 		model.addAttribute("comments", revComments);
 		model.addAttribute("comCount", revComments.size());
 		model.addAttribute("totalComLikes", totalComLikes);
-		float avgComLikes = (float) totalComLikes / revComments.size();
+		float avgComLikes = 0;
+		if (revComments.size() > 0) {
+			avgComLikes = (float) totalComLikes / revComments.size();
+		}
 		model.addAttribute("avgComLikes", avgComLikes);
 
 		return "userReviews";
 	}
+
+	@RequestMapping(value = "/user/{username}/review-data/addRevReact", method = RequestMethod.POST)
+    public ResponseEntity<String> likeOrDislike(@RequestParam(value = "vals[]") int[] vals) {
+        // Save like/dislike action
+        // vals[0] = like (1) or dislike (0), and values[1] = review ID
+        if (vals[0] == 1) {
+            // Like button pressed
+            revRepo.alterReviewReaction(Utilities.getUserID(), vals[1], true);
+        } else {
+            // Dislike button pressed
+            revRepo.alterReviewReaction(Utilities.getUserID(), vals[1], false);
+        }
+
+        return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
+    }
 }
