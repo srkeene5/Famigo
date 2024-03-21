@@ -19,6 +19,7 @@ import com.famigo.website.utilities.Utilities;
 
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.repositories.FollowingRepository;
+import com.famigo.website.repositories.PlaceRepository;
 import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.repositories.CommentRepository;
 import com.famigo.website.model.User;
@@ -37,6 +38,8 @@ public class UserPageController {
 	ReviewRepository revRepo;
 	@Autowired
 	CommentRepository comRepo;
+	@Autowired
+	PlaceRepository placeRepo;
 
 	@GetMapping("/user")
 	public String greeting(Model model) {
@@ -136,6 +139,12 @@ public class UserPageController {
 			avgComLikes = (float) totalComLikes / revComments.size();
 		}
 		model.addAttribute("avgComLikes", avgComLikes);
+
+		String[] placeNames = new String[revs.size()];
+		for (int i = 0; i < placeNames.length; i++) {
+			placeNames[i] = placeRepo.getPlaceByID(revs.get(i).getPlaceId()).getName();
+		}
+		model.addAttribute("placeNames", placeNames);
 
 		return "userReviews";
 	}

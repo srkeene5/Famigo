@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Review Data</title>
-    
+
     <style>
         .likeBtn {
             background-color: lightgray;
@@ -40,13 +40,13 @@
         <ul th:each="i, ib : ${reviews}">
             <div class="reviewBlock" th:object="${i}">
                 <p th:id="'rev' + ${ib.index}" class="revId">[[*{revId}]]</p>
-                <li th:text="'User: ' + *{userId}"></li>
-                <li th:text="'Rated ' + *{stars} + ' stars'"></li>
-                <li th:text="*{review}"></li>
-    
-                <li><button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>  <p th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></p></li>
-                <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p></li>
+                <p th:text="'Place: ' + ${placeNames[ib.index]}"></p>
+                <p th:text="'Rated ' + *{stars} + ' stars'"></p>
+                <p th:text="*{review}"></p>
+                <button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>     <p th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></p>
+                <button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>     <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p>
                 <p th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></p>
+                <br>
                 <br>
             </div>
     

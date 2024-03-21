@@ -2,7 +2,7 @@ package com.famigo.website.repositories;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.Place;
+import com.famigo.website.model.Review;
 
 @Repository
 public class PlaceRepository {
@@ -68,5 +69,24 @@ public class PlaceRepository {
             // count++;
         }
         return place;
+    }
+
+    public Place getPlaceByID(String id) {
+        Map<String, Object> place;
+        try {
+            place = jdbcTemplate.queryForMap("SELECT * FROM place WHERE id=?",
+                    new Object[] {Integer.parseInt(id)});
+        } catch (DataAccessException e) {
+            place = null;
+        }
+
+        if (place != null) {
+            return new Place((String) place.get("rating"),
+                    (String) place.get("name"),
+                    (String) place.get("address"),
+                    Integer.toString(((int) place.get("id")))
+            );
+        }
+        return null;
     }
 }
