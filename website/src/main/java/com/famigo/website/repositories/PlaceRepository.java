@@ -64,18 +64,18 @@ public class PlaceRepository {
         // int count = 0;
         for (Map<String, Object> o : placeList) {
             if (name.equals(o.get("name"))) {
-                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), String.valueOf((int) o.get("id")));
+                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), (int) o.get("id"));
             }
             // count++;
         }
         return place;
     }
 
-    public Place getPlaceByID(String id) {
+    public Place getPlaceByID(int id) {
         Map<String, Object> place;
         try {
             place = jdbcTemplate.queryForMap("SELECT * FROM place WHERE id=?",
-                    new Object[] {Integer.parseInt(id)});
+                    new Object[] {id});
         } catch (DataAccessException e) {
             place = null;
         }
@@ -84,7 +84,7 @@ public class PlaceRepository {
             return new Place((String) place.get("rating"),
                     (String) place.get("name"),
                     (String) place.get("address"),
-                    Integer.toString(((int) place.get("id")))
+                    ((int) place.get("id"))
             );
         }
         return null;

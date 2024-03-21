@@ -241,7 +241,7 @@ public class ReviewSorter {
                 for (int j = 0; j < revLen; j++) {
                     buffer.append((char) rand.nextInt(97, 123));
                 }
-                rr.addReview(new Review(userId, "place", buffer.toString(), rand.nextInt(1, 6)));
+                rr.addReview(new Review(userId, -1, buffer.toString(), rand.nextInt(1, 6)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
@@ -252,7 +252,7 @@ public class ReviewSorter {
         if (getBy.equals("user")) {
             revs = rr.getReviewsByUser("user");
         } else {
-            revs = rr.getReviewsByPlace("place");
+            revs = rr.getReviewsByPlace(-1);
         }
 
         if (revs == null) {

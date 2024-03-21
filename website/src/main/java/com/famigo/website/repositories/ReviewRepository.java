@@ -34,7 +34,7 @@ public class ReviewRepository {
                 ps.setInt(4, review.getStars());
                 ps.setTimestamp(5, Timestamp.valueOf(review.getTimeStamp()));
                 ps.setBoolean(6, review.isEdited());
-                ps.setString(7, review.getPlaceId());
+                ps.setInt(7, review.getPlaceId());
                 ps.setInt(8, 0);
                 ps.setInt(9, 0);
             }
@@ -53,12 +53,12 @@ public class ReviewRepository {
             reviews.add(new Review(uid, (int) o.get("revID"),
                     (String) o.get("review"), (int) o.get("stars"),
                     (LocalDateTime) o.get("timestamp"), (boolean) o.get("edited"),
-                    (String) o.get("placeID").toString(), (int) o.get("likes"), (int) o.get("dislikes")));
+                    (int) o.get("placeID"), (int) o.get("likes"), (int) o.get("dislikes")));
         }
         return reviews;
     }
 
-    public ArrayList<Review> getReviewsByPlace(String pid) {
+    public ArrayList<Review> getReviewsByPlace(int pid) {
         List<Map<String, Object>> reviewList = jdbcTemplate.queryForList("SELECT * FROM reviews WHERE placeID=?",
                 new Object[] { pid });
         if (reviewList == null || reviewList.isEmpty()) {
