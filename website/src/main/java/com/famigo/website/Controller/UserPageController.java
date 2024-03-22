@@ -38,7 +38,7 @@ public class UserPageController {
 
 		model.addAttribute("friendCountOfUser", followRepository.getFriendsCount(user.getUsername()));
 		//model.addAttribute("friendList", followRepository.getFriendsList(user.getUsername()));
-
+		model.addAttribute("isFollowing", false); // users cannot follow themselves
 
 		return "userpage";
 	}

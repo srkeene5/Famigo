@@ -8,7 +8,9 @@
     <h3>Following</h3>
     
     <ul th:if="${followings}">
-        <li th:each="following : ${followings}" th:text="${following}"></li>
+        <li th:each="following : ${followings}">
+            <a th:href="@{/user/{followingUsername}(followingUsername=${following})}" th:text="${following}"></a>
+        </li>
     </ul>
 </body>
 </html>

@@ -340,9 +340,13 @@
         <p th:if="${userpage == null}">
             User does not exist.
         </p>
-        <!-- users shouldnt follow themselves-->
-        <p th:if="${userpage.username} != ${user_logged_in.username}">
+        <!-- users shouldnt follow themselves, also change button depending on follow status-->
+        <p th:if="${userpage.username != user_logged_in.username and !isFollowing}">
             <button id="followbutton" type="button" >Follow</button>
+        </p>
+
+        <p th:if="${userpage.username != user_logged_in.username and isFollowing}">
+            <button id="followbutton" type="button" >Unfollow</button>
         </p>
     </div>
     
