@@ -14,6 +14,7 @@ import com.famigo.website.repositories.FollowingRepository;
 import com.famigo.website.model.User;
 import com.famigo.website.model.SubFollow;
 
+
 @Controller
 public class UserPageController {
 
@@ -26,6 +27,7 @@ public class UserPageController {
 	@GetMapping("/user")
 	public String greeting(Model model) {
 		User user = userRepository.getUser("id", Utilities.getUserID());
+		model.addAttribute("userlist", userRepository.getAllUsernames());
 		model.addAttribute("signup", new Signup());
 		model.addAttribute("userpage", user);
 		model.addAttribute("user_logged_in", user);
@@ -41,6 +43,7 @@ public class UserPageController {
 	@GetMapping("/user/{username}")
 	public String userPage(@PathVariable String username, Model model) {
 		// UserRepository userRepo = new UserRepository();
+		model.addAttribute("userlist", userRepository.getAllUsernames());
 		User user_being_viewed = userRepository.getUser("username", username/* util.getUserID() */); // accidentally
 																										// made the user
 																										// always go to

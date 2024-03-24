@@ -2,10 +2,19 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 <style>
-    
+    a, a:hover, a:visited, a:active {
+        color: inherit;
+        text-decoration: none;
+    }
     
     body {
         background-color: var(--primary-color);
+    }
+
+    li {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
     }
 
     .infoblock {
@@ -64,6 +73,10 @@
         cursor: pointer;
         overflow: hidden;
         outline: none;
+    }
+
+    .userlist {
+
     }
 
     .buttonHolder {
@@ -199,6 +212,33 @@
         display: none;
     }
 
+    #searchfield {
+        width: 18vw;
+        height: 7vh;
+        border-radius: calc(100vh * 0.65 * 0.5);
+        border: 2px solid;
+        padding-left: 1vw;
+        font-size: calc(4vh);
+    }
+
+    #searchbox {
+        height: 5vh;
+        width: 10vw;
+        margin-left: 39vw;
+        margin-top: 14vh;
+        display: none;
+    }
+
+    #searchlist {
+        width: 15vw;
+        height: 32vh;
+        border: 2px solid;
+        padding-left: 1vw;
+        font-size: calc(4vh);
+        margin-top: -1.35vh;
+        margin-left: 2.7vw;
+    }
+
     #settingspage {
         display: none;
     }
@@ -286,6 +326,15 @@
         </div>
     </div>
 
+    <form id="searchbox">
+        <p><input id="searchfield" type="text" placeholder="Search Username" oninput="UpdateSearch();" onclick="ShowUsers()"/></p>
+        <div class="infoblock" id="searchlist">
+            <li class="user_list" th:each="user_name : ${userlist}" th:id="${user_name}">
+                <a th:href="@{/user/{name}(name=${user_name})}" th:text="${user_name}"></a>
+            </li>
+        </div>
+    </form>
+
 	<div id="navigationbar" class="infoblock">
         <div id="textholder">
             <p id="famigotext">
@@ -317,11 +366,11 @@
             </button>
         </form>
 
-        <form class="form" action="#" th:action="@{/user}" method="get">
-            <button class="button" id="search">
+        <div>
+            <button class="button" id="search" onclick="ShowSearch();">
                 <img draggable="false" class="image" th:src="@{/images/search.png}"/>
             </button>
-        </form>
+        </div>
 
         <div>
             <button class="button" id="settings" onclick="ShowSettings();">
@@ -426,6 +475,14 @@
             document.getElementById(element).style.display = "block";
         }
 
+        function RemoveElement(element) {
+            document.getElementById(element).style.display = "hidden";
+        }
+
+        function ShowUsers() {
+            AddElement("searchlist");
+        }
+
         function ValidatePassword() {
             var currentPassword = document.getElementById("currentpassword").value;
             var password = document.getElementById("password").value;
@@ -453,6 +510,29 @@
                 alert("Usernames do not match. Please try again.");
                 document.getElementById("username").value = "";
                 document.getElementById("confirmusername").value = "";
+            }
+        }
+
+        function ShowSearch() {
+            if (document.getElementById("searchbox").style.display == "none") {
+                document.getElementById("searchbox").style.display = "block";
+                UpdateSearch();
+            } else {
+                document.getElementById("searchfield").value = "";
+                document.getElementById("searchbox").style.display = "none";
+                document.getElementById("searchlist").style.display = "none";
+            }
+        }
+
+        function UpdateSearch() {
+            var users = document.getElementsByClassName("user_list");
+            var searchedUsername = document.getElementById("searchfield").value;
+            for (let i = 0; i < users.length; i++) {
+                if (users[i].id.toLowerCase().includes(searchedUsername)) {
+                    users[i].style.display = "block";
+                } else {
+                    users[i].style.display = "none";
+                }
             }
         }
 
