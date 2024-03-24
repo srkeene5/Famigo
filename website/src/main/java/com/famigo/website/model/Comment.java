@@ -7,6 +7,7 @@ public class Comment {
     private int comId;
     private String comment;
     private int likes;
+    private int dislikes;
     private LocalDateTime timeStamp;
     private boolean edited;
     private String reviewId;
@@ -47,6 +48,10 @@ public class Comment {
         return likes;
     }
 
+    public int getDislikes() {
+        return dislikes;
+    }
+
     public LocalDateTime getTimeStamp() {
         return timeStamp;
     }
@@ -61,5 +66,9 @@ public class Comment {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
 }

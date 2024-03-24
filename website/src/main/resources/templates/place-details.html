@@ -129,14 +129,32 @@
                 <li><button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>  <p th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></p></li>
                 <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p></li>
                 <p th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></p>
+                
+                <!--Comment logic starts-->
+                <form action="/addComment" method="POST">
+                    <label for="commentBody">Enter a comment:</label>
+                    <textarea id="commentBody" name="comment" size="10" rows="5" maxlength="500"></textarea>
+                    <!--history used to return to same page after POST returns-->
+                    <input type="hidden" name="url" id="url">
+                    <button type="submit">Submit</button>
+                </form>
+                <!--Comment logic ends-->
+
                 <br>
+            
             </div>
     
         </ul>
     </div>
 
     <script>
+        // to get url
+        const form = document.querySelector('form');
+        const url = document.getElementById('url');
 
+        form.addEventListener('submit', function() {
+            url.value = window.location.href;  
+        });
         // Ajax setup
         let script = document.createElement('script');
         script.src = '//code.jquery.com/jquery-3.6.3.min.js';
@@ -245,6 +263,7 @@
                 stval = 5;
             }
         });
+
         function resetRevPop(){
             myPopup.classList.remove("show");
             Review.value = "";
