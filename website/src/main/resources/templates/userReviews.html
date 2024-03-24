@@ -32,21 +32,29 @@
 </head>
 
 <body>
-    <h1>Review Data</h1>
+    <h1>Reviews by [[${username}]]</h1>
+    Total reviews written: [[${revCount}]]<br>
+    Total review comments written: [[${comCount}]]
+    <br><br>
+    <div th:if="${avgRevLikes} != -1">(Only you can see the following data)</div>
+    <div th:if="${avgRating} != -1">Average review rating: [[${avgRating}]]</div>
+    <div th:if="${avgRevLikes} != -1">Average likes per review: [[${avgRevLikes}]]</div>
+    <div th:if="${avgComsPerRev} != -1">Average comments per review: [[${avgComsPerRev}]]</div>
+    <br>
 
     <h1>Reviews</h1>
 
     <div id="reviewList">
         <ul th:each="i, ib : ${reviews}">
             <div class="reviewBlock" th:object="${i}">
-                <p th:id="'rev' + ${ib.index}" class="revId">[[*{revId}]]</p>
-                <p th:text="'Place: ' + ${placeNames[ib.index]}"></p>
-                <p th:text="'Rated ' + *{stars} + ' stars'"></p>
-                <p th:text="*{review}"></p>
-                <button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>     <p th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></p>
-                <button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>     <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p>
-                <p th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></p>
-                <BR>
+                <div th:id="'rev' + ${ib.index}" class="revId">[[*{revId}]]</div>
+                <div th:text="'Place: ' + ${placeNames[ib.index]}"></div>
+                <div th:text="'Rated ' + *{stars} + ' stars'"></div>
+                <div th:text="*{review}"></div>
+                <button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button> <div th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></div>
+                &emsp;<button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button> <div th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></div>
+                <div th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></div>
+                <br><br>
             </div>
     
         </ul>

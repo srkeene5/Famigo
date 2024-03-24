@@ -96,20 +96,20 @@ public class UserPageController {
 
 	@GetMapping("/user/{username}/review-data")
 	public String userReviewStats(@PathVariable String username, /*@RequestParam(value = "<webVarName>") <varType> <localVarName>*/ Model model) {
-		User curUser = userRepository.getUser("id", Utilities.getUserID());
 		User chosenUser = userRepository.getUser("username", username);
 
 		ArrayList<Review> revs = revRepo.getReviewsByUser(chosenUser.getID());
 		if (revs == null) {
 			revs = new ArrayList<Review>();
 		}
-		model.addAttribute("reviews", revs);
-		model.addAttribute("revCount", revs.size());
 
 		ArrayList<ArrayList<Comment>> revComments = new ArrayList<ArrayList<Comment>>();
+		int commentCount = 0;
 		int totalRevLikes = 0;
 		int totalComLikes = 0;
+		int ratingSum = 0;
 		for (Review r : revs) {
+			ratingSum += r.getStars();
 			totalRevLikes += r.getLikes();
 			// Insert ArrayList of comments from that review into 2D comment ArrayList
 			ArrayList<Comment> coms = comRepo.getCommentsByReview(r.getRevId());
@@ -118,33 +118,56 @@ public class UserPageController {
 			}
 			revComments.add(coms);
 			for (Comment c : coms) {
+				commentCount++;
 				totalComLikes += c.getLikes();
 			}
 		}
 
 		int[] revReactions = revRepo.getUserReviewReactions(Utilities.getUserID(), revs);
-        model.addAttribute("revReactions", revReactions);
 
-		model.addAttribute("totalRevLikes", totalRevLikes);
 		float avgRevLikes = 0;
+		float avgComsPerRev = 0;
+		float avgRating = 0;
 		if (revs.size() > 0) {
 			avgRevLikes = (float) totalRevLikes / revs.size();
+			avgComsPerRev = commentCount / revs.size();
+			avgRating = ratingSum / revs.size();
+
 		}
-		model.addAttribute("avgRevLikes", avgRevLikes);
-		model.addAttribute("comments", revComments);
-		model.addAttribute("comCount", revComments.size());
-		model.addAttribute("totalComLikes", totalComLikes);
 		float avgComLikes = 0;
 		if (revComments.size() > 0) {
 			avgComLikes = (float) totalComLikes / revComments.size();
 		}
-		model.addAttribute("avgComLikes", avgComLikes);
 
 		String[] placeNames = new String[revs.size()];
 		for (int i = 0; i < placeNames.length; i++) {
 			placeNames[i] = placeRepo.getPlaceByID(revs.get(i).getPlaceId()).getName();
 		}
+
+		// Add public data to model
+		model.addAttribute("username", chosenUser.getUsername());
+		model.addAttribute("reviews", revs);
+		model.addAttribute("revCount", revs.size());
+		model.addAttribute("revReactions", revReactions);
+		model.addAttribute("totalRevLikes", totalRevLikes);
+		model.addAttribute("comments", revComments);
+		model.addAttribute("comCount", commentCount);
+		model.addAttribute("totalComLikes", totalComLikes);
 		model.addAttribute("placeNames", placeNames);
+
+		// Add private data to model only if user logged in and user being viewed match.
+		// If not, set the attributes to null. This must be done server side for increased security.
+		if (Utilities.getUserID().equals(chosenUser.getID())) {
+			model.addAttribute("avgRevLikes", avgRevLikes);
+			model.addAttribute("avgComLikes", avgComLikes);
+			model.addAttribute("avgComsPerRev", avgComsPerRev);
+			model.addAttribute("avgRating", avgRating);
+		} else {
+			model.addAttribute("avgRevLikes", -1);
+			model.addAttribute("avgComLikes", -1);
+			model.addAttribute("avgComsPerRev", -1);
+			model.addAttribute("avgRating", -1);
+		}
 
 		return "userReviews";
 	}
