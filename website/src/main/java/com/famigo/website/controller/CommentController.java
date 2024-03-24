@@ -26,10 +26,14 @@ public class CommentController {
     boolean testing = true;
 
     @Autowired
-    CommentRepository comRepo;
+    CommentRepository commentRepo;
 
     @Autowired
     UserRepository userRepo;
+
+
+    @Autowired
+    ReviewRepository reviewRepo;
 
     @RequestMapping(value = "/addComment", method = RequestMethod.GET)
     public String showCommentPage(ModelMap model) {
@@ -37,49 +41,44 @@ public class CommentController {
     }
 
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
-    public ResponseEntity<String> submitComment(@RequestParam("comment") String commentBody, @RequestParam("url") String url) {
+    public ResponseEntity<String> submitComment(@RequestParam("comment") String commentBody, @RequestParam("url") String url, @RequestParam("revId") String reviewID) {
         System.out.println("ADDCOMMENT POST REACHED");
         System.out.println("The comment: " + commentBody);
 
         //Comment comment = new Comment(Utilities.getUserID(), subCom.getComPlace(), subCom.getComText(), Integer.parseInt(subCom.getComLikes()));
         User user = userRepo.getUser("id", Utilities.getUserID());
-        /*String reviewID = 
+        //Review review = reviewRepo.get;
+        System.out.println("{reviewID: " + reviewID + "}");
         Comment comment = new Comment(user.getID(), reviewID, commentBody, 0);
-        comRepo.addComment(comment);
-        System.out.println("User: " + comment.getUserId());
-        System.out.println("ReviewID: " + comment.getComId());
-        System.out.println("Review: " + comment.getComment());
-        //System.out.println("PlaceID: " + comment.getPlaceId());
-        System.out.println("Likes: " + comment.getLikes());
-        System.out.println("Dislikes: " + comment.getDislikes());
-        if (testing) {
-            ArrayList<Comment> uCommentArr = comRepo.getCommentsByUser(Utilities.getUserID());
-            //ArrayList<Comment> pRevArr = comRepo.getReviewsByPlace(subCom.getrPlace());
-            System.out.println("_____Print Review By UserID_____");
-            for (Comment uComment : uCommentArr) {
-                System.out.println("User: " + uComment.getUserId());
-                //System.out.println("ReviewID: " + uRev.getRevId());
-                //System.out.println("Review: " + uRev.getReview());
-                //System.out.println("Stars: " + uRev.getStars());
-                //System.out.println("PlaceID: " + uRev.getPlaceId());
-                System.out.println("Likes: " + uComment.getLikes());
-                System.out.println("Dislikes: " + uComment.getDislikes());
-                System.out.println("Comment: " + uComment.getComment());
-                System.out.println();
+        commentRepo.addComment(comment);
+
+        // Testing
+        int test = 2;
+        if (test == 1) {
+            System.out.println("-------------------\nCOMMENT INFO:");
+            System.out.println("User: " + comment.getUserId());
+            System.out.println("ComID: " + comment.getComId());
+            System.out.println("RevID: " + comment.getReviewId());
+            System.out.println("Comment: " + comment.getComment());
+            System.out.println("Likes: " + comment.getLikes());
+            System.out.println("Dislikes: " + comment.getDislikes());
+            System.out.println("-------------------");
+        } else if (test == 2) {
+            System.out.println("[Reviews for id: " + comment.getReviewId() + "]");
+            ArrayList<Comment> comments = commentRepo.getCommentsByReview(comment.getReviewId());
+            for (int i = 0; i < comments.size(); i++) {
+                Comment c = comments.get(i);
+                System.out.println("User: " + c.getUserId());
+                System.out.println("ComID: " + c.getComId());
+                System.out.println("RevID: " + c.getReviewId());
+                System.out.println("Comment: " + c.getComment());
+                System.out.println("Likes: " + c.getLikes());
+                System.out.println("Dislikes: " + c.getDislikes());
+                System.out.println("-------------------");
             }
-            /*System.out.println("_____Print Review By PlaceID_____");
-            for (Review pRev : pRevArr) {
-                System.out.println("User: " + pRev.getUserId());
-                System.out.println("ReviewID: " + pRev.getRevId());
-                System.out.println("Review: " + pRev.getReview());
-                System.out.println("Stars: " + pRev.getStars());
-                System.out.println("PlaceID: " + pRev.getPlaceId());
-                System.out.println();
-            }*/
-        //}
+        }
 
-
-        // Keep us on same page
+        // Keep us on same page after commenting
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", url).build(); 
     }
 

@@ -2,6 +2,7 @@ package com.famigo.website.repositories;
 
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class ReviewRepository {
             }
 
         });
+        //Testing
+        System.out.println("Printing all reviews:");
     }
 
     public ArrayList<Review> getReviewsByUser(String uid) {

@@ -134,8 +134,13 @@
                 <form action="/addComment" method="POST">
                     <label for="commentBody">Enter a comment:</label>
                     <textarea id="commentBody" name="comment" size="10" rows="5" maxlength="500"></textarea>
-                    <!--history used to return to same page after POST returns-->
+                    <!--url used to return to same page after POST returns-->
                     <input type="hidden" name="url" id="url">
+                    <!--get the review id to store comment-->
+                    <input type="hidden" name="revId" id="revId" th:value="*{revId}">
+                    <p> Review ID: [[*{revId}]]</p>
+
+                    <!--<p> Username: <span th:text="${rev.revId}"></span></p>-->
                     <button type="submit">Submit</button>
                 </form>
                 <!--Comment logic ends-->
