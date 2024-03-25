@@ -1,5 +1,9 @@
 package com.famigo.website.Service;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,6 +16,7 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+    //private PasswordEncoder passwordEncoder;
 
     @Autowired
     public EmailService(JavaMailSender javaMailSender) {
@@ -36,4 +41,16 @@ public class EmailService {
       
         javaMailSender.send(message);
     }
+
+    public void register(User user, String siteURL)
+        throws UnsupportedEncodingException, MessagingException {
+    String encodedPassword = passwordEncoder.encode(user.getPassword());
+    user.setPassword(encodedPassword);
+     
+    //String randomCode = RandomString.make(64);
+   // user.setVerificationCode(randomCode);
+    user.setEnabled(false);
+          
+    sendVerificationEmail(user, siteURL);
+}
 }
