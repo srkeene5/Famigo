@@ -40,7 +40,6 @@
         var myInterval = setInterval(updateDisplay, 500);
 
         document.getElementById("newmessage").addEventListener("click", function() {
-            console.log("GOT HERE");
             var content = document.getElementById("content").value;
             document.getElementById("error").setAttribute("hidden", true);
             document.getElementById("error").textContent = "";

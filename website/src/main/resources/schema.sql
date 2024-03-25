@@ -96,6 +96,21 @@ CREATE TABLE IF NOT EXISTS followers (
     PRIMARY KEY (id, following_id)
 );
 
+CREATE TABLE IF NOT EXISTS trip (
+    id VARCHAR(30),
+    name TEXT,
+    owner VARCHAR(20),
+    FOREIGN KEY (owner) REFERENCES user(id),
+    created DATETIME,
+    description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS tripMembers(
+    tripID VARCHAR(30),
+    userID VARCHAR(20),
+    inviteStatus INTEGER
+);
+
 CREATE TABLE IF NOT EXISTS event (
     id VARCHAR(50),
     name TEXT,
@@ -105,5 +120,6 @@ CREATE TABLE IF NOT EXISTS event (
     FOREIGN KEY (place) REFERENCES place(id),
     start DATETIME,
     end DATETIME,
-    description TEXT
+    description TEXT,
+    tripID VARCHAR(30)
 );

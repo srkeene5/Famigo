@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title>Trips</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <h1>Trips</h1>
+        <table id="invites">
+            <tr th:each="invite : ${invites}">
+                <td><span th:text="${invite.getName()}"></span></td>
+                <td th:text="${invite.getOwner()}"></td>
+                <td th:text="${invite.getMembers()}"></td>
+                <td th:text="${invite.getCreated()}"></td>
+                <td><button th:attr="data-id=${invite.getID()}" onclick="evaluateInvite(event)">Accept</button></td>
+                <td><button th:attr="data-id=${invite.getID()}" onclick="evaluateInvite(event)">Decline</button></td>
+            </tr>
+        </table>
+        <div id="newtrip">
+            <div id="selected"></div>
+            <select name="users" id="selectUser" onchange="addToSelected()">
+                <option disabled selected value>Select Users</option>
+                <option th:each="user : ${users}" th:value="${user}" th:text="${user}" th:id="${user}"></option>
+            </select>
+            <input type="text" id="name" placeholder="Enter Name"/>
+            <textarea placeholder="Enter Description" id="description"></textarea>
+            <button id="createtrip">Create New Trip</button>
+        </div>
+        <table id="currentTrips">
+            <tr th:each="trip : ${trips}">
+                <td><a th:href="@{'/trips/'+${trip.getID()}}"><span th:text="${trip.getName()}"></span></a></td>
+                <td th:text="${trip.getOwner()}"></td>
+                <td th:each="member : ${trip.getMembers()}"><a th:href="@{'/user/'+${member.getUsername()}}"><span th:href="@{'/user/'+${member.getUsername()}}"></span></a></td>
+                <td th:text="${trip.getCreated()}"></td>
+            </tr>
+        </table>
+    </body>
+    <script>
+        function evaluateInvite(e) {
+            var resultThing = {
+                result : e.target.textContent,
+                tripID : e.target.getAttribute("data-id")
+            };
+            try {
+                const response = fetch("/trips", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(resultThing)
+                }).then((response) => {
+                    location.reload();
+                });
+            } catch(error){
+                console.log(error);
+            }
+        }
+        document.getElementById("createtrip").addEventListener("click", function(e) {
+            var convrec = document.querySelectorAll(".member");
+            var members = [];
+            convrec.forEach(function(element) {
+                members.push(element.textContent);
+            });
+            var resultThing = {
+                name : document.getElementById("name").value,
+                description : document.getElementById("description").value,
+                members : members
+            };
+            if (members == "" || document.getElementById("name") == "" || document.getElementById("description").value == "") {
+                var element = document.createElement("p");
+                element.setAttribute("value", "You must enter all fields");
+                element.style.color = "red";
+                document.getElementById("newtrip").appendChild(element);
+                return;
+            }
+            try {
+                const response = fetch("/trips/new-trip", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(resultThing)
+                }).then((response) => response.json()
+                ).then((response) => {
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/trips/" + response["id"];
+                });
+            } catch(error){
+                console.log(error);
+            }
+        });
+
+        function addToSelected() {
+            var select = document.getElementById("selectUser");
+            var user = select.options[select.selectedIndex].text;
+            select.options[select.selectedIndex].setAttribute("hidden", true);
+            var selectedDiv = document.getElementById("selected");
+            var removebutton = document.createElement("button");
+            removebutton.className = "member";
+            removebutton.textContent = user;
+            removebutton.addEventListener("click", function(e) {
+                var username = e.target.textContent;
+                document.getElementById(username).hidden = false;
+                e.target.remove();
+            });
+            selectedDiv.append(removebutton);
+        }
+    </script>
+</html>
