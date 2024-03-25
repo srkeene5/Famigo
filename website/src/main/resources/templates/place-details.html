@@ -134,8 +134,8 @@
                 <form action="/addComment" method="POST">
                     <label for="commentBody">Enter a comment:</label>
                     <textarea id="commentBody" name="comment" size="10" rows="5" maxlength="500"></textarea>
-                    <!--url used to return to same page after POST returns-->
-                    <input type="hidden" name="url" id="url">
+                    <!--place name used to return to same page after POST returns-->
+                    <input type="hidden" name="placeName" id = "placeName" th:value="${selectedPlace.name}">
                     <!--get the review id to store comment-->
                     <input type="hidden" name="revId" id="revId" th:value="*{revId}">
                     <!--<p> Review ID: [[*{revId}]]</p>-->
@@ -162,12 +162,12 @@
 
     <script>
         // to get url
-        const form = document.querySelector('form');
+        /*const form = document.querySelector('form');
         const url = document.getElementById('url');
 
         form.addEventListener('submit', function() {
             url.value = window.location.href;  
-        });
+        });*/
         // Ajax setup
         let script = document.createElement('script');
         script.src = '//code.jquery.com/jquery-3.6.3.min.js';

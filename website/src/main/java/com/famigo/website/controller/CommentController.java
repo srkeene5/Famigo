@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
-    public ResponseEntity<String> submitComment(@RequestParam("comment") String commentBody, @RequestParam("url") String url, @RequestParam("revId") int reviewID) {
+    public ResponseEntity<String> submitComment(@RequestParam("comment") String commentBody, @RequestParam("placeName") String placeName, @RequestParam("revId") int reviewID) {
         System.out.println("ADDCOMMENT POST REACHED");
         System.out.println("The comment: " + commentBody);
 
@@ -79,9 +79,11 @@ public class CommentController {
         }
 
         // Keep us on same page after commenting
-        System.out.println("response: " + ResponseEntity.status(HttpStatus.FOUND).header("Location", url).build());
-        System.out.println("url: " + url);
-        return ResponseEntity.status(HttpStatus.FOUND).header("Location", url).build(); 
+        //System.out.println("response: " + ResponseEntity.status(HttpStatus.FOUND).header("Location", url).build());
+        System.out.println("place name: " + placeName);
+        String url_ = "http://localhost:8080/places/" + placeName;
+        System.out.println(url_);
+        return ResponseEntity.status(HttpStatus.FOUND).header("Location", url_).build(); 
     }
 
 }
