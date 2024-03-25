@@ -118,9 +118,13 @@ public class UserRepository {
                 // TODO Auto-generated method stub
                 return rs.getString("password");
             }
-            
+
         }, userID);
         return password;
+    }
+
+    public void updateRole(String userID, Role role) {
+        jdbcTemplate.update("UPDATE user SET role=? WHERE id=?", role.toString(), userID);
     }
 
     public void deleteAccount(String userID) {

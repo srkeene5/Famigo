@@ -34,7 +34,7 @@ public class ReviewSorter {
      * "stars"
      * "timeStamp"
      * "review"
-     * 
+     * "likes"
      * 
      * 
      * Add handling in ReviewMergeBy
@@ -60,6 +60,24 @@ public class ReviewSorter {
         ReviewsubSortBy(revs, 0, revs.size() - 1, val, ascending, null, false, null, false);
         ReviewsubSortBy(revs, 0, revs.size() - 1, "sortPrimeSec", ascending, sortPrime, primeAscend, sortSec,
                 secAscend);
+    }
+
+    public void ReviewSortByUnPack(ArrayList<Review> revs, String valStr, ArrayList<User> sortPrime,
+            ArrayList<User> sortSec, String Ascend) {
+        /*
+         * boolean primeAscend = false;
+         * boolean secAscend = false;
+         * if (!Ascend.equals("")) {
+         * Ascend.split(" ")
+         * }
+         * if (valStr.equals("0")) {
+         * if(sortPrime.isEmpty() && sortSec.isEmpty()){
+         * ReviewSortBy(revs, "timeStamp", false);
+         * } else if (sortSec.isEmpty()) {
+         * ReviewSortBy(revs, "timeStamp", false,);
+         * }
+         * }
+         */
     }
 
     /* _____Private Classes_____ */
@@ -113,6 +131,22 @@ public class ReviewSorter {
             if (val.equals("timeStamp")) {
                 if ((ascending && revs.get(i).getTimeStamp().isAfter(revs.get(j).getTimeStamp()))
                         || (!ascending && revs.get(i).getTimeStamp().isBefore(revs.get(j).getTimeStamp()))) {
+                    Review hold = revs.get(j);
+                    int index = j;
+                    while (index != i) {
+                        revs.set(index, revs.get(index - 1));
+                        index--;
+                    }
+                    revs.set(i, hold);
+                    i++;
+                    m++;
+                    j++;
+                } else {
+                    i++;
+                }
+            } else if (val.equals("likes")) {
+                if ((ascending && revs.get(i).getLikes() > revs.get(j).getLikes())
+                        || (!ascending && revs.get(i).getLikes() < revs.get(j).getLikes())) {
                     Review hold = revs.get(j);
                     int index = j;
                     while (index != i) {

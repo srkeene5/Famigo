@@ -92,6 +92,35 @@
     <p>Place Address: <span th:text="${selectedPlace.address}"></span></p>
     <br>
     <h2>Reviews</h2>
+    <form th:action="@{'/places/' + ${selectedPlace.name}}" method="post">
+        
+        <div class="sortOpts">
+            <label for="revSort">Sort By:</label>
+            <select name="revSort" id="revSort">
+                <option value="0timeStamp">Most Recent</option>
+                <option value="1timeStamp">Least Recent</option>
+                <option value="0stars">Most Stars</option>
+                <option value="1stars">Least Stars</option>
+                <option value="0likes">Most Liked</option>
+                <option value="1likes">Least Liked</option>
+            </select>
+        </div>
+        <div class="sortOpts">
+            <label for="priority1">Priorize:</label>
+            <select name="priority" id="priority">
+                <option value="">None</option>
+                <option value="0friends">Prioritize Friends</option>
+                <option value="0follows">Prioritize Following</option>
+                <option value="0friends 0follows">Prioritize Friends and Following</option>
+                <option value="1friends">Deprioritize Friends</option>
+                <option value="1follows">Deprioritize Following</option>
+                <option value="1friends 0follows">Deprioritize Friends and Following</option>
+            </select>
+        </div>
+        <br>
+        <input type="submit" value="Submit">
+        <br><br><br>
+    </form>
     
     <button id="addReview">Add Review</button>
     <div id="myPopup" class="popup">

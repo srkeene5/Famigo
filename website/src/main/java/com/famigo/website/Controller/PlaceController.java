@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.famigo.website.model.Place;
-import com.famigo.website.model.Report;
+import com.famigo.website.repositories.FollowingRepository;
 import com.famigo.website.repositories.PlaceRepository;
-import com.famigo.website.repositories.ReportRepository;
 import com.famigo.website.repositories.ReviewRepository;
+import com.famigo.website.repositories.UserRepository;
+import com.famigo.website.service.ReviewSorter;
 import com.famigo.website.model.Review;
 import com.famigo.website.model.SubReview;
 import com.famigo.website.utilities.Utilities;
@@ -34,12 +34,18 @@ public class PlaceController {
     @Autowired
     private ReviewRepository rr;
     @Autowired
-    private ReportRepository repR;
+    private FollowingRepository fr;
+    @Autowired
+    private UserRepository ur;
 
-    @GetMapping("/places/{name}")
-    public String showPlaceDetails(@PathVariable String name, Model model) {
+    ReviewSorter rs = new ReviewSorter();
+
+    @PostMapping("/places/{name}")
+    public String showPlaceDetails(@PathVariable String name, @RequestParam String revSort,
+            @RequestParam String priority, Model model) {
+        // added some stuff for sorters. -Shaun
+
         Place place = placeRepository.getPlaceByName(name);
-
         // model.addAttribute("place", place);
         model.addAttribute("selectedPlace", place);
         model.addAttribute("placePath", "/places/" + name);
@@ -51,6 +57,27 @@ public class PlaceController {
             model.addAttribute("reviews", new Review[0]);
             model.addAttribute("userReactions", new int[0]);
         } else {
+            // sorting
+            /*
+             * String[] priorities = priority.split(" ");
+             * ArrayList<ArrayList<User>> priorArray = new ArrayList<>();
+             * List<String> followingIDs = fr.getFollowingList(Utilities.getUserID());
+             * for (String string : priorities) {
+             * ArrayList<User> hold = new ArrayList<>();
+             * for (String str : followingIDs) {
+             * if (string.substring(1).equals("friends")) {
+             * hold.add(ur.getUserByUsername(str));
+             * }
+             * if (string.substring(1).equals("followers")) {
+             * hold.add(ur.getUserByUsername(str));
+             * }
+             * }
+             * priorArray.add(hold);
+             * }
+             * rs.ReviewSortByUnPack(reviews, revSort, priorArray.get(0), priorArray.get(1),
+             * priority);
+             */
+            // fin sorting
             model.addAttribute("reviews", reviews.toArray());
 
             int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
@@ -111,9 +138,39 @@ public class PlaceController {
         return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/places/{name}/reportRevReact", method = RequestMethod.POST)
-    public ResponseEntity<String> report(@RequestParam(value = "vals[]") String[] vals) {
-        repR.addReport(new Report(Utilities.getUserID(), rr.getReviewByID(Integer.valueOf(vals[1])), vals[0]));
-        return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
-    }
+    /*
+     * @RequestMapping(value = "/place/{name}/sort", method = RequestMethod.POST)
+     * public String unMod(@PathVariable String name, @RequestParam String revSort,
+     * Model model) {
+     * System.out.println(name + "\t " + revSort);
+     * Place place = placeRepository.getPlaceByName(name);
+     * 
+     * // model.addAttribute("place", place);
+     * model.addAttribute("selectedPlace", place);
+     * model.addAttribute("placePath", "/places/" + name);
+     * model.addAttribute("placeId", place.getId());
+     * 
+     * // Get reviews for this place
+     * ArrayList<Review> reviews = rr.getReviewsByPlace(place.getId());
+     * if (reviews == null || reviews.isEmpty()) {
+     * model.addAttribute("reviews", new Review[0]);
+     * model.addAttribute("userReactions", new int[0]);
+     * } else {
+     * System.out.println("sorting");
+     * System.out.println("\"" + revSort.substring(1) + "\"\t\"" +
+     * !revSort.substring(0, 1).equals("0") + "\"");
+     * rs.ReviewSortBy(reviews, revSort.substring(1), !revSort.substring(0,
+     * 1).equals("0"));
+     * for (Review review : reviews) {
+     * System.out.println(review.getStars());
+     * }
+     * model.addAttribute("reviews", reviews.toArray());
+     * 
+     * int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(),
+     * reviews);
+     * model.addAttribute("revReactions", revReactions);
+     * }
+     * return "place-details";
+     * }
+     */
 }

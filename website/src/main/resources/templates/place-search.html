@@ -46,7 +46,11 @@
     <ul>
         <!-- making a link for every place name -->
         <li th:each="placeName : ${placeNamesList}" th:data-place-name="${placeName}">
-            <a th:href="@{/places/{name}(name=${placeName})}" th:text="${placeName}"></a>
+            <form th:action="@{/places/{name}(name=${placeName})}" method="post">
+                <button type="submit" th:text="${placeName}"></button>
+                <input type="hidden" name="revSort" value="">
+                <input type="hidden" name="priority" value="">
+            </form>
         </li>
     </ul>
 </body>

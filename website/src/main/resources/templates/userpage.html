@@ -199,6 +199,16 @@
         margin-top: 10%;
     }
 
+    .makeMod {
+        display: none;
+    }
+    .unMode {
+        display: none;
+    }
+    .visible {
+        display: block;
+    }
+
 </style>
 <head> 
     <title>Homepage</title>
@@ -299,7 +309,7 @@
                 </button>
             </form>
 
-            <span th:if="${user_logged_in.role} == 'MODERATOR'">
+            <span th:if="${user_logged_in.role.name() == 'MODERATOR'}">
                 <form action="#" th:action="@{/modPage}" method="get">
                     <button class="button" id="modPage">
                         Moderation Page
@@ -322,7 +332,11 @@
         <p>
             Text would go here that gives friends, followers, and possibly info like name and username. 
             <br><br>
+            Test links
             <a th:href="@{'/visitUserPage'}">FriendUser</a>
+            <a th:href="@{'/banPage'}">Banned Page test</a>
+            Test links
+            <br><br>
         </p>
         <p th:if="${userpage != null}">
             Username: <span th:text="${userpage.username}"></span>
@@ -346,6 +360,20 @@
         <!-- users shouldnt follow themselves-->
         <p th:if="${userpage.username} != ${user_logged_in.username}">
             <button id="followbutton" type="button" >Follow</button>
+            <!--<a href="" class="makeMod" th:classappend="${user_logged_in.role.name() == 'ADMIN' && userpage.role.name() == 'USER'} ? visible"></a>
+            <a href="" class="unMod" th:classappend="${user_logged_in.role.name() == 'ADMIN' && userpage.role.name() == 'MODERATOR'} ? visible"></a>
+            <button class="makeMod" id="makeMod" type="button" >Promote to Modderator</button>
+            <button class="unMod" id="unMod" type="button" >Demote from Modderator</button>-->
+            <div th:if="${user_logged_in.role.name() == 'ADMIN' && userpage.role.name() == 'USER'}">
+                <form th:action="@{'/makeMod/' + ${userpage.getID()}}" method="post">
+                    <button type="submit">Promote to Modderator</button>
+                </form>
+            </div>
+            <div th:if="${user_logged_in.role.name() == 'ADMIN' && userpage.role.name() == 'MODERATOR'}">
+                <form th:action="@{'/unMod/' + ${userpage.getID()}}" method="post">
+                    <button type="submit">Demote from Modderator</button>
+                </form>
+            </div>
         </p>
     </div>
     
@@ -385,6 +413,30 @@
             // reload to see follow
             location.reload();
         });
+        /*(document.getElementById("makeMod").addEventListener("click", function() {
+            const formData = new FormData();
+            formData.append('userID', document.getElementById("userinfo").getAttribute('data-userid'));
+
+            const response = fetch("/makeMod", {
+                method : "POST",
+                body : formData
+            });
+            document.getElementById("makeMod").classList.toggle("visible");
+            document.getElementById("unMod").classList.toggle("visible");
+        });
+        document.getElementById("unMod").addEventListener("click", function() {
+            const formData = new FormData();
+            formData.append('userID', document.getElementById("userinfo").getAttribute('data-userid'));
+
+            console.log("Unmoding");
+            const response = fetch("/unMod", {
+                method : "POST",
+                body : formData
+            });
+            console.log("sent");
+            document.getElementById("makeMod").classList.toggle("visible");
+            document.getElementById("unMod").classList.toggle("visible");
+        });*/
     </script>
 
     <div id="userlinks" class="infoblock">

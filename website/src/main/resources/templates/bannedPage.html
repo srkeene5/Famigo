@@ -1,0 +1,123 @@
+<html>
+
+<head>
+    <title>Ban Page</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, 
+                   initial-scale=1.0">
+    
+    <style>
+        .popup {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none;
+        }
+        .popup-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888888;
+            width: 30%;
+            font-weight: bolder;
+        }
+        .popup-content button {
+            display: block;
+            margin: 0 auto;
+        }
+        .show {
+            display: block;
+        }
+        h1 {
+            color: #5898FF;
+        }
+        textarea {
+            position: relative;
+            resize: none;
+            width: 100%;
+            height: 20%;
+        }
+        .button-container {
+            display: flex;
+        }
+        .formClear {
+            clear:left;
+            height: 5px;
+        }
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Banned Page</h1>
+    <button id="appealButton">Appeal Ban</button>
+
+    <div id="myPopup" class="popup">
+        <div class="popup-content">
+            <h3>Appeal:</h3>
+            <span id="error"></span>
+
+
+
+            <textarea id="appealText" name="appeal"></textarea>
+            <div class="formClear"></div>
+
+            <div class="formClear"></div>
+            <div class="button-container">
+                <button id="cancel">Cancel</button>
+                <button id="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        var script = document.createElement('script');
+        script.src = '//code.jquery.com/jquery-3.6.3.min.js'; // Check https://jquery.com/ for the current version
+        document.getElementsByTagName('head')[0].appendChild(script);
+        appealButton.addEventListener("click",function(){
+            myPopup.classList.add("show");
+        });
+        cancel.addEventListener("click",function(){
+            resetAppPop();
+        });
+        submit.addEventListener("click",function(){
+            let appText = appealText.value;
+            if (appText == ""){
+                var error = document.getElementById("error");
+                error.textContent = "Appeal must contain Text";
+                error.style.color = "red";
+            } else {
+                let vals = [];
+                vals[0] = appText;
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/addAppeal",
+                    data: {vals: vals},
+                    timeout: 60,
+                }).done(function (data) {
+                    console.log(data);
+                });
+                resetAppPop();
+            }
+        });
+        function resetAppPop(){
+            myPopup.classList.remove("show");
+            appealText.value = "";
+            error.textContent = "";
+        }
+    </script>
+</body>
+
+</html>

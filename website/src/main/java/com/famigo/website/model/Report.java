@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 
 public class Report {
     private int reportID;
-    private String userID;
+    private String reportingUserID;
+    private String contentUserID;
     private String reportText;
     private LocalDateTime timeStamp;
+    private String appeal;
+    private boolean ban;
 
     private Place place;
     private Comment comment;
@@ -15,49 +18,67 @@ public class Report {
     public Report() {
     }
 
-    public Report(String userID, Place place, String reportText) {
+    public Report(String reportingUserID, String contentUserID, Place place, String reportText) {
         reportID = 0;
-        this.userID = userID;
+        this.contentUserID = contentUserID;
+        this.reportingUserID = reportingUserID;
         this.place = place;
         this.reportText = reportText;
         this.timeStamp = java.time.LocalDateTime.now();
         comment = null;
         review = null;
+        this.appeal = null;
+        this.ban = false;
     }
 
-    public Report(String userID, Comment comment, String reportText) {
+    public Report(String reportingUserID, String contentUserID, Comment comment, String reportText) {
         reportID = 0;
-        this.userID = userID;
+        this.contentUserID = contentUserID;
+        this.reportingUserID = reportingUserID;
         this.comment = comment;
         this.reportText = reportText;
         this.timeStamp = java.time.LocalDateTime.now();
         place = null;
         review = null;
+        this.appeal = null;
+        this.ban = false;
     }
 
-    public Report(String userID, Review review, String reportText) {
+    public Report(String reportingUserID, String contentUserID, Review review, String reportText) {
         reportID = 0;
-        this.userID = userID;
+        this.contentUserID = contentUserID;
+        this.reportingUserID = reportingUserID;
         this.review = review;
         this.reportText = reportText;
         this.timeStamp = java.time.LocalDateTime.now();
         place = null;
         comment = null;
+        this.appeal = null;
+        this.ban = false;
     }
 
-    public Report(int reportID, String userID, String reportText, LocalDateTime timeStamp, Place place, Review review,
-            Comment comment) {
+    public Report(int reportID, String reportingUserID, String contentUserID, String reportText, String appeal,
+            LocalDateTime timeStamp, Place place,
+            Review review,
+            Comment comment, boolean ban) {
         this.place = place;
         this.comment = comment;
         this.review = review;
         this.reportID = reportID;
-        this.userID = userID;
+        this.contentUserID = contentUserID;
+        this.reportingUserID = reportingUserID;
         this.reportText = reportText;
         this.timeStamp = timeStamp;
+        this.appeal = appeal;
+        this.ban = ban;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getContentUserID() {
+        return contentUserID;
+    }
+
+    public String getReportingUserID() {
+        return reportingUserID;
     }
 
     public String getReportedText() {
@@ -124,6 +145,22 @@ public class Report {
 
     public String getExplanation() {
         return reportText;
+    }
+
+    public String getAppeal() {
+        return appeal;
+    }
+
+    public void setAppeal(String appeal) {
+        this.appeal = appeal;
+    }
+
+    public boolean isBanned() {
+        return ban;
+    }
+
+    public void setBan(boolean ban) {
+        this.ban = ban;
     }
 
     public void deleteReport() {

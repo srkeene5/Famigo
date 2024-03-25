@@ -69,16 +69,32 @@
         <ul th:each="i, ib : ${reports}">
             <div class="reportBlock" th:object="${i}">
                 <p th:id="'rep' + ${ib.index}" class="repID">[[*{reportID}]]</p>
-                <li th:text="'User: ' + *{userID}"></li>
-                <li th:text="'Report: ' + ${i.getExplanation()}"></li>
+                <li th:text="'User Reporting: ' + *{reportingUserID}"></li>
+                <li th:text="'Reported User: ' + *{contentUserID}"></li>
                 <li th:text="'Reported Content: ' + ${i.getReportedText()}">
+                <li th:text="'Report: ' + ${i.getExplanation()}"></li>
     
-                <li><button th:id="'ignoreBtn' + ${ib.index}" class="ignBtn">Reject Report</button>
-                <li><button th:id="'deleteBtn' + ${ib.index}" class="delBtn">Delete Reported Content</button>
-                <li><button th:id="'delBanBtn' + ${ib.index}" class="delBanBtn">Delete Content and Ban User</button>
+                <li><button th:id="'ignoreBtn' + ${i.getReportID()}" class="ignBtn">Reject Report</button>
+                <li><button th:id="'deleteBtn' + ${i.getReportID()}" class="delBtn">Delete Reported Content</button>
+                <li><button th:id="'delBanBtn' + ${i.getReportID()}" class="delBanBtn">Delete Content and Ban User</button>
                 <br>
             </div>
+        </ul>
+    </div>
+    <div id="appealList">
+        <ul th:each="i, ib : ${reports}">
+            <div class="reportBlock" th:object="${i}">
+                <p th:id="'rep' + ${ib.index}" class="repID">[[*{reportID}]]</p>
+                <li th:text="'User Reporting: ' + *{reportingUserID}"></li>
+                <li th:text="'Reported User: ' + *{contentUserID}"></li>
+                <li th:text="'Reported Content: ' + ${i.getReportedText()}">
+                <li th:text="'Report: ' + ${i.getExplanation()}"></li>
+                <li th:text="'Appeal: ' + ${i.getAppeal()}"></li>
     
+                <li><button th:id="'appRejBtn' + ${i.getReportID()}" class="appRejBtn">Reject Appeal</button>
+                <li><button th:id="'appAccBtn' + ${i.getReportID()}" class="appAccBtn">Accept Appeal</button>
+                <br>
+            </div>
         </ul>
     </div>
 
@@ -88,19 +104,35 @@
         let script = document.createElement('script');
         script.src = '//code.jquery.com/jquery-3.6.3.min.js';
         document.getElementsByTagName('head')[0].appendChild(script);
+        
 
-        /* - - - Add Review Popup - - - */
+        /* - - - Append List - - - */
 
-        let place = document.getElementById("placeId").innerHTML;
 
-        document.getElementById("placeId").style.display = "none";
-        let repIds = document.getElementsByClassName("repId");
-        for (let i = 0; i < repIds.length; i++) {
-            repIds[i].style.display = "none";
+        let appAccBtns = document.getElementsByClassName("appAccBtn");
+        let appRejBtns = document.getElementsByClassName("appRejBtn");
+
+        for (let i = 0; i < appAccBtns.length; i++) {
+            appAccBtns[i].addEventListener("click", function(event) {
+                let values = [];
+                values[0] = "appAcc";
+                reportId = event.target.id.substring(9); // ID# of button
+                console.log(reportId);
+                values[1] = reportId;
+                sendModReact(values);
+            });
+            appRejBtns[i].addEventListener("click", function(event) {
+                let values = [];
+                values[0] = "appRej";
+                reportId = event.target.id.substring(9); // ID# of button
+                console.log(reportId);
+                values[1] = reportId;
+                sendModReact(values);
+            });
         }
-         
 
-        /* - - - Reivew List - - - */
+
+        /* - - - Report List - - - */
 
         
         let ignBtns = document.getElementsByClassName("ignBtn");
@@ -110,47 +142,42 @@
         reportNum = "";
         for (let i = 0; i < ignBtns.length; i++) {
             ignBtns[i].addEventListener("click", function(event) {
-                /*
                 let values = [];
-
-                values[0] = 1;
-
-                // Review number on page (between 0 and max reviews per page - 1)
-                // For now, we'll just return all the reviews at once. We'll separate by page later, if needed.
-                reviewNum = event.target.id.substring(5); // ID# of button
-                console.log("rev" + reviewNum);
-                console.log(document.getElementById("rev" + reviewNum));
-                reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
-                console.log(reviewId);
-                values[1] = reviewId;
-
-                sendLikeOrDislike(values);
-                */
+                values[0] = "ignore";
+                reportId = event.target.id.substring(9); // ID# of button
+                console.log(reportId);
+                values[1] = reportId;
+                sendModReact(values);
             });
-            delBtns[i].addEventListener("click", function() {
-                /*
-                // Dislike button logic
+            delBtns[i].addEventListener("click", function(event) {
                 let values = [];
-                values[0] = 0;
-                reviewNum = event.target.id.substring(5); // ID# of button
-                reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
-                console.log(reviewId);
-                values[1] = reviewId;
-
-                sendLikeOrDislike(values);
-                */
+                values[0] = "delete";
+                reportId = event.target.id.substring(9); // ID# of button
+                console.log(reportId);
+                values[1] = reportId;
+                sendModReact(values);
             });
-            delBanBtn[i].addEventListener("click", function(){
-                /*
-                console.log("0");
-                myReport.classList.add("show");
-                console.log("1");
-                // Report button logic
-                reviewNum = event.target.id.substring(5); // ID# of button
-                console.log("2");
-                */
+            delBanBtn[i].addEventListener("click", function(event){
+                let values = [];
+                values[0] = "delAndBan";
+                reportId = event.target.id.substring(9); // ID# of button
+                console.log(reportId);
+                values[1] = reportId;
+                sendModReact(values);
             });
         }
+
+        function sendModReact(values) {
+            $.ajax({
+                type: "POST",
+                url: "/mod/repReact",
+                data: {vals: values},
+                timeout: 30,
+            }).done(function (data) {
+                console.log(data);
+            });
+        }
+
         /*
         submitRep.addEventListener("click", function(){
             let repText = Rep.value;
@@ -191,21 +218,8 @@
             });
             resetRepPop();
         }
-
-        function sendLikeOrDislike(values) {
-
-            console.log("Sending like/dislike data...");
-
-            $.ajax({
-                    type: "POST",
-                    url: "${placePath}/addRevReact",
-                    data: {vals: values},
-                    timeout: 30,
-                }).done(function (data) {
-                    console.log(data);
-                });
-        }
         */
+        
     </script>
 </body>
 

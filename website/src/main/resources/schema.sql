@@ -50,12 +50,15 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 CREATE TABLE IF NOT EXISTS reports (
     repID int NOT NULL AUTO_INCREMENT,
-    userID VARCHAR(20),
+    repUserID VARCHAR(20),
+    conUserID VARCHAR(20),
     repText TEXT,
+    appText TEXT,
     timestamp DATETIME,
     placeID INTEGER,
     revID INTEGER,
     comID INTEGER,
+    banned BOOLEAN,
     PRIMARY KEY (repID)
 );
 
