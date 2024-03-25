@@ -147,14 +147,14 @@ public class CommentSorter {
                 int UPj = 0;
                 if (sortSec != null) {
                     for (User user : sortSec) {
-                        if (coms.get(i).getUserId().equals(user.getID())) {
+                        if (coms.get(i).getComUserId().equals(user.getID())) {
                             if (secAscend) {
                                 UPi = 1;
                             } else {
                                 UPi = -1;
                             }
                         }
-                        if (coms.get(j).getUserId().equals(user.getID())) {
+                        if (coms.get(j).getComUserId().equals(user.getID())) {
                             if (secAscend) {
                                 UPj = 1;
                             } else {
@@ -164,14 +164,14 @@ public class CommentSorter {
                     }
                 }
                 for (User user : sortPrime) {
-                    if (coms.get(i).getUserId().equals(user.getID())) {
+                    if (coms.get(i).getComUserId().equals(user.getID())) {
                         if (primeAscend) {
                             UPi = 2;
                         } else {
                             UPi = -2;
                         }
                     }
-                    if (coms.get(j).getUserId().equals(user.getID())) {
+                    if (coms.get(j).getComUserId().equals(user.getID())) {
                         if (primeAscend) {
                             UPj = 2;
                         } else {
@@ -243,7 +243,7 @@ public class CommentSorter {
                 for (int j = 0; j < comLen; j++) {
                     buffer.append((char) rand.nextInt(97, 123));
                 }
-                cr.addComment(new Comment(userId, "review", buffer.toString(), rand.nextInt(likeCap)));
+                cr.addComment(new Comment(userId, 0, buffer.toString(), rand.nextInt(likeCap)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
@@ -255,7 +255,7 @@ public class CommentSorter {
         if (getBy.equals("user")) {
             coms = cr.getCommentsByUser("user");
         } else {
-            coms = cr.getCommentsByReview("review");
+            coms = cr.getCommentsByReview(0);
         }
 
         if (coms == null) {
@@ -315,42 +315,42 @@ public class CommentSorter {
         if (testing && testingPrime && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", false, friends, true);
             System.out.println("_____Sorted_Desc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", true, friends, true);
             System.out.println("_____Sorted_Asc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
         }
         if (testing && testingSec && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", false, friends, true, following, true);
             System.out.println("_____Sorted_Desc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", true, friends, true, following, true);
             System.out.println("_____Sorted_Asc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
         }

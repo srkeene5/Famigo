@@ -1,6 +1,9 @@
 package com.famigo.website.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.famigo.website.model.Place;
+import com.famigo.website.repositories.CommentRepository;
 import com.famigo.website.repositories.PlaceRepository;
 import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.model.Review;
+import com.famigo.website.model.Comment;
 import com.famigo.website.model.SubReview;
 import com.famigo.website.utilities.Utilities;
 
@@ -31,6 +36,8 @@ public class PlaceController {
     private PlaceRepository placeRepository;
     @Autowired
     private ReviewRepository rr;
+    @Autowired
+    private CommentRepository cr;
 
     @GetMapping("/places/{name}")
     public String showPlaceDetails(@PathVariable String name, Model model) {
@@ -41,13 +48,36 @@ public class PlaceController {
         model.addAttribute("placePath", "/places/" + name);
         model.addAttribute("placeId", place.getId());
 
-        // Get reviews for this place
+        // Get reviews and comments for this place
         ArrayList<Review> reviews = rr.getReviewsByPlace(place.getId());
         if (reviews == null || reviews.isEmpty()) {
             model.addAttribute("reviews", new Review[0]);
             model.addAttribute("userReactions", new int[0]);
+            model.addAttribute("comments", new Comment[0]);
         } else {
             model.addAttribute("reviews", reviews.toArray());
+            
+            Map<Integer, List<Comment>> commentsOnReviews = new HashMap<>();
+            for (Review review : reviews) {
+                //String ridStr = String.valueOf(review.getRevId());
+                //System.out.println("rid: " + review.getRevId());
+                List<Comment> comments = cr.getCommentsByReview(review.getRevId());
+                commentsOnReviews.put(review.getRevId(), comments);
+            }
+
+            // test to see if array is correct
+            for (Map.Entry<Integer, List<Comment>> entry : commentsOnReviews.entrySet()) {
+                int review = entry.getKey();
+                List<Comment> commentList = entry.getValue();
+                System.out.println("Review: " + review);
+                System.out.println("Comment list: ");
+                if (commentList == null) continue;
+                for (int i = 0; i < commentList.size(); i++) {
+                    System.out.println("---" + commentList.get(i).getComment()); 
+                }
+            }
+
+            model.addAttribute("commentsOnReviews", commentsOnReviews);
 
             int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
             model.addAttribute("revReactions", revReactions);

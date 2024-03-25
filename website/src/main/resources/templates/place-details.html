@@ -120,7 +120,7 @@
 
     <div id="reviewList">
         <ul th:each="i, ib : ${reviews}">
-            <div class="reviewBlock" th:object="${i}">
+            <div class="reviewBlock" th:object="${i}" th:with="currentReviewId=*{revId}">
                 <p th:id="'rev' + ${ib.index}" class="revId">[[*{revId}]]</p>
                 <li th:text="'User: ' + *{userId}"></li>
                 <li th:text="'Rated ' + *{stars} + ' stars'"></li>
@@ -138,14 +138,22 @@
                     <input type="hidden" name="url" id="url">
                     <!--get the review id to store comment-->
                     <input type="hidden" name="revId" id="revId" th:value="*{revId}">
-                    <p> Review ID: [[*{revId}]]</p>
-
-                    <!--<p> Username: <span th:text="${rev.revId}"></span></p>-->
-                    <button type="submit">Submit</button>
+                    <!--<p> Review ID: [[*{revId}]]</p>-->
+                    <button type="submit" onclick="location.reload()">Post</button>
                 </form>
                 <!--Comment logic ends-->
 
-                <br>
+                <!--Printing comments on the reviews-->
+                <div th:each="entry : ${commentsOnReviews}">
+                    <!--<span th:text="${entry.key}"></span> :-->
+                    <ul th:each="commentObj : ${entry.value}"> 
+                        <!--<p th:text="${currentReviewId}"></p> vs <p th:text="${commentObj.reviewId}"></p>-->
+                        <div th:if="${currentReviewId == commentObj.reviewId}">
+                            <li th:text="${commentObj.comment}"></li> 
+                        </div>
+                    </ul>
+                </div>
+                
             
             </div>
     

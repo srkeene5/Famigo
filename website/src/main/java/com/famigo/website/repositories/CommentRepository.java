@@ -29,12 +29,12 @@ public class CommentRepository {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
                 ps.setInt(1, comment.getComId());
-                ps.setString(2, comment.getUserId());
+                ps.setString(2, comment.getComUserId());
                 ps.setString(3, comment.getComment());
                 ps.setInt(4, comment.getLikes());
                 ps.setTimestamp(5, Timestamp.valueOf(comment.getTimeStamp()));
                 ps.setBoolean(6, comment.isEdited());
-                ps.setString(7, comment.getReviewId());
+                ps.setInt(7, comment.getReviewId());
             }
 
         });
@@ -51,12 +51,12 @@ public class CommentRepository {
             comments.add(new Comment(uid, (int) o.get("comID"),
                     (String) o.get("comment"), (int) o.get("likes"),
                     (LocalDateTime) o.get("timestamp"), (boolean) o.get("edited"),
-                    (String) o.get("reviewID")));
+                    (int) o.get("reviewID")));
         }
         return comments;
     }
 
-    public ArrayList<Comment> getCommentsByReview(String rid) {
+    public ArrayList<Comment> getCommentsByReview(int rid) {
         List<Map<String, Object>> commentList = jdbcTemplate.queryForList("SELECT * FROM comments WHERE reviewID=?",
                 new Object[] { rid });
         if (commentList == null || commentList.isEmpty()) {

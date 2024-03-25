@@ -3,17 +3,17 @@ package com.famigo.website.model;
 import java.time.LocalDateTime;
 
 public class Comment {
-    private String userId;
+    private String comUserId;
     private int comId;
     private String comment;
     private int likes;
     private int dislikes;
     private LocalDateTime timeStamp;
     private boolean edited;
-    private String reviewId;
+    private int reviewId;
 
-    public Comment(String userId, String reviewId, String comment, int likes) {
-        this.userId = userId;
+    public Comment(String comUserId, int reviewId, String comment, int likes) {
+        this.comUserId = comUserId;
         this.timeStamp = java.time.LocalDateTime.now();
         this.comment = comment;
         this.likes = likes;
@@ -21,9 +21,9 @@ public class Comment {
         this.reviewId = reviewId;
     }
 
-    public Comment(String userId, int comId, String comment, int likes, LocalDateTime timeStamp, boolean edited,
-            String reviewId) {
-        this.userId = userId;
+    public Comment(String comUserId, int comId, String comment, int likes, LocalDateTime timeStamp, boolean edited,
+            int reviewId) {
+        this.comUserId = comUserId;
         this.comId = comId;
         this.comment = comment;
         this.likes = likes;
@@ -32,8 +32,8 @@ public class Comment {
         this.reviewId = reviewId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getComUserId() {
+        return comUserId;
     }
 
     public int getComId() {
@@ -60,7 +60,7 @@ public class Comment {
         return edited;
     }
 
-    public String getReviewId() {
+    public int getReviewId() {
         return reviewId;
     }
 

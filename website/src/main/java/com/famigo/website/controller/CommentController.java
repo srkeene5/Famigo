@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
-    public ResponseEntity<String> submitComment(@RequestParam("comment") String commentBody, @RequestParam("url") String url, @RequestParam("revId") String reviewID) {
+    public ResponseEntity<String> submitComment(@RequestParam("comment") String commentBody, @RequestParam("url") String url, @RequestParam("revId") int reviewID) {
         System.out.println("ADDCOMMENT POST REACHED");
         System.out.println("The comment: " + commentBody);
 
@@ -56,7 +56,7 @@ public class CommentController {
         int test = 2;
         if (test == 1) {
             System.out.println("-------------------\nCOMMENT INFO:");
-            System.out.println("User: " + comment.getUserId());
+            System.out.println("User: " + comment.getComUserId());
             System.out.println("ComID: " + comment.getComId());
             System.out.println("RevID: " + comment.getReviewId());
             System.out.println("Comment: " + comment.getComment());
@@ -68,7 +68,7 @@ public class CommentController {
             ArrayList<Comment> comments = commentRepo.getCommentsByReview(comment.getReviewId());
             for (int i = 0; i < comments.size(); i++) {
                 Comment c = comments.get(i);
-                System.out.println("User: " + c.getUserId());
+                System.out.println("User: " + c.getComUserId());
                 System.out.println("ComID: " + c.getComId());
                 System.out.println("RevID: " + c.getReviewId());
                 System.out.println("Comment: " + c.getComment());
@@ -79,6 +79,8 @@ public class CommentController {
         }
 
         // Keep us on same page after commenting
+        System.out.println("response: " + ResponseEntity.status(HttpStatus.FOUND).header("Location", url).build());
+        System.out.println("url: " + url);
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", url).build(); 
     }
 
