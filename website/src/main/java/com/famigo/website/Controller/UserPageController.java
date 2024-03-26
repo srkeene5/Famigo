@@ -144,6 +144,11 @@ public class UserPageController {
 			placeNames[i] = placeRepo.getPlaceByID(revs.get(i).getPlaceId()).getName();
 		}
 
+		int[] followVals = new int[revs.size()];
+		for (int i = 0; i < followVals.length; i++) {
+			followVals[i] = followRepository.getFollowerStatus(Utilities.getUserID(), revs.get(i).getUserId());
+		}
+
 		// Add public data to model
 		model.addAttribute("username", chosenUser.getUsername());
 		model.addAttribute("reviews", revs);
@@ -154,6 +159,13 @@ public class UserPageController {
 		model.addAttribute("comCount", commentCount);
 		model.addAttribute("totalComLikes", totalComLikes);
 		model.addAttribute("placeNames", placeNames);
+		model.addAttribute("followValList", followVals);
+
+		System.out.print("Follow vals: ");
+		for (int i : followVals) {
+			System.out.print(i + ", ");
+		}
+		System.out.println();
 
 		// Add private data to model only if user logged in and user being viewed match.
 		// If not, set the attributes to null. This must be done server side for increased security.
