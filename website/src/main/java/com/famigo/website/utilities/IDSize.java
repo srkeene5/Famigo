@@ -7,4 +7,5 @@ public class IDSize {
     public final static int USERSTATSID = 100;
     public final static int FOLLOWERID = 100;
     public final static int EVENTID = 50;
+    public final static int TRIPID = 30;
 }

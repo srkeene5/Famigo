@@ -5,6 +5,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
+        <div id="trip">
+            <h1 th:text="${trip.getName()}"></h1>
+            <p>Owner: <a th:href="@{'/user/'+${trip.getOwner().getUsername()}}"><span th:text="${trip.getOwner().getUsername()}"></span></a></p>
+            <p>Members: <a th:each="member : ${trip.getMembers()}" th:href="@{'/user/'+${member.getUsername()}}"><span th:text="${member.getUsername()}"></span></a></p>
+            <p th:text="'Date Created: '+${trip.getCreated()}"></p>
+            <p th:text="${trip.getDescription()}"></p>
+        </div>
         <div id="newevent">
             <input type="text" id="newname" placeholder="Enter Title"/>
             <select name="places" id="selectPlace">
@@ -18,9 +25,10 @@
         </div>
         <table th:if="${events != null}">
             <tr th:each="event : ${events}">
-                <td><a th:href="@{'/events/'+${event.getID()}}"><span th:text="${event.getName()}"></span></a></td>
+                <td><a th:href="@{'/trips/'+${trip.getID()}+'/'+${event.getID()}}"><span th:text="${event.getName()}"></span></a></td>
             </tr>
         </table>
+        <button th:if="${isowner} == true" id="deletetrip">Delete Trip</button>
     </body>
     <script>
         document.getElementById("createevent").addEventListener("click", function(e) {
@@ -36,9 +44,8 @@
                 end : end,
                 description : description
             };
-            console.log(message);
             try {
-                const response = fetch("/new-event", {
+                const response = fetch(window.location.href + "/new-event", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -46,13 +53,23 @@
                     body : JSON.stringify(message)
                 }).then((response) => response.json())
                 .then((response) => {
-                    window.location.href = window.location.protocol + "//" + window.location.host + "/events/" + response["eid"];
+                    window.location.href = window.location.href + "/" + response["eid"];
                 });
             }
             catch (error) {
                 console.log(error);
             }
-            console.log(name, index, place, start, end, description);
+        });
+        document.getElementById("deletetrip").addEventListener("click", function(e) {
+            try {
+                const response = fetch(window.location.href + "/delete-trip", {
+                    method: "POST"
+                }).then((response) => {
+                    window.location.href = "/trips";
+                });
+            } catch(error) {
+                console.log(error);
+            }
         });
     </script>
 </html>

@@ -7,8 +7,13 @@ CREATE TABLE IF NOT EXISTS user (
     description TEXT,
     visibility VARCHAR(20) NOT NULL,
     role VARCHAR(20) NOT NULL,
-    enabled BOOLEAN DEFAULT 1 NOT NULL,
+    enabled BOOLEAN DEFAULT 0 NOT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS verification (
+    userID VARCHAR(20),
+    link VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS conversation (
@@ -76,6 +81,7 @@ CREATE TABLE IF NOT EXISTS place (
     name VARCHAR(255) UNIQUE NOT NULL,
     address VARCHAR(255) NOT NULL,
     rating INTEGER NOT NULL,
+    description TEXT,
     PRIMARY KEY (id)
 );
 
@@ -96,14 +102,43 @@ CREATE TABLE IF NOT EXISTS followers (
     PRIMARY KEY (id, following_id)
 );
 
+CREATE TABLE IF NOT EXISTS travelGroup (
+    id VARCHAR(30),
+    name TEXT,
+    owner VARCHAR(20),
+    created DATETIME,
+    description TEXT,
+    conversationID VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS travelGroupMembers(
+    travelGroupID VARCHAR(30),
+    userID VARCHAR(20),
+    inviteStatus INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS trip (
+    id VARCHAR(30),
+    name TEXT,
+    owner VARCHAR(20),
+    created DATETIME,
+    description TEXT,
+    travelGroupID VARCHAR(30)
+);
+
+CREATE TABLE IF NOT EXISTS tripMembers(
+    tripID VARCHAR(30),
+    userID VARCHAR(20),
+    inviteStatus INTEGER
+);
+
 CREATE TABLE IF NOT EXISTS event (
     id VARCHAR(50),
     name TEXT,
     creator VARCHAR(20),
-    FOREIGN KEY (creator) REFERENCES user(id),
     place INTEGER NOT NULL,
-    FOREIGN KEY (place) REFERENCES place(id),
     start DATETIME,
     end DATETIME,
-    description TEXT
+    description TEXT,
+    tripID VARCHAR(30)
 );

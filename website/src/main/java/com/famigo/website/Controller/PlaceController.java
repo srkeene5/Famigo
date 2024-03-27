@@ -55,7 +55,7 @@ public class PlaceController {
         return "place-details";
     }
 
-    @PostMapping("/places")
+    @GetMapping("/places")
     public String places(Model model) {
         model.addAttribute("placeNamesList", placeRepository.getPlaces());
         return "place-search";

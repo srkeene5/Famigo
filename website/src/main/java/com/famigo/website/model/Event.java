@@ -11,8 +11,9 @@ public class Event {
     private LocalDateTime start;
     private LocalDateTime end;
     private String description;
+    private String tripID;
     
-    public Event(String id, String name, String creator, Place place, LocalDateTime start, LocalDateTime end, String description) {
+    public Event(String id, String name, String creator, Place place, LocalDateTime start, LocalDateTime end, String description, String tripID) {
         this.id = id;
         this.name = name;
         this.creator = creator;
@@ -20,6 +21,7 @@ public class Event {
         this.start = start;
         this.end = end;
         this.description = description;
+        this.tripID = tripID;
     }
 
     public String getID() {
@@ -64,7 +66,10 @@ public class Event {
     public void setDescription(String description) {
         this.description = description;
     }
-
-
-
+    public String getTripID() {
+        return tripID;
+    }
+    public void setTripID(String tripID) {
+        this.tripID = tripID;
+    }
 }

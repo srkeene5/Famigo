@@ -124,6 +124,19 @@ public class MessageRepository {
         }
     }
 
+    public void addUserToConversation(String userID, String conversationID) {
+        jdbcTemplate.update("INSERT INTO conversationParticipants (conversationID, userID) VALUES (?, ?)", new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                ps.setString(1, conversationID);
+                ps.setString(2, userID);
+            }
+            
+        });
+    }
+
     public ArrayList<Conversation> getConversations(String userID) {
         List<Map<String, Object>> conversationList = jdbcTemplate.queryForList("SELECT conversationID FROM conversationParticipants WHERE userID=?", new Object[]{userID});
         if (conversationList == null) {

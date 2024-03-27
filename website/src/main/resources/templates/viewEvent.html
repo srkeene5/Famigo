@@ -15,9 +15,20 @@
             <input type="datetime-local" id="enddate" th:value="${event.getEnd()}"/>
             <textarea placeholder="description" id="newdescription" th:text="${event.getDescription()}"></textarea>
             <button id="createevent">Edit Event</button>
+            <button id="deleteevent">Delete Event</button>
         </div>
     <body>
-    <script>
+        <iframe
+            width="600"
+            height="450"
+            style="border:0"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            th:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyABB5qjyvqKcHKCf5YRAb0T0vhcS8a9d-8&q='+${event.getPlace().getAddress()}">
+        </iframe>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         document.getElementById("createevent").addEventListener("click", function(e) {
             var name = document.getElementById("newname").value;
             var place = document.getElementById("selectPlace").value;
@@ -39,12 +50,27 @@
                     })
                 }).then((response) => response.json())
                 .then((response) => {
-                    window.location.href = window.location.protocol + "//" + window.location.host + "/events/" + response["eid"];
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/trips/" + /*[[${event.getTripID()}]]*/ + "/" + response["eid"];
                 });
             }
             catch (error) {
                 console.log(error);
             }
         });
+
+        document.getElementById("deleteevent").addEventListener("click", function(e) {
+            try {
+                const response = fetch(window.location.href + "/delete-event", {
+                    method: "POST"
+                }).then((response) => {
+                    if (response.status == 200) {
+                        window.location.href=window.location.protocol + "//" + window.location.host + "/trips/" + /*[[${event.getTripID()}]]*/ + "";
+                    }
+                }) 
+            } catch(error) {
+                console.log(error);
+            }
+        });
+        /*]]>*/
     </script>
 </html>
