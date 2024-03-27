@@ -74,6 +74,12 @@
         .disliked {
             background-color: pink;
         }
+        .cliked {
+            background-color: lightblue;
+        }
+        .cdisliked {
+            background-color: pink;
+        }
         .liked:hover {
             background-color: gray;
         }
@@ -130,6 +136,10 @@
                 <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p></li>
                 <p th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></p>
                 
+                <script th:inline="javascript">
+                    var cReactions = /*[[${#maps.toList(cReactions)}]]*/ {};
+                </script>
+
                 <!--Comment logic starts-->
                 <form action="/addComment" method="POST">
                     <label for="commentBody">Enter a comment:</label>
@@ -139,6 +149,7 @@
                     <!--get the review id to store comment-->
                     <input type="hidden" name="revId" id="revId" th:value="*{revId}">
                     <!--<p> Review ID: [[*{revId}]]</p>-->
+                    <!--reload to show comment immediately-->
                     <button type="submit" onclick="location.reload()">Post</button>
                 </form>
                 <!--Comment logic ends-->
@@ -146,10 +157,26 @@
                 <!--Printing comments on the reviews-->
                 <div th:each="entry : ${commentsOnReviews}">
                     <!--<span th:text="${entry.key}"></span> :-->
-                    <ul th:each="commentObj : ${entry.value}"> 
-                        <!--<p th:text="${currentReviewId}"></p> vs <p th:text="${commentObj.reviewId}"></p>-->
+                    <ul th:each="commentObj, jb : ${entry.value}">
                         <div th:if="${currentReviewId == commentObj.reviewId}">
-                            <li th:text="${commentObj.comment}"></li> 
+                            <!--<p th:id="'com' + ${commentObj.comId}" class="comId">[[${commentObj.comId}]]</p>--> <!--todo-->
+                            <p th:id="'com' + ${ib.index} + '/' + ${jb.index}" class="comId">[[${commentObj.comId}]]</p>
+                            <span th:text="${commentObj.comment}"></span>
+                            <p>CID:</p>
+                            <span th:text="${commentObj.comId}"></span>
+                            
+                            <!--<button th:id="'comLkBtn' + ${ib.index}" class="comLkBtn">Like</button> 
+                            <p th:id="'clikes' + ${ib.index}" style="display:inline-block" th:text="*{clikes}"></p>-->
+                            <button th:id="'cLkBtn' + ${ib.index} + '/' + ${jb.index}" class="clikeBtn">Like</button>
+                            <p th:id="'clikes' + ${ib.index} + '/' + ${jb.index}" style="display:inline-block" th:text="${commentObj.clikes}"></p>
+                            <p th:id="'cReaction' + ${commentObj.comId}" class="cReaction" th:text="${cReactions[commentObj.comId]}"></p>
+                            
+                            <!--<button th:id="'cdlBtn' + ${commentObj.comId}" class="cdislikeBtn">Dislike</button>
+                            <p th:id="'cdislikes' + ${commentObj.comId}" style="display:inline-block" th:text="${commentObj.cdislikes}"></p>
+                            <p th:id="'cReaction' + ${commentObj.comId}" class="cReaction" th:text="${cReactions[commentObj.comId]}"></p>-->
+                            <!--<button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button> 
+                            <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p>-->
+                            
                         </div>
                     </ul>
                 </div>
@@ -180,10 +207,23 @@
         for (let i = 0; i < revIds.length; i++) {
             revIds[i].style.display = "none";
         }
+
         let revReacts = document.getElementsByClassName("revReaction");
         for (let i = 0; i < revReacts.length; i++) {
             revReacts[i].style.display = "none";
         }
+
+        // testing
+        console.log("REVREACTS:");
+        for (let i = 0; i < revReacts.length; i++) {
+            console.log(revReacts[i].innerHTML);
+        }
+
+        let cReacts = document.getElementsByClassName("cReaction");
+        for (let i = 0; i < cReacts.length; i++) {
+            cReacts[i].style.display = "none";
+        }
+
 
         /* - - - Add Review Popup - - - */
 
@@ -293,9 +333,10 @@
 
         let likeBtns = document.getElementsByClassName("likeBtn");
         let dislikeBtns = document.getElementsByClassName("dislikeBtn");
-
+        
         for (let i = 0; i < likeBtns.length; i++) {
             likeBtns[i].addEventListener("click", function(event) {
+                console.log("review i = " + i);
                 // Like button pressed
                 // [0] = like ("1") or dislike ("0") button press,
                 // [1] = review number on page (0 or higher)
@@ -309,13 +350,18 @@
                 reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
                 values[1] = reviewId;
 
+                console.log("reviewNum="+reviewNum);
+                console.log("reviewId="+reviewId);
+
                 // Update like number and button color
                 if (revReacts[i].innerHTML == 1) {
+                    console.log("if1");
                     likeBtns[i].classList.remove("liked");
                     let likeText = document.getElementById("likes" + i);
                     likeText.innerHTML = parseInt(likeText.innerHTML) - 1;
                     revReacts[i].innerHTML = 0;
                 } else if (revReacts[i].innerHTML == -1) {
+                    console.log("if2");
                     likeBtns[i].classList.add("liked");
                     dislikeBtns[i].classList.remove("disliked");
                     let likeText = document.getElementById("likes" + i);
@@ -324,8 +370,11 @@
                     dislikeText.innerHTML = parseInt(dislikeText.innerHTML) - 1;
                     revReacts[i].innerHTML = 1;
                 } else {
+                    let arev = document.getElementById("likes");
+                    console.log("arev="+arev);
                     likeBtns[i].classList.add("liked");
                     let likeText = document.getElementById("likes" + i);
+                    console.log("if3,likeText: " + likeText);
                     likeText.innerHTML = parseInt(likeText.innerHTML) + 1;
                     revReacts[i].innerHTML = 1;
                 }
@@ -339,6 +388,9 @@
                 reviewNum = event.target.id.substring(5); // ID# of button
                 reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
                 values[1] = reviewId;
+
+                console.log("reviewNum="+reviewNum);
+                console.log("reviewId="+reviewId);
 
                 // Update dislike number and button color
                 if (revReacts[i].innerHTML == -1) {
@@ -377,6 +429,133 @@
             $.ajax({
                     type: "POST",
                     url: "${placePath}/addRevReact",
+                    data: {vals: values},
+                    timeout: 30,
+                }).done(function (data) {
+                    console.log(data);
+                });
+        }
+
+        /* Comment like stuff */
+        let clikeBtns = document.getElementsByClassName("clikeBtn");
+        let cdislikeBtns = document.getElementsByClassName("cdislikeBtn");
+        // for needs to go across "clikeBtn12" => 2 iterations thru loop; need to separate
+        for (let i = 0; i < clikeBtns.length; i++) {
+            clikeBtns[i].addEventListener("click", function(event) {
+                console.log("comment i = " + i);
+
+                /*let j = 0;
+                while (1) {
+                    let clikeText = document.getElementById("clikes" + j);
+                    if (clikeText == null) {
+                        console.log("clikes" + j + " is null");
+                    } else {
+                        console.log("clikes" + j + " is NOT null");
+                    }
+                    j++;
+                    if (j == 50) break;
+                }*/
+                //console.log("COUNTER:" + counter);
+
+                // Like button pressed
+                // [0] = like ("1") or dislike ("0") button press,
+                // [1] = review number on page (0 or higher)
+                let values = [];
+
+                values[0] = 1;
+
+                // Review number on page (between 0 and max reviews per page - 1)
+                // For now, we'll just return all the reviews at once. We'll separate by page later, if needed.
+                commentNum = event.target.id.substring(6); // ID# of button
+                console.log("commentNum="+commentNum);
+                commentId = parseInt(document.getElementById("com" + commentNum).innerHTML);
+                values[1] = commentId;
+                console.log("commentId="+commentId);
+
+                //<button th:id="'cLkBtn' + ${ib.index} + '/' + ${jb.index}" class="clikeBtn">Like</button>
+
+                // Update like number and button color
+                if (cReacts[i].innerHTML == 1) {
+                    console.log("if1");
+                    clikeBtns[i].classList.remove("cliked");
+                    let clikeText = document.getElementById("clikes" + /*i*/commentNum);
+                    clikeText.innerHTML = parseInt(clikeText.innerHTML) - 1;
+                    cReacts[i].innerHTML = 0;
+                } else if (cReacts[i].innerHTML == -1) {
+                    console.log("if2");
+                    clikeBtns[i].classList.add("cliked");
+                    dislikeBtns[i].classList.remove("cdisliked");
+                    let clikeText = document.getElementById("clikes" + /*i*/commentNum);
+                    clikeText.innerHTML = parseInt(clikeText.innerHTML) + 1;
+                    let cdislikeText = document.getElementById("cdislikes" + /*i*/commentNum);
+                    cdislikeText.innerHTML = parseInt(cdislikeText.innerHTML) - 1;
+                    cReacts[i].innerHTML = 1;
+                } else {
+                    console.log("if3");
+                    clikeBtns[i].classList.add("cliked");
+                    //<p th:id="'clikes' + ${ib.index} + '/' + ${jb.index}" style="display:inline-block" th:text="${commentObj.clikes}"></p>
+                    //let clikeText = document.getElementById("clikes" + i);
+                    let clikeText = document.getElementById("clikes" + commentNum);
+                    //let a = document.getElementById("clikes");
+                    //console.log("a="+a);
+                    console.log("if3,clikeText: " + clikeText);
+                    clikeText.innerHTML = parseInt(clikeText.innerHTML) + 1;
+                    cReacts[i].innerHTML = 1;
+                }
+                sendCommentReaction(values);
+            });
+
+            /*cdislikeBtns[i].addEventListener("click", function() {
+                // Dislike button logic
+                let values = [];
+                values[0] = 0;
+
+                commentNum = event.target.id.substring(6); // ID# of button
+                console.log("commentNum="+commentNum);
+                commentId = parseInt(document.getElementById("com" + commentNum).innerHTML);
+                values[1] = commentId;
+                console.log("commentId="+commentId);
+
+                // Update dislike number and button color
+                if (cReacts[i].innerHTML == -1) {
+                    cdislikeBtns[i].classList.remove("cdisliked");
+                    let dislikeText = document.getElementById("cdislikes" + i);
+                    cdislikeText.innerHTML = parseInt(cdislikeText.innerHTML) - 1;
+                    cReacts[i].innerHTML = 0;
+                } else if (cReacts[i].innerHTML == 1) {
+                    cdislikeBtns[i].classList.add("cdisliked");
+                    clikeBtns[i].classList.remove("cliked");
+                    let clikeText = document.getElementById("clikes" + i);
+                    clikeText.innerHTML = parseInt(clikeText.innerHTML) - 1;
+                    let cdislikeText = document.getElementById("cdislikes" + i);
+                    cdislikeText.innerHTML = parseInt(cdislikeText.innerHTML) + 1;
+                    cReacts[i].innerHTML = -1;
+                } else {
+                    cdislikeBtns[i].classList.add("cdisliked");
+                    let dislikeText = document.getElementById("cdislikes" + i);
+                    cdislikeText.innerHTML = parseInt(cdislikeText.innerHTML) + 1;
+                    cReacts[i].innerHTML = -1;
+                }
+                sendCommentReaction(values);
+            });*/
+
+            
+            // This block sets the like/dislike button colors on page load
+            if (cReacts[i].innerHTML == 1) {
+                // User has liked this review
+                clikeBtns[i].classList.add("cliked");
+            } /*else if (cReacts[i].innerHTML == -1) {
+                // User has disliked this review
+                cdislikeBtns[i].classList.add("cdisliked");
+            }*/
+            
+
+        }
+
+        function sendCommentReaction(values) {
+            $.ajax({
+                    type: "POST",
+                    url: "${placePath}/addComReact",
                     data: {vals: values},
                     timeout: 30,
                 }).done(function (data) {

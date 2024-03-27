@@ -42,7 +42,7 @@ public class PlaceController {
     @GetMapping("/places/{name}")
     public String showPlaceDetails(@PathVariable String name, Model model) {
         Place place = placeRepository.getPlaceByName(name);
-
+        System.out.println("place="+place);
         // model.addAttribute("place", place);
         model.addAttribute("selectedPlace", place);
         model.addAttribute("placePath", "/places/" + name);
@@ -66,7 +66,7 @@ public class PlaceController {
             }
 
             // test to see if array is correct
-            for (Map.Entry<Integer, List<Comment>> entry : commentsOnReviews.entrySet()) {
+            /*for (Map.Entry<Integer, List<Comment>> entry : commentsOnReviews.entrySet()) {
                 int review = entry.getKey();
                 List<Comment> commentList = entry.getValue();
                 System.out.println("Review: " + review);
@@ -75,7 +75,7 @@ public class PlaceController {
                 for (int i = 0; i < commentList.size(); i++) {
                     System.out.println("---" + commentList.get(i).getComment()); 
                 }
-            }
+            }*/
 
             model.addAttribute("commentsOnReviews", commentsOnReviews);
 
@@ -85,11 +85,18 @@ public class PlaceController {
         return "place-details";
     }
 
-    @PostMapping("/places")
-    public String places(Model model) {
+    
+    @GetMapping("/places")
+    public String placesGet(Model model) {
         model.addAttribute("placeNamesList", placeRepository.getPlaces());
         return "place-search";
     }
+
+    /*@PostMapping("/places")
+    public String placesPost(Model model) {
+        //model.addAttribute("placeNamesList", placeRepository.getPlaces());
+        return "redirect:/places";
+    }*/
 
     @RequestMapping(value = "/places/{name}/addRev", method = RequestMethod.POST)
     public ResponseEntity<String> submitReview(@PathVariable String name, @RequestBody SubReview sr) {

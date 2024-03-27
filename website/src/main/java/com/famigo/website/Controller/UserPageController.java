@@ -70,6 +70,7 @@ public class UserPageController {
 		model.addAttribute("following_count_of_user",
 				followRepository.getNumFollowing(user_being_viewed.getID()));
 		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getID()));
+		System.out.println(Utilities.getUserID());
 		return "userpage";
 	}
 }

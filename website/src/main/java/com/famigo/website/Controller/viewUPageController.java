@@ -56,7 +56,7 @@ public class viewUPageController {
         if (coms != null) {
             int likeTotal = 0;
             for (Comment com : coms) {
-                likeTotal += com.getLikes();
+                likeTotal += com.getClikes();
             }
             buffer.append("Total Comments: " + coms.size() + "\n");
             buffer.append("Average Likes per Comment: " + (likeTotal / coms.size()) + "\n");

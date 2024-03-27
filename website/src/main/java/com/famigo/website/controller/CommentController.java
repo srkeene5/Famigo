@@ -49,7 +49,7 @@ public class CommentController {
         User user = userRepo.getUser("id", Utilities.getUserID());
         //Review review = reviewRepo.get;
         System.out.println("{reviewID: " + reviewID + "}");
-        Comment comment = new Comment(user.getID(), reviewID, commentBody, 0);
+        Comment comment = new Comment(user.getID(), reviewID, commentBody,0, 0);
         commentRepo.addComment(comment);
 
         // Testing
@@ -60,8 +60,8 @@ public class CommentController {
             System.out.println("ComID: " + comment.getComId());
             System.out.println("RevID: " + comment.getReviewId());
             System.out.println("Comment: " + comment.getComment());
-            System.out.println("Likes: " + comment.getLikes());
-            System.out.println("Dislikes: " + comment.getDislikes());
+            System.out.println("Likes: " + comment.getClikes());
+            System.out.println("Dislikes: " + comment.getCdislikes());
             System.out.println("-------------------");
         } else if (test == 2) {
             System.out.println("[Reviews for id: " + comment.getReviewId() + "]");
@@ -72,8 +72,8 @@ public class CommentController {
                 System.out.println("ComID: " + c.getComId());
                 System.out.println("RevID: " + c.getReviewId());
                 System.out.println("Comment: " + c.getComment());
-                System.out.println("Likes: " + c.getLikes());
-                System.out.println("Dislikes: " + c.getDislikes());
+                System.out.println("Likes: " + c.getClikes());
+                System.out.println("Dislikes: " + c.getCdislikes());
                 System.out.println("-------------------");
             }
         }
@@ -84,6 +84,22 @@ public class CommentController {
         String url_ = "http://localhost:8080/places/" + placeName;
         System.out.println(url_);
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", url_).build(); 
+    }
+
+    @RequestMapping(value = "/places/{name}/addComReact", method = RequestMethod.POST)
+    public ResponseEntity<String> cLikeOrDislike(@RequestParam(value = "vals[]") int[] vals) {
+        // Save like/dislike action
+        // vals[0] = like (1) or dislike (0), and values[1] = review ID
+        if (vals[0] == 1) {
+            // Like button pressed
+            commentRepo.alterCommentReaction(Utilities.getUserID(), vals[1], true);
+            System.out.println("---COMMENT LIKED---");
+        } else {
+            // Dislike button pressed
+            commentRepo.alterCommentReaction(Utilities.getUserID(), vals[1], false);
+            System.out.println("---COMMENT DISLIKED---");
+        }
+        return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
     }
 
 }

@@ -86,6 +86,12 @@ CREATE TABLE IF NOT EXISTS reviewReaction (
     isLike BOOLEAN
 );
 
+CREATE TABLE IF NOT EXISTS commentReaction (
+    userID VARCHAR(20) NOT NULL,
+    commentID INTEGER NOT NULL,
+    isLike BOOLEAN
+);
+
 CREATE TABLE IF NOT EXISTS userStats (
     id VARCHAR(100) PRIMARY KEY,
     follower_count INT DEFAULT 0

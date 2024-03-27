@@ -6,27 +6,28 @@ public class Comment {
     private String comUserId;
     private int comId;
     private String comment;
-    private int likes;
-    private int dislikes;
+    private int clikes;
+    private int cdislikes;
     private LocalDateTime timeStamp;
     private boolean edited;
     private int reviewId;
 
-    public Comment(String comUserId, int reviewId, String comment, int likes) {
+    public Comment(String comUserId, int reviewId, String comment, int clikes, int cdislikes) {
         this.comUserId = comUserId;
         this.timeStamp = java.time.LocalDateTime.now();
         this.comment = comment;
-        this.likes = likes;
+        this.clikes = clikes;
+        this.cdislikes = cdislikes;
         this.edited = false;
         this.reviewId = reviewId;
     }
 
-    public Comment(String comUserId, int comId, String comment, int likes, LocalDateTime timeStamp, boolean edited,
+    public Comment(String comUserId, int comId, String comment, int clikes, LocalDateTime timeStamp, boolean edited,
             int reviewId) {
         this.comUserId = comUserId;
         this.comId = comId;
         this.comment = comment;
-        this.likes = likes;
+        this.clikes = clikes;
         this.timeStamp = timeStamp;
         this.edited = edited;
         this.reviewId = reviewId;
@@ -44,12 +45,12 @@ public class Comment {
         return comment;
     }
 
-    public int getLikes() {
-        return likes;
+    public int getClikes() {
+        return clikes;
     }
 
-    public int getDislikes() {
-        return dislikes;
+    public int getCdislikes() {
+        return cdislikes;
     }
 
     public LocalDateTime getTimeStamp() {
@@ -64,11 +65,11 @@ public class Comment {
         return reviewId;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
+    public void setClikes(int clikes) {
+        this.clikes = clikes;
     }
 
-    public void setDislikes(int dislikes) {
-        this.dislikes = dislikes;
+    public void setCdislikes(int cdislikes) {
+        this.cdislikes = cdislikes;
     }
 }

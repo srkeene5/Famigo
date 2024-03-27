@@ -145,6 +145,8 @@ public class ReviewRepository {
                         new Object[] {rid});
             }
         }
+        //System.out.println("ALL REVIEW REACTIONS:");
+        //printAllReviewReactions();
     }
 
     // For each review, returns 1 if the given user has liked the given review, -1 if they disliked,
@@ -168,7 +170,23 @@ public class ReviewRepository {
                 reactions[i] = -1;
             }
         }
+        for (int reaction : reactions) {
+            System.out.print(reaction + ", ");
+        }
+        System.out.println();
         return reactions;
+    }
+
+    // mine
+    public void printAllReviewReactions() {
+        String sql = "SELECT * FROM reviewReaction"; 
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+        for (Map<String, Object> row : rows) {
+            System.out.println("userID: " + row.get("userID"));
+            System.out.println("reviewID: " + row.get("reviewID"));
+            System.out.println("isLike: " + row.get("isLike"));
+            System.out.println("~~~~~~~~~~~~~~");
+        }
     }
 
 }

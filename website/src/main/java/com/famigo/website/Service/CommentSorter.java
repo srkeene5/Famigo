@@ -38,7 +38,7 @@ public class CommentSorter {
      * Add handling in CommentMergeBy
      * 1. Copy between the "copy comments" in CommentMergeBy, and paste after the
      * lower comment
-     * 2. Changing the four ".getLikes()" statements a new variable to sort by
+     * 2. Changing the four ".getClikes()" statements a new variable to sort by
      * 3. Change the if statement val.equals("likes") to the new variable name
      * 4. Update the "Currently can Handle" section in the description
      * 
@@ -91,8 +91,8 @@ public class CommentSorter {
         while (i <= m && j <= f) {
             // copy for any new var to sort
             if (val.equals("likes")) {
-                if ((ascending && coms.get(i).getLikes() > coms.get(j).getLikes())
-                        || (!ascending && coms.get(i).getLikes() < coms.get(j).getLikes())) {
+                if ((ascending && coms.get(i).getClikes() > coms.get(j).getClikes())
+                        || (!ascending && coms.get(i).getClikes() < coms.get(j).getClikes())) {
                     Comment hold = coms.get(j);
                     int index = j;
                     while (index != i) {
@@ -243,7 +243,7 @@ public class CommentSorter {
                 for (int j = 0; j < comLen; j++) {
                     buffer.append((char) rand.nextInt(97, 123));
                 }
-                cr.addComment(new Comment(userId, 0, buffer.toString(), rand.nextInt(likeCap)));
+                //cr.addComment(new Comment(userId, 0, buffer.toString(), rand.nextInt(likeCap)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
@@ -283,17 +283,17 @@ public class CommentSorter {
         if (testing && testingLikes && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
-                System.out.println(com.getLikes());
+                System.out.println(com.getClikes());
             }
             cs.CommentSortBy(coms, "likes", false);
             System.out.println("_____Sorted_Desc_____");
             for (Comment com : coms) {
-                System.out.println(com.getLikes());
+                System.out.println(com.getClikes());
             }
             cs.CommentSortBy(coms, "likes", true);
             System.out.println("_____Sorted_Asc_____");
             for (Comment com : coms) {
-                System.out.println(com.getLikes());
+                System.out.println(com.getClikes());
             }
         }
         if (testing && testingComment && coms != null) {
@@ -315,42 +315,42 @@ public class CommentSorter {
         if (testing && testingPrime && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getClikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", false, friends, true);
             System.out.println("_____Sorted_Desc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getClikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", true, friends, true);
             System.out.println("_____Sorted_Asc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getClikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
         }
         if (testing && testingSec && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getClikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", false, friends, true, following, true);
             System.out.println("_____Sorted_Desc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getClikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
             cs.CommentSortBy(coms, "timeStamp", false);
             cs.CommentSortBy(coms, "likes", true, friends, true, following, true);
             System.out.println("_____Sorted_Asc_____");
             for (Comment com : coms) {
-                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
+                System.out.println("User: " + com.getComUserId() + " \t| Likes: " + com.getClikes() + " \t| TimeStamp: "
                         + com.getTimeStamp());
             }
         }
