@@ -329,6 +329,10 @@
                 <a th:href="@{'/user/' + ${userpage.username} + '/following'}">View Following</a>
             </p>
             <!--testing purposes: Your username: <span th:text="${user_logged_in.username}"></span>-->
+            <br>
+            <p>
+                <a th:href="@{'/user/' + ${userpage.username} + '/review-data'}">View Past Reviews</a>
+            </p>
         </p>
         <p th:if="${userpage == null}">
             User does not exist.

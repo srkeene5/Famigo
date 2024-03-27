@@ -2,7 +2,7 @@ package com.famigo.website.repositories;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.Place;
+import com.famigo.website.model.Review;
 
 @Repository
 public class PlaceRepository {
@@ -63,11 +64,30 @@ public class PlaceRepository {
         // int count = 0;
         for (Map<String, Object> o : placeList) {
             if (name.equals(o.get("name"))) {
-                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), String.valueOf((int) o.get("id")));
+                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), (int) o.get("id"));
             }
             // count++;
         }
         return place;
+    }
+
+    public Place getPlaceById(int id) {
+        Map<String, Object> place;
+        try {
+            place = jdbcTemplate.queryForMap("SELECT * FROM place WHERE id=?",
+                    new Object[] {id});
+        } catch (DataAccessException e) {
+            place = null;
+        }
+
+        if (place != null) {
+            return new Place((String) place.get("rating"),
+                    (String) place.get("name"),
+                    (String) place.get("address"),
+                    ((int) place.get("id"))
+            );
+        }
+        return null;
     }
 
     public ArrayList<Place> getPlacesFromNames(ArrayList<String> placeNames) {
@@ -76,19 +96,5 @@ public class PlaceRepository {
             places.add(getPlaceByName(placeNames.get(i)));
         }
         return places;
-    }
-
-    public Place getPlaceById(String id) {
-        List<Map<String, Object>> placeList = jdbcTemplate.queryForList("SELECT * FROM place WHERE id=?", new Object[] {id});
-        if (placeList == null || placeList.isEmpty()) {
-            return null;
-        }
-        Place place = null;
-        // int count = 0;
-        for (Map<String, Object> o : placeList) {
-            place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), String.valueOf((int) o.get("id")));
-            // count++;
-        }
-        return place;
     }
 }

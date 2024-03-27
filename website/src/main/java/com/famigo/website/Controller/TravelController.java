@@ -70,7 +70,7 @@ public class TravelController {
 
     @RequestMapping(value="/trips/{tripID}/{eventID}/edit-event", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> editEvent(@PathVariable String tripID, @PathVariable String eventID, @RequestBody SubEvent event) {
-        Event e = new Event(eventID, event.getName(), Utilities.getUserID(), pr.getPlaceById(event.getPlace()), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription(), tripID);
+        Event e = new Event(eventID, event.getName(), Utilities.getUserID(), pr.getPlaceById(Integer.parseInt(event.getPlace())), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription(), tripID);
         tr.editEvent(e);
         Map<String, String> result = new HashMap<String, String>();
         result.put("eid", e.getID());

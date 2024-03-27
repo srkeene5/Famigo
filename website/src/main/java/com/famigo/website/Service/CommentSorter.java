@@ -243,7 +243,7 @@ public class CommentSorter {
                 for (int j = 0; j < comLen; j++) {
                     buffer.append((char) rand.nextInt(97, 123));
                 }
-                cr.addComment(new Comment(userId, "review", buffer.toString(), rand.nextInt(likeCap)));
+                cr.addComment(new Comment(userId, -1, buffer.toString(), rand.nextInt(likeCap)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
@@ -255,7 +255,7 @@ public class CommentSorter {
         if (getBy.equals("user")) {
             coms = cr.getCommentsByUser("user");
         } else {
-            coms = cr.getCommentsByReview("review");
+            coms = cr.getCommentsByReview(-1);
         }
 
         if (coms == null) {

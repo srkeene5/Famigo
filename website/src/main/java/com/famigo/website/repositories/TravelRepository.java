@@ -46,7 +46,7 @@ public class TravelRepository {
                 ps.setString(1, e.getID());
                 ps.setString(2, e.getName());
                 ps.setString(3, e.getCreator());
-                ps.setInt(4, Integer.parseInt(e.getPlace().getId()));
+                ps.setInt(4, e.getPlace().getId());
                 ps.setTimestamp(5, Timestamp.valueOf(e.getStart()));
                 ps.setTimestamp(6, Timestamp.valueOf(e.getEnd()));
                 ps.setString(7, e.getDescription());
@@ -64,7 +64,7 @@ public class TravelRepository {
             public void setValues(PreparedStatement ps) throws SQLException {
                 ps.setString(1, e.getName());
                 ps.setString(2, e.getCreator());
-                ps.setInt(3, Integer.parseInt(e.getPlace().getId()));
+                ps.setInt(3, e.getPlace().getId());
                 ps.setTimestamp(4, Timestamp.valueOf(e.getStart()));
                 ps.setTimestamp(5, Timestamp.valueOf(e.getEnd()));
                 ps.setString(6, e.getDescription());
