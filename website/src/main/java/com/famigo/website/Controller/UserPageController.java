@@ -64,7 +64,7 @@ public class UserPageController {
 																										// always go to
 																										// their own
 																										// page, oops
-		User user_logged_in = userRepository.getUser("username", Utilities.getUserID());
+		User user_logged_in = userRepository.getUser("id", Utilities.getUserID());
 		SubFollow followerCount = new SubFollow();
 		// followerCount.setFollowerCount(followRepository.getFollowerCount(user_being_viewed.getUsername()));
 		// debugging
@@ -72,25 +72,25 @@ public class UserPageController {
 			System.out.println("username of user's page being viewed: " + user_being_viewed.getUsername());
 			// System.out.println("password of user's page being viewed: " +
 			// user_being_viewed.getPassword());
-			System.out.println("Logged in user: " + user_logged_in.getUsername());
+			System.out.println("Logged in user: " + user_logged_in.getID());
 			// System.out.println("Num followers of logged-in user: " +
 			// user_logged_in.getFollowerCount());
 			// System.out.println("Num followers of USER BEING VIEWED: " +
 			// user_being_viewed.getFollowerCount());
 		}
 		System.out.println("~~~~~~~user page controller~~~~~~~~~~~");
-		System.out.println("Follower count: " + followRepository.getNumFollowers(user_being_viewed.getUsername()));
-		System.out.println("Following count " + followRepository.getNumFollowing(user_being_viewed.getUsername()));
-		System.out.println("Followers list " + followRepository.getFollowersList(user_being_viewed.getUsername()));
-		System.out.println("Following list " + followRepository.getFollowingList(user_being_viewed.getUsername()));
+		System.out.println("Follower count: " + followRepository.getNumFollowers(user_being_viewed.getID()));
+		System.out.println("Following count " + followRepository.getNumFollowing(user_being_viewed.getID()));
+		System.out.println("Followers list " + followRepository.getFollowersList(user_being_viewed.getID()));
+		System.out.println("Following list " + followRepository.getFollowingList(user_being_viewed.getID()));
 		System.out.println("~~~~~~~~~~~~~~~~~~");
 
 		model.addAttribute("userpage", user_being_viewed); // get Username
 		model.addAttribute("user_logged_in", user_logged_in); // get Username
-		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user_being_viewed.getUsername()));
+		model.addAttribute("follower_count_of_user", followRepository.getNumFollowers(user_being_viewed.getID()));
 		model.addAttribute("following_count_of_user",
-				followRepository.getNumFollowing(user_being_viewed.getUsername()));
-		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getUsername()));
+				followRepository.getNumFollowing(user_being_viewed.getID()));
+		model.addAttribute("followlist", followRepository.getFollowersList(user_being_viewed.getID()));
 		return "userpage";
 	}
 
@@ -141,7 +141,7 @@ public class UserPageController {
 
 		String[] placeNames = new String[revs.size()];
 		for (int i = 0; i < placeNames.length; i++) {
-			placeNames[i] = placeRepo.getPlaceByID(revs.get(i).getPlaceId()).getName();
+			placeNames[i] = placeRepo.getPlaceById(revs.get(i).getPlaceId()).getName();
 		}
 
 		int[] followVals = new int[revs.size()];

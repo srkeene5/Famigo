@@ -71,7 +71,7 @@ public class PlaceRepository {
         return place;
     }
 
-    public Place getPlaceByID(int id) {
+    public Place getPlaceById(int id) {
         Map<String, Object> place;
         try {
             place = jdbcTemplate.queryForMap("SELECT * FROM place WHERE id=?",
@@ -88,5 +88,13 @@ public class PlaceRepository {
             );
         }
         return null;
+    }
+
+    public ArrayList<Place> getPlacesFromNames(ArrayList<String> placeNames) {
+        ArrayList<Place> places = new ArrayList<>();
+        for (int i = 0; i < placeNames.size(); i++) {
+            places.add(getPlaceByName(placeNames.get(i)));
+        }
+        return places;
     }
 }

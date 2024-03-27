@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS user (
-    id VARCHAR(20) PRIMARY KEY,
+    id VARCHAR(20),
     username VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     password TEXT NOT NULL,
@@ -7,32 +7,42 @@ CREATE TABLE IF NOT EXISTS user (
     description TEXT,
     visibility VARCHAR(20) NOT NULL,
     role VARCHAR(20) NOT NULL,
-    enabled BOOLEAN DEFAULT 1 NOT NULL
+    enabled BOOLEAN DEFAULT 1 NOT NULL,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS conversation (
-    id VARCHAR(30) PRIMARY KEY,
-    name VARCHAR(100)
+    id VARCHAR(30),
+    name VARCHAR(100),
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS conversationParticipants(
     conversationID VARCHAR(30),
-    userID VARCHAR(10)
+    userID VARCHAR(20),
+    FOREIGN KEY (conversationID) REFERENCES conversation(id),
+    FOREIGN KEY (userID) REFERENCES user(id)
 );
 
 CREATE TABLE IF NOT EXISTS message (
-    id VARCHAR(50) PRIMARY KEY,
-    sender VARCHAR(10),
+    id VARCHAR(50),
+    sender VARCHAR(20),
     content TEXT,
     timestamp DATETIME,
     edited BOOLEAN,
-    conversation VARCHAR(30)
+    conversation VARCHAR(30),
+    PRIMARY KEY (id),
+    FOREIGN KEY (conversation) REFERENCES conversation(id),
+    FOREIGN KEY (sender) REFERENCES user(id)
 );
 
 CREATE TABLE IF NOT EXISTS unread (
     messageID VARCHAR(50),
     conversationID VARCHAR(30),
-    userID VARCHAR(10)
+    userID VARCHAR(20),
+    FOREIGN KEY (messageID) REFERENCES message(id),
+    FOREIGN KEY (conversationID) REFERENCES conversation(id),
+    FOREIGN KEY (userID) REFERENCES user(id)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
@@ -45,7 +55,8 @@ CREATE TABLE IF NOT EXISTS reviews (
     placeID VARCHAR(20),
     likes INTEGER,
     dislikes INTEGER,
-    PRIMARY KEY (revID)
+    PRIMARY KEY (revID),
+    FOREIGN KEY (userID) REFERENCES user(id)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -56,7 +67,8 @@ CREATE TABLE IF NOT EXISTS comments (
     timestamp DATETIME,
     edited BOOLEAN,
     reviewID INTEGER NOT NULL,
-    PRIMARY KEY (comID)
+    PRIMARY KEY (comID),
+    FOREIGN KEY (userID) REFERENCES user(id)
 );
 
 CREATE TABLE IF NOT EXISTS place (
@@ -82,4 +94,16 @@ CREATE TABLE IF NOT EXISTS followers (
     id VARCHAR(100),
     following_id VARCHAR(100),
     PRIMARY KEY (id, following_id)
+);
+
+CREATE TABLE IF NOT EXISTS event (
+    id VARCHAR(50),
+    name TEXT,
+    creator VARCHAR(20),
+    FOREIGN KEY (creator) REFERENCES user(id),
+    place INTEGER NOT NULL,
+    FOREIGN KEY (place) REFERENCES place(id),
+    start DATETIME,
+    end DATETIME,
+    description TEXT
 );

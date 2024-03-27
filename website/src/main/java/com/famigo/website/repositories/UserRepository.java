@@ -90,7 +90,7 @@ public class UserRepository {
 
     public User getUserByUsername(String userID) {
         try {
-            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE id=?", new RowMapper<User>() {
+            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE username=?", new RowMapper<User>() {
                 @Override
                 public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                     try {
@@ -99,6 +99,7 @@ public class UserRepository {
                                 Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
                         return newUser;
                     } catch (Exception e) {
+                        System.out.println(e);
                         return null;
                     }
                 }
@@ -127,5 +128,18 @@ public class UserRepository {
         jdbcTemplate.update("UPDATE user SET enabled=0 WHERE id=?", userID);
         jdbcTemplate.update("DELETE FROM unread WHERE userID=?", userID);
         jdbcTemplate.update("DELETE FROM followers WHERE id=? OR following_id=?", userID, userID);
+    }
+
+    public boolean isUserID(String userID) {
+        boolean answer = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM user WHERE id=?", new RowMapper<Boolean>() {
+
+            @Override
+            public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // TODO Auto-generated method stub
+                return rs.getBoolean(1);
+            }
+            
+        }, userID);
+        return answer;
     }
 }

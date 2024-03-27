@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title th:text="'Event - '+${event.getName()}"></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+        <div id="editEvent">
+            <input type="text" id="newname" placeholder="Enter Title" th:value="${event.getName()}"/>
+            <p th:text="'Selected: '+${event.getPlace().getName()}"></p>
+            <select name="places" id="selectPlace">
+                <option disabled selected value>Select Place</option>
+                <option th:each="place : ${places}" th:value="${place.getId()}" th:text="${place.getName()}" th:id="${place.getId()}"></option>
+            </select>
+            <input type="datetime-local" id="startdate" th:value="${event.getStart()}"/>
+            <input type="datetime-local" id="enddate" th:value="${event.getEnd()}"/>
+            <textarea placeholder="description" id="newdescription" th:text="${event.getDescription()}"></textarea>
+            <button id="createevent">Edit Event</button>
+        </div>
+    <body>
+    <script>
+        document.getElementById("createevent").addEventListener("click", function(e) {
+            var name = document.getElementById("newname").value;
+            var place = document.getElementById("selectPlace").value;
+            var start = document.getElementById("startdate").value;
+            var end = document.getElementById("enddate").value;
+            var description = document.getElementById("newdescription").value;
+            try {
+                const response = fetch(window.location.href + "/edit-event", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body : JSON.stringify({
+                        name : name,
+                        place : place,
+                        start : start,
+                        end : end,
+                        description : description
+                    })
+                }).then((response) => response.json())
+                .then((response) => {
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/events/" + response["eid"];
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    </script>
+</html>
