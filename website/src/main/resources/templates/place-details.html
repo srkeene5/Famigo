@@ -135,10 +135,6 @@
                 <li><button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button>  <p th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></p></li>
                 <li><button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button>  <p th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></p></li>
                 <p th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></p>
-                
-                <script th:inline="javascript">
-                    var cReactions = /*[[${#maps.toList(cReactions)}]]*/ {};
-                </script>
 
                 <!--Comment logic starts-->
                 <form action="/addComment" method="POST">

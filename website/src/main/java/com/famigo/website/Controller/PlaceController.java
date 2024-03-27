@@ -81,12 +81,14 @@ public class PlaceController {
 
             int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
             model.addAttribute("revReactions", revReactions);
+            HashMap<Integer, List<Integer>> cReations = cr.getUserCommentReactions(Utilities.getUserID(), commentsOnReviews);
+            model.addAttribute("cReactions", cReations);
+
         }
         return "place-details";
     }
-
     
-    @GetMapping("/places")
+    @PostMapping("/places")
     public String placesGet(Model model) {
         model.addAttribute("placeNamesList", placeRepository.getPlaces());
         return "place-search";
