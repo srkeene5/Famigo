@@ -335,6 +335,12 @@
         </div>
     </form>
 
+    <div id="visibility">
+        <li hidden class="vis_list" th:each="vis_name : ${vislist}" th:id="${vis_name}">
+            <a th:href="@{/user/{vis}(name=${vis_name})}" th:text="${vis_name}"></a>
+        </li>
+    </div>
+
 	<div id="navigationbar" class="infoblock">
         <div id="textholder">
             <p id="famigotext">
@@ -526,9 +532,14 @@
 
         function UpdateSearch() {
             var users = document.getElementsByClassName("user_list");
+            var userVis = document.getElementsByClassName("vis_list");
             var searchedUsername = document.getElementById("searchfield").value;
             for (let i = 0; i < users.length; i++) {
-                if (users[i].id.toLowerCase().includes(searchedUsername)) {
+                if (!userVis[i].id.toLowerCase().includes("p")) {
+                    alert(userVis[i].id);
+                    users[i].remove();
+                    userVis[i].remove();
+                } else if (users[i].id.toLowerCase().includes(searchedUsername)) {
                     users[i].style.display = "block";
                 } else {
                     users[i].style.display = "none";

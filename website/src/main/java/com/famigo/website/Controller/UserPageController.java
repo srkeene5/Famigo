@@ -28,6 +28,7 @@ public class UserPageController {
 	public String greeting(Model model) {
 		User user = userRepository.getUser("id", Utilities.getUserID());
 		model.addAttribute("userlist", userRepository.getAllUsernames());
+		model.addAttribute("vislist", userRepository.getAllVisibility());
 		model.addAttribute("signup", new Signup());
 		model.addAttribute("userpage", user);
 		model.addAttribute("user_logged_in", user);

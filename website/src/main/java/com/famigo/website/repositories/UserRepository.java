@@ -88,6 +88,15 @@ public class UserRepository {
         return users;
     }
 
+    public ArrayList<String> getAllVisibility() {
+        ArrayList<String> users = new ArrayList<>();
+        List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT visibility FROM user");
+        for (Map<String, Object> user : userList) {
+            users.add((String) user.get("visibility"));
+        }
+        return users;
+    }
+
     public User getUserByUsername(String userID) {
         try {
             User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE id=?", new RowMapper<User>() {
