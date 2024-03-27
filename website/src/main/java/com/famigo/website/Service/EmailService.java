@@ -1,4 +1,4 @@
-package com.famigo.website.service;
+package com.famigo.website.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

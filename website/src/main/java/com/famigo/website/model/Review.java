@@ -25,6 +25,10 @@ public class Review {
         this.dislikes = 0;
     }
 
+    public Review (String hey, String hey2, String hey3, int hey1) {
+
+    }
+
     // Constructor for review pulled from database
     public Review(String userId, int revId, String review, int stars, LocalDateTime timeStamp, boolean edited,
             int placeId, int likes, int dislikes) {

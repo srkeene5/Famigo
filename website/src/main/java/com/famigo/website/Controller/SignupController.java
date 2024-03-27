@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.famigo.website.model.Signup;
 import com.famigo.website.model.User;
 import com.famigo.website.repositories.UserRepository;
-import com.famigo.website.service.EmailService;
+import com.famigo.website.Service.EmailService;
 import com.famigo.website.utilities.Role;
 import com.famigo.website.utilities.Utilities;
 import com.famigo.website.utilities.ValidateText;
