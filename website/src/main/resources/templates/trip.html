@@ -64,6 +64,8 @@
             try {
                 const response = fetch(window.location.href + "/delete-trip", {
                     method: "POST"
+                }).then((response) => {
+                    window.location.href = "/trips";
                 });
             } catch(error) {
                 console.log(error);

@@ -5,22 +5,19 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-        <h1>Trips</h1>
-        <table id="invites">
-            <tr th:each="invite : ${invites}">
-                <td><span th:text="${invite.getName()}"></span></td>
-                <td th:text="${invite.getOwner().getUsername()}"></td>
-                <td th:each="member : ${invite.getMembers()}"><a th:href="@{'/user/'+${member.getUsername()}}"><span th:href="@{'/user/'+${member.getUsername()}}"></span></a></td>
-                <td th:text="${invite.getCreated()}"></td>
-                <td><button th:attr="data-id=${invite.getID()}" onclick="evaluateInvite(event)">Accept</button></td>
-                <td><button th:attr="data-id=${invite.getID()}" onclick="evaluateInvite(event)">Decline</button></td>
-            </tr>
-        </table>
+        <div id="group">
+            <h1 th:text="${group.getName()}"></h1>
+            <p>Owner: <a th:href="@{'/user/'+${group.getOwner().getUsername()}}"><span th:text="${group.getOwner().getUsername()}"></span></a></p>
+            <p>Members: <a th:each="member : ${group.getMembers()}" th:href="@{'/user/'+${member.getUsername()}}"><span th:text="${member.getUsername()}"></span></a></p>
+            <p th:text="'Date Created: '+${group.getCreated()}"></p>
+            <p th:text="${group.getDescription()}"></p>
+            <button id="message"><a th:href="'/conversations/'+${group.getConversationID()}">Message Group</a></button>
+        </div>
         <div id="newtrip">
             <div id="selected"></div>
             <select name="users" id="selectUser" onchange="addToSelected()">
                 <option disabled selected value>Select Users</option>
-                <option th:each="user : ${users}" th:value="${user}" th:text="${user}" th:id="${user}"></option>
+                <option th:each="user : ${users}" th:if="${!user.getUsername().equals(currentuser)}" th:value="${user.getUsername()}" th:text="${user.getUsername()}" th:id="${user.getUsername()}"></option>
             </select>
             <input type="text" id="name" placeholder="Enter Name"/>
             <textarea placeholder="Enter Description" id="description"></textarea>
@@ -30,31 +27,13 @@
             <tr th:each="trip : ${trips}">
                 <td><a th:href="@{'/trips/'+${trip.getID()}}"><span th:text="${trip.getName()}"></span></a></td>
                 <td th:text="${trip.getOwner().getUsername()}"></td>
-                <td th:each="member : ${trip.getMembers()}"><a th:href="@{'/user/'+${member.getUsername()}}"><span th:text="@{'/user/'+${member.getUsername()}}"></span></a></td>
+                <td th:each="member : ${trip.getMembers()}"><a th:href="@{'/user/'+${member.getUsername()}}"><span th:href="@{'/user/'+${member.getUsername()}}"></span></a></td>
                 <td th:text="${trip.getCreated()}"></td>
             </tr>
         </table>
+        <button th:if="${isowner} == true" id="deletegroup">Delete Group</button>
     </body>
     <script>
-        function evaluateInvite(e) {
-            var resultThing = {
-                result : e.target.textContent,
-                tripID : e.target.getAttribute("data-id")
-            };
-            try {
-                const response = fetch("/trips", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(resultThing)
-                }).then((response) => {
-                    location.reload();
-                });
-            } catch(error){
-                console.log(error);
-            }
-        }
         document.getElementById("createtrip").addEventListener("click", function(e) {
             var convrec = document.querySelectorAll(".member");
             var members = [];
@@ -74,7 +53,7 @@
                 return;
             }
             try {
-                const response = fetch("/trips/new-trip", {
+                const response = fetch(window.location.href, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -104,5 +83,17 @@
             });
             selectedDiv.append(removebutton);
         }
+
+        document.getElementById("deletegroup").addEventListener("click", function(e) {
+            try {
+                const response = fetch(window.location.href + "/delete-group", {
+                    method: "POST"
+                }).then((response) => {
+                    window.location.href = "/groups";
+                });
+            } catch(error) {
+                console.log(error);
+            }
+        });
     </script>
 </html>

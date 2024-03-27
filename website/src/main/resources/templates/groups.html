@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
     <head>
-        <title>Trips</title>
+        <title>Groups</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-        <h1>Trips</h1>
+        <h1>Groups</h1>
         <table id="invites">
             <tr th:each="invite : ${invites}">
                 <td><span th:text="${invite.getName()}"></span></td>
                 <td th:text="${invite.getOwner().getUsername()}"></td>
-                <td th:each="member : ${invite.getMembers()}"><a th:href="@{'/user/'+${member.getUsername()}}"><span th:href="@{'/user/'+${member.getUsername()}}"></span></a></td>
+                <p>Members: <a th:each="member : ${invite.getMembers()}" th:href="@{'/user/'+${member.getUsername()}}"><span th:text="${member.getUsername()}"></span></a></p>
                 <td th:text="${invite.getCreated()}"></td>
                 <td><button th:attr="data-id=${invite.getID()}" onclick="evaluateInvite(event)">Accept</button></td>
                 <td><button th:attr="data-id=${invite.getID()}" onclick="evaluateInvite(event)">Decline</button></td>
             </tr>
         </table>
-        <div id="newtrip">
+        <div id="newgroup">
             <div id="selected"></div>
             <select name="users" id="selectUser" onchange="addToSelected()">
                 <option disabled selected value>Select Users</option>
@@ -24,14 +24,14 @@
             </select>
             <input type="text" id="name" placeholder="Enter Name"/>
             <textarea placeholder="Enter Description" id="description"></textarea>
-            <button id="createtrip">Create New Trip</button>
+            <button id="creategroup">Create New Group</button>
         </div>
-        <table id="currentTrips">
-            <tr th:each="trip : ${trips}">
-                <td><a th:href="@{'/trips/'+${trip.getID()}}"><span th:text="${trip.getName()}"></span></a></td>
-                <td th:text="${trip.getOwner().getUsername()}"></td>
-                <td th:each="member : ${trip.getMembers()}"><a th:href="@{'/user/'+${member.getUsername()}}"><span th:text="@{'/user/'+${member.getUsername()}}"></span></a></td>
-                <td th:text="${trip.getCreated()}"></td>
+        <table id="currentGroups">
+            <tr th:each="group : ${groups}">
+                <td><a th:href="@{'/groups/'+${group.getID()}}"><span th:text="${group.getName()}"></span></a></td>
+                <td th:text="${group.getOwner().getUsername()}"></td>
+                <td th:each="member : ${group.getMembers()}"><a th:href="@{'/user/'+${member.getUsername()}}"><span th:href="@{'/user/'+${member.getUsername()}}"></span></a></td>
+                <td th:text="${group.getCreated()}"></td>
             </tr>
         </table>
     </body>
@@ -42,7 +42,7 @@
                 tripID : e.target.getAttribute("data-id")
             };
             try {
-                const response = fetch("/trips", {
+                const response = fetch("/groups", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -55,7 +55,7 @@
                 console.log(error);
             }
         }
-        document.getElementById("createtrip").addEventListener("click", function(e) {
+        document.getElementById("creategroup").addEventListener("click", function(e) {
             var convrec = document.querySelectorAll(".member");
             var members = [];
             convrec.forEach(function(element) {
@@ -70,11 +70,11 @@
                 var element = document.createElement("p");
                 element.setAttribute("value", "You must enter all fields");
                 element.style.color = "red";
-                document.getElementById("newtrip").appendChild(element);
+                document.getElementById("newgroup").appendChild(element);
                 return;
             }
             try {
-                const response = fetch("/trips/new-trip", {
+                const response = fetch("/groups/new-group", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -82,7 +82,7 @@
                     body: JSON.stringify(resultThing)
                 }).then((response) => response.json()
                 ).then((response) => {
-                    window.location.href = window.location.protocol + "//" + window.location.host + "/trips/" + response["id"];
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/groups/" + response["id"];
                 });
             } catch(error){
                 console.log(error);

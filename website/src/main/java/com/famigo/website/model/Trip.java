@@ -11,14 +11,16 @@ public class Trip {
     ArrayList<User> members;
     LocalDateTime created;
     String description;
+    String travelGroupID;
 
-    public Trip(String id, String name, User owner, ArrayList<User> members, LocalDateTime created, String description) {
+    public Trip(String id, String name, User owner, ArrayList<User> members, LocalDateTime created, String description, String travelGroupID) {
         this.id = id;
         this.name = name;
         this.owner = owner;
         this.members = members;
         this.created = created;
         this.description = description;
+        this.travelGroupID = travelGroupID;
     }
 
     public String getID() {
@@ -63,5 +65,9 @@ public class Trip {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTravelGroupID() {
+        return travelGroupID;
     }
 }

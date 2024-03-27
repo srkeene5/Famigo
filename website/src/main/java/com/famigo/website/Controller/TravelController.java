@@ -18,13 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Event;
 import com.famigo.website.model.Place;
 import com.famigo.website.model.SubEvent;
 import com.famigo.website.model.SubInvite;
 import com.famigo.website.model.SubTrip;
+import com.famigo.website.model.TravelGroup;
 import com.famigo.website.model.Trip;
 import com.famigo.website.model.User;
+import com.famigo.website.repositories.MessageRepository;
 import com.famigo.website.repositories.PlaceRepository;
 import com.famigo.website.repositories.TravelRepository;
 import com.famigo.website.repositories.UserRepository;
@@ -41,6 +44,8 @@ public class TravelController {
     TravelRepository tr;
     @Autowired
     PlaceRepository pr;
+    @Autowired
+    MessageRepository mr;
 
     @GetMapping("/trips/{tripID}")
     public String events(Model model, @PathVariable String tripID) {
@@ -76,7 +81,7 @@ public class TravelController {
     public ResponseEntity<HttpStatus> deleteEvent(@PathVariable String tripID, @PathVariable String eventID) {
         Event e = tr.getEvent(eventID);
         Trip t = tr.getTrip(tripID);
-        if (Utilities.getUserID().equals(e.getCreator()) || Utilities.getUserID().equals(t.getOwner())) {
+        if (Utilities.getUserID().equals(e.getCreator()) || Utilities.getUserID().equals(t.getOwner().getID()) || !t.getTravelGroupID().equals("NULL")) {
             tr.deleteEvent(eventID);
             return new ResponseEntity<HttpStatus>(HttpStatus.OK);
         }
@@ -95,7 +100,7 @@ public class TravelController {
     @GetMapping("/trips")
     public String trips(Model model) {
         ArrayList<Trip> tripsArr = tr.getTrips();
-        ArrayList<Trip> inviteList = tr.getInvites();
+        ArrayList<Trip> inviteList = tr.getTripInvites();
         ArrayList<String> users = ur.getAllUsernames();
         users.remove(Utilities.getUsername());
         model.addAttribute("trips", tripsArr);
@@ -107,10 +112,10 @@ public class TravelController {
     @RequestMapping(value="/trips", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HttpStatus> evaluateInvite(Model model, @RequestBody SubInvite result) {
         if (result.getResult().equals("Accept")) {
-            tr.evaluateRequest(result.getTripID(), InviteStatus.ACCEPTED);
+            tr.evaluateRequest(result.getTripID(), Utilities.getUserID(), InviteStatus.ACCEPTED);
         }
         else {
-            tr.evaluateRequest(result.getTripID(), InviteStatus.REFUSED);
+            tr.evaluateRequest(result.getTripID(), Utilities.getUserID(), InviteStatus.REFUSED);
         }
         return new ResponseEntity<HttpStatus>(HttpStatus.OK);
     }
@@ -122,7 +127,7 @@ public class TravelController {
         for (int i = 0; i < result.getMembers().size(); i++) {
             members.add(ur.getUserByUsername(result.getMembers().get(i)));
         }
-        Trip t = new Trip(Utilities.generateID(IDSize.TRIPID), result.getName(), ur.getUser("id", Utilities.getUserID()), members, LocalDateTime.now(), result.getDescription());
+        Trip t = new Trip(Utilities.generateID(IDSize.TRIPID), result.getName(), ur.getUser("id", Utilities.getUserID()), members, LocalDateTime.now(), result.getDescription(), "NULL");
         tr.createTrip(t);
         Map<String, Object> map = new HashMap<>();
         map.put("id", t.getID());
@@ -132,11 +137,89 @@ public class TravelController {
     @RequestMapping(value="/trips/{tripID}/delete-trip", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HttpStatus> deleteTrip(@PathVariable String tripID) {
         Trip t = tr.getTrip(tripID);
-        if (Utilities.getUserID().equals(t.getOwner())) {
+        if (Utilities.getUserID().equals(t.getOwner().getID()) || (!t.getTravelGroupID().equals("NULL") && tr.getGroup(t.getTravelGroupID()).getOwner().getID().equals(Utilities.getUserID()))) {
             tr.deleteTrip(tripID);
             return new ResponseEntity<HttpStatus>(HttpStatus.OK);
         }
         return new ResponseEntity<HttpStatus>(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/groups")
+    public String getGroups(Model model) {
+        ArrayList<TravelGroup> travelGroups = tr.getTravelGroups();
+        ArrayList<TravelGroup> invites = tr.getGroupInvites();
+        ArrayList<String> allUsers = ur.getAllUsernames();
+        model.addAttribute("groups", travelGroups);
+        model.addAttribute("invites", invites);
+        model.addAttribute("users", allUsers);
+        return "groups.html";
+    }
+
+    @RequestMapping(value="/groups", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HttpStatus> evaluateGroupInvite(Model model, @RequestBody SubInvite result) {
+        if (result.getResult().equals("Accept")) {
+            tr.evaluateGroupRequest(result.getTripID(), InviteStatus.ACCEPTED);
+            TravelGroup g = tr.getGroup(result.getTripID());
+            mr.addUserToConversation(Utilities.getUserID(), g.getConversationID());
+        }
+        else {
+            tr.evaluateGroupRequest(result.getTripID(), InviteStatus.REFUSED);
+        }
+        return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/groups/new-group", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> createGroup(Model model, @RequestBody SubTrip result) {
+        ArrayList<User> members = new ArrayList<>();
+        members.add(ur.getUser("id", Utilities.getUserID()));
+        for (int i = 0; i < result.getMembers().size(); i++) {
+            members.add(ur.getUserByUsername(result.getMembers().get(i)));
+        }
+        ArrayList<User> current = new ArrayList<>();
+        current.add(ur.getUser("id", Utilities.getUserID()));
+        Conversation c = new Conversation(Utilities.generateID(IDSize.CONVERSATIONID), result.getName(), current);
+        mr.addConversation(c);
+        TravelGroup t = new TravelGroup(Utilities.generateID(IDSize.TRIPID), result.getName(), ur.getUser("id", Utilities.getUserID()), LocalDateTime.now(), result.getDescription(), members, c.getID());
+        tr.createTravelGroup(t);
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", t.getID());
+        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/groups/{groupID}/delete-group", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HttpStatus> deleteGroup(@PathVariable String groupID) {
+        TravelGroup t = tr.getGroup(groupID);
+        if (Utilities.getUserID().equals(t.getOwner().getID())) {
+            tr.deleteGroup(groupID);
+            return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+        }
+        return new ResponseEntity<HttpStatus>(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/groups/{groupID}")
+    public String group(Model model, @PathVariable String groupID) {
+        TravelGroup group = tr.getGroup(groupID);
+        ArrayList<Trip> trips = tr.getGroupTrips(groupID);
+        model.addAttribute("group", group);
+        model.addAttribute("trips", trips);
+        model.addAttribute("users", group.getMembers());
+        model.addAttribute("currentuser", Utilities.getUsername());
+        model.addAttribute("isowner", Utilities.getUserID().equals(group.getOwner().getID()));
+        return "group.html";
+    }
+
+    @RequestMapping(value="/groups/{groupID}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> createGroupTrip(Model model, @PathVariable String groupID, @RequestBody SubTrip result) {
+        ArrayList<User> members = new ArrayList<>();
+        members.add(ur.getUser("id", Utilities.getUserID()));
+        for (int i = 0; i < result.getMembers().size(); i++) {
+            members.add(ur.getUserByUsername(result.getMembers().get(i)));
+        }
+        Trip t = new Trip(Utilities.generateID(IDSize.TRIPID), result.getName(), ur.getUser("id", Utilities.getUserID()), members, LocalDateTime.now(), result.getDescription(), groupID);
+        tr.createTrip(t);
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", t.getID());
+        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
 
 }
