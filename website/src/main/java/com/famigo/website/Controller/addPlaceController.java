@@ -2,6 +2,7 @@ package com.famigo.website.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.famigo.website.model.Place;
+import com.famigo.website.model.SubPlace;
 import com.famigo.website.repositories.PlaceRepository;
 
 @Controller
@@ -24,10 +26,10 @@ public class addPlaceController {
         return "addplace";
     }
 
-    @RequestMapping(value = "/addplace", method = RequestMethod.POST)
-    public ResponseEntity<String> submit_place(@RequestBody Place place) {
+    @RequestMapping(value = "/addplace", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> submit_place(@RequestBody SubPlace place) {
         System.out.println(place.getName());
-        Place placeObject = new Place("0", place.getName(), "100");
+        Place placeObject = new Place("0", place.getName(), place.getAddress(), place.getDescription());
         System.out.println("BEFORE");
         placeRepository.addPlace(placeObject);
         System.out.println("place added...");

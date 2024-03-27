@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.famigo.website.model.Conversation;
 import com.famigo.website.model.Message;
 import com.famigo.website.model.SubConversation;
@@ -25,6 +27,8 @@ import com.famigo.website.model.User;
 import com.famigo.website.repositories.MessageRepository;
 import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.utilities.Utilities;
+import com.famigo.website.utilities.IDSize;
+import com.famigo.website.utilities.Status;
 
 @Controller
 public class MessageController {
@@ -33,14 +37,13 @@ public class MessageController {
     MessageRepository mr;
     @Autowired
     UserRepository ur;
-    String conversationID = null;
 
     @GetMapping("/conversations")
     public String getConversations(Model model) {
         String userID = Utilities.getUserID();
         ArrayList<Conversation> c = mr.getConversations(userID);
         ArrayList<String> users = ur.getAllUsernames();
-        users.remove(Utilities.getUserID());
+        users.remove(Utilities.getUsername());
         model.addAttribute("conversations", c);
         model.addAttribute("usernames", users);
         return "viewConversations";
@@ -50,15 +53,15 @@ public class MessageController {
     public ResponseEntity<Map<String, String>> createConversation(@RequestBody SubConversation members) {
         ArrayList<User> userList = new ArrayList<>();
         userList.add(ur.getUser("id", Utilities.getUserID()));
-        for (String user : members.getMembers()) {   
-            User u = ur.getUser("id", user);
+        for (String user : members.getMembers()) {
+            User u = ur.getUser("username", user);
             if (u != null) {
                 userList.add(u);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-        Conversation c = new Conversation(Utilities.generateID(30), "null", userList, null);
+        Conversation c = new Conversation(Utilities.generateID(30), "null", userList);
         mr.addConversation(c);
         Map<String, String> result = new HashMap<String, String>();
         result.put("cid", c.getID());
@@ -68,6 +71,7 @@ public class MessageController {
     @GetMapping("/conversations/{cid}")
     public String seeMessages(Model model, @PathVariable String cid) {
         ArrayList<Message> m = mr.getMessages(cid);
+        mr.getUnread(Utilities.getUserID(), cid);
         model.addAttribute("user", Utilities.getUserID());
         model.addAttribute("messages", m);
         return "viewMessages";
@@ -76,16 +80,20 @@ public class MessageController {
     @RequestMapping(value="/conversations/{cid}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sendMessage(Model model, @PathVariable String cid, @RequestBody SubMessage content) {
         String username = Utilities.getUserID();
-        Message m = new Message(Utilities.generateID(50), username, content.getContent(), LocalDateTime.now(), false, cid);
+        Message m = new Message(Utilities.generateID(IDSize.MESSAGEID), username, content.getContent(), LocalDateTime.now(), false, cid, Status.UNREAD);
         mr.addMessage(m);
+        mr.addToUnread(m, mr.getConversation(cid), username);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    /*
+    @ResponseBody
     @RequestMapping(value="/conversations/{cid}/getupdates", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> updateMessages(@PathVariable String cid, @RequestBody SubMessage timestamp) {
-
+    public ResponseEntity<ArrayList<Message>> updateMessages(@PathVariable String cid) {
+        ArrayList<Message> messageList = mr.getUnread(Utilities.getUserID(), cid);
+        if (messageList == null || messageList.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(messageList, HttpStatus.OK);
     }
-    */
 
 }

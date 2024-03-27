@@ -25,7 +25,7 @@ public class UserRepository {
 
     public void createUser(User user) {
         jdbcTemplate.update(
-                "INSERT INTO user (id, username, email, password, name, description, visibility, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO user (id, username, email, password, name, description, visibility, role, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)",
                 new PreparedStatementSetter() {
 
                     @Override
@@ -99,7 +99,7 @@ public class UserRepository {
 
     public User getUserByUsername(String userID) {
         try {
-            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE id=?", new RowMapper<User>() {
+            User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE username=?", new RowMapper<User>() {
                 @Override
                 public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                     try {
@@ -108,6 +108,7 @@ public class UserRepository {
                                 Visibility.valueOf(rs.getString("visibility")), Role.valueOf(rs.getString("role")));
                         return newUser;
                     } catch (Exception e) {
+                        System.out.println(e);
                         return null;
                     }
                 }
@@ -116,6 +117,82 @@ public class UserRepository {
             return user;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public String getPassword(String userID) {
+        String password = jdbcTemplate.queryForObject("SELECT password FROM user WHERE id=?", new RowMapper<String>() {
+
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // TODO Auto-generated method stub
+                return rs.getString("password");
+            }
+            
+        }, userID);
+        return password;
+    }
+
+    public void deleteAccount(String userID) {
+        jdbcTemplate.update("UPDATE user SET enabled=0 WHERE id=?", userID);
+        jdbcTemplate.update("DELETE FROM unread WHERE userID=?", userID);
+        jdbcTemplate.update("DELETE FROM followers WHERE id=? OR following_id=?", userID, userID);
+    }
+
+    public boolean isUserID(String userID) {
+        boolean answer = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM user WHERE id=?", new RowMapper<Boolean>() {
+
+            @Override
+            public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // TODO Auto-generated method stub
+                return rs.getBoolean(1);
+            }
+            
+        }, userID);
+        return answer;
+    }
+
+    public void addVerificationLink(String link, String userID) {
+        String sql = "INSERT INTO verification (userID, link) VALUES (?, ?)";
+        jdbcTemplate.update(sql, new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                // TODO Auto-generated method stub
+                ps.setString(1, userID);
+                ps.setString(2, link);
+            }
+            
+        });
+    }
+
+    public boolean verify(String link) {
+        String sql = "SELECT COUNT(1) FROM verification WHERE link=?";
+        int result = jdbcTemplate.queryForObject(sql, Integer.class, link);
+        if (result == 1) {
+            String userID = jdbcTemplate.queryForObject("SELECT userID FROM verification WHERE link=?", String.class, link);
+            jdbcTemplate.update("DELETE FROM verification WHERE userID=?", new PreparedStatementSetter() {
+
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    // TODO Auto-generated method stub
+                    ps.setString(1, userID);
+                }
+                
+            });
+            jdbcTemplate.update("UPDATE user SET enabled=1 WHERE id=?", new PreparedStatementSetter() {
+
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    // TODO Auto-generated method stub
+                    ps.setString(1, userID);
+                }
+                
+            });
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }

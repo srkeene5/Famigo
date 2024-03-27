@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title th:text="'Event - '+${event.getName()}"></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+        <div id="editEvent">
+            <input type="text" id="newname" placeholder="Enter Title" th:value="${event.getName()}"/>
+            <p th:text="'Selected: '+${event.getPlace().getName()}"></p>
+            <select name="places" id="selectPlace">
+                <option disabled selected value>Select Place</option>
+                <option th:each="place : ${places}" th:value="${place.getId()}" th:text="${place.getName()}" th:id="${place.getId()}"></option>
+            </select>
+            <input type="datetime-local" id="startdate" th:value="${event.getStart()}"/>
+            <input type="datetime-local" id="enddate" th:value="${event.getEnd()}"/>
+            <textarea placeholder="description" id="newdescription" th:text="${event.getDescription()}"></textarea>
+            <button id="createevent">Edit Event</button>
+            <button id="deleteevent">Delete Event</button>
+        </div>
+    <body>
+        <iframe
+            width="600"
+            height="450"
+            style="border:0"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            th:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyABB5qjyvqKcHKCf5YRAb0T0vhcS8a9d-8&q='+${event.getPlace().getAddress()}">
+        </iframe>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.getElementById("createevent").addEventListener("click", function(e) {
+            var name = document.getElementById("newname").value;
+            var place = document.getElementById("selectPlace").value;
+            var start = document.getElementById("startdate").value;
+            var end = document.getElementById("enddate").value;
+            var description = document.getElementById("newdescription").value;
+            try {
+                const response = fetch(window.location.href + "/edit-event", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body : JSON.stringify({
+                        name : name,
+                        place : place,
+                        start : start,
+                        end : end,
+                        description : description
+                    })
+                }).then((response) => response.json())
+                .then((response) => {
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/trips/" + /*[[${event.getTripID()}]]*/ + "/" + response["eid"];
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+
+        document.getElementById("deleteevent").addEventListener("click", function(e) {
+            try {
+                const response = fetch(window.location.href + "/delete-event", {
+                    method: "POST"
+                }).then((response) => {
+                    if (response.status == 200) {
+                        window.location.href=window.location.protocol + "//" + window.location.host + "/trips/" + /*[[${event.getTripID()}]]*/ + "";
+                    }
+                }) 
+            } catch(error) {
+                console.log(error);
+            }
+        });
+        /*]]>*/
+    </script>
+</html>

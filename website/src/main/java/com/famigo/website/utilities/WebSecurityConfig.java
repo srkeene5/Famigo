@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -37,9 +36,9 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        JdbcDaoImpl users = new JdbcDaoImpl();
+        JdbcImpl users = new JdbcImpl();
         users.setJdbcTemplate(jdbcTemplate);
-        users.setUsersByUsernameQuery("SELECT id,password,'true' FROM user WHERE username=?");
+        users.setUsersByUsernameQuery("SELECT username,password,enabled,id FROM user WHERE username=?");
         users.setAuthoritiesByUsernameQuery("SELECT id,role FROM user WHERE username=?");
         return users;
     }

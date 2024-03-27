@@ -9,12 +9,12 @@ public class Review {
     private int stars;
     private LocalDateTime timeStamp;
     private boolean edited;
-    private String placeId;
+    private int placeId;
     private int likes;
     private int dislikes;
 
     // Constructor for new review
-    public Review(String userId, String placeId, String review, int stars) {
+    public Review(String userId, int placeId, String review, int stars) {
         this.userId = userId;
         this.timeStamp = java.time.LocalDateTime.now();
         this.review = review;
@@ -27,7 +27,7 @@ public class Review {
 
     // Constructor for review pulled from database
     public Review(String userId, int revId, String review, int stars, LocalDateTime timeStamp, boolean edited,
-            String placeId, int likes, int dislikes) {
+            int placeId, int likes, int dislikes) {
         this.userId = userId;
         this.revId = revId;
         this.review = review;
@@ -73,7 +73,7 @@ public class Review {
         return edited;
     }
 
-    public String getPlaceId() {
+    public int getPlaceId() {
         return placeId;
     }
 
@@ -87,7 +87,7 @@ public class Review {
 
     // Main for testing
     public static void main(String[] args) {
-        Review r1 = new Review("1", "p", "review", 3);
+        Review r1 = new Review("1", -2, "review", 3);
         r1.isEdited();
     }
 }

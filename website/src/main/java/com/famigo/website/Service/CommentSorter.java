@@ -243,7 +243,7 @@ public class CommentSorter {
                 for (int j = 0; j < comLen; j++) {
                     buffer.append((char) rand.nextInt(97, 123));
                 }
-                cr.addComment(new Comment(userId, "review", buffer.toString(), rand.nextInt(likeCap)));
+                cr.addComment(new Comment(userId, -1, buffer.toString(), rand.nextInt(likeCap)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
@@ -255,11 +255,16 @@ public class CommentSorter {
         if (getBy.equals("user")) {
             coms = cr.getCommentsByUser("user");
         } else {
-            coms = cr.getCommentsByReview("review");
+            coms = cr.getCommentsByReview(-1);
+        }
+
+        if (coms == null) {
+            testing = false;
+            System.out.println("No Comments");
         }
 
         CommentSorter cs = new CommentSorter();
-        if (testing && testingTimeStamp) {
+        if (testing && testingTimeStamp && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getTimeStamp());
@@ -275,7 +280,7 @@ public class CommentSorter {
                 System.out.println(com.getTimeStamp());
             }
         }
-        if (testing && testingLikes) {
+        if (testing && testingLikes && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getLikes());
@@ -291,7 +296,7 @@ public class CommentSorter {
                 System.out.println(com.getLikes());
             }
         }
-        if (testing && testingComment) {
+        if (testing && testingComment && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println(com.getComment());
@@ -307,7 +312,7 @@ public class CommentSorter {
                 System.out.println(com.getComment());
             }
         }
-        if (testing && testingPrime) {
+        if (testing && testingPrime && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "
@@ -328,7 +333,7 @@ public class CommentSorter {
                         + com.getTimeStamp());
             }
         }
-        if (testing && testingSec) {
+        if (testing && testingSec && coms != null) {
             System.out.println("_____Unsorted_____");
             for (Comment com : coms) {
                 System.out.println("User: " + com.getUserId() + " \t| Likes: " + com.getLikes() + " \t| TimeStamp: "

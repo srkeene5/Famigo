@@ -45,17 +45,17 @@ public class PlaceController {
         ArrayList<Review> reviews = rr.getReviewsByPlace(place.getId());
         if (reviews == null || reviews.isEmpty()) {
             model.addAttribute("reviews", new Review[0]);
-            model.addAttribute("userReactions", new int[0]);
+            model.addAttribute("revReactions", new int[0]);
         } else {
             model.addAttribute("reviews", reviews.toArray());
 
-            int[] userReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
-            model.addAttribute("userReactions", userReactions);
+            int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
+            model.addAttribute("revReactions", revReactions);
         }
         return "place-details";
     }
 
-    @PostMapping("/places")
+    @GetMapping("/places")
     public String places(Model model) {
         model.addAttribute("placeNamesList", placeRepository.getPlaces());
         return "place-search";
@@ -63,12 +63,12 @@ public class PlaceController {
 
     @RequestMapping(value = "/places/{name}/addRev", method = RequestMethod.POST)
     public ResponseEntity<String> submitReview(@PathVariable String name, @RequestBody SubReview sr) {
-        rr.addReview(new Review(Utilities.getUserID(), sr.getrPlace(),
+        rr.addReview(new Review(Utilities.getUserID(), Integer.parseInt(sr.getrPlace()),
                 sr.getrText(), Integer.parseInt(sr.getrStar())));
 
         if (testing) {
             ArrayList<Review> uRevArr = rr.getReviewsByUser(Utilities.getUserID());
-            ArrayList<Review> pRevArr = rr.getReviewsByPlace(sr.getrPlace());
+            ArrayList<Review> pRevArr = rr.getReviewsByPlace(Integer.parseInt(sr.getrPlace()));
             System.out.println("_____Print Review By UserID_____");
             for (Review uRev : uRevArr) {
                 System.out.println("User: " + uRev.getUserId());
@@ -98,10 +98,10 @@ public class PlaceController {
         // vals[0] = like (1) or dislike (0), and values[1] = review ID
         if (vals[0] == 1) {
             // Like button pressed
-            rr.addReviewReaction(Utilities.getUserID(), vals[1], true);
+            rr.alterReviewReaction(Utilities.getUserID(), vals[1], true);
         } else {
             // Dislike button pressed
-            rr.addReviewReaction(Utilities.getUserID(), vals[1], false);
+            rr.alterReviewReaction(Utilities.getUserID(), vals[1], false);
         }
 
         return new ResponseEntity<>("\"Success\"", HttpStatus.OK);

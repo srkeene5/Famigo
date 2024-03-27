@@ -2,7 +2,6 @@ package com.famigo.website.repositories;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ public class PlaceRepository {
     private JdbcTemplate jdbcTemplate;
 
     public void addPlace(Place place) {
-        String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO place (id, name, address, rating, description) VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql, new PreparedStatementSetter() {
 
@@ -31,6 +30,7 @@ public class PlaceRepository {
                 ps.setString(2, place.getName());
                 ps.setString(3, place.getAddress());
                 ps.setString(4, place.getRating());
+                ps.setString(5, place.getDescription());
             }
 
         });
@@ -63,10 +63,38 @@ public class PlaceRepository {
         // int count = 0;
         for (Map<String, Object> o : placeList) {
             if (name.equals(o.get("name"))) {
-                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), String.valueOf((int) o.get("id")));
+                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), (String) o.get("description"), (int) o.get("id"));
             }
             // count++;
         }
         return place;
+    }
+
+    public Place getPlaceById(int id) {
+        Map<String, Object> place;
+        try {
+            place = jdbcTemplate.queryForMap("SELECT * FROM place WHERE id=?",
+                    new Object[] {id});
+        } catch (DataAccessException e) {
+            place = null;
+        }
+
+        if (place != null) {
+            return new Place((String) place.get("rating"),
+                    (String) place.get("name"),
+                    (String) place.get("address"),
+                    (String) place.get("description"),
+                    ((int) place.get("id"))
+            );
+        }
+        return null;
+    }
+
+    public ArrayList<Place> getPlacesFromNames(ArrayList<String> placeNames) {
+        ArrayList<Place> places = new ArrayList<>();
+        for (int i = 0; i < placeNames.size(); i++) {
+            places.add(getPlaceByName(placeNames.get(i)));
+        }
+        return places;
     }
 }

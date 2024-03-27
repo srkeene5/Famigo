@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title>Verify Email</title>
+    </head>
+    <body>
+        <button id="verify">Confirm Signup</button>
+        <p id="favorable" hidden>Your account has been verified. Please click <a href="/login">here</a> to login.</p>
+        <p id="unfavorable" hidden>Either the link is incorrect or has expired. Please try again.</p>
+    </body>
+    <script>
+        document.getElementById("verify").addEventListener("click", function(e) {
+            try {
+                const response = fetch(window.location.href, {
+                    method: "POST"
+                }).then((response) => {
+                    if (response.status == 200) {
+                        document.getElementById("verify").hidden = true;
+                        document.getElementById("favorable").hidden = false;
+                    }
+                    else {
+                        document.getElementById("verify").hidden = true;
+                        document.getElementById("unfavorable").hidden = false;
+                    }
+                });
+            } catch(error) {
+                console.log(error);
+            }
+        });
+    </script>
+</html>

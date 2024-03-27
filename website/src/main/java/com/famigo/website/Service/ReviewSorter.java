@@ -241,7 +241,7 @@ public class ReviewSorter {
                 for (int j = 0; j < revLen; j++) {
                     buffer.append((char) rand.nextInt(97, 123));
                 }
-                rr.addReview(new Review(userId, "place", buffer.toString(), rand.nextInt(1, 6)));
+                rr.addReview(new Review(userId, -1, buffer.toString(), rand.nextInt(1, 6)));
                 try {
                     TimeUnit.SECONDS.sleep(rand.nextInt(1, 3));
                 } catch (Exception e) {
@@ -252,10 +252,15 @@ public class ReviewSorter {
         if (getBy.equals("user")) {
             revs = rr.getReviewsByUser("user");
         } else {
-            revs = rr.getReviewsByPlace("place");
+            revs = rr.getReviewsByPlace(-1);
+        }
+
+        if (revs == null) {
+            testing = false;
+            System.out.println("No Reviews");
         }
         ReviewSorter rs = new ReviewSorter();
-        if (testing && testingTimeStamp) {
+        if (testing && testingTimeStamp && revs != null) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getTimeStamp());
@@ -271,7 +276,7 @@ public class ReviewSorter {
                 System.out.println(rev.getTimeStamp());
             }
         }
-        if (testing && testingStars) {
+        if (testing && testingStars && revs != null) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getStars());
@@ -287,7 +292,7 @@ public class ReviewSorter {
                 System.out.println(rev.getStars());
             }
         }
-        if (testing && testingReview) {
+        if (testing && testingReview && revs != null) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println(rev.getReview());
@@ -303,7 +308,7 @@ public class ReviewSorter {
                 System.out.println(rev.getReview());
             }
         }
-        if (testing && testingPrime) {
+        if (testing && testingPrime && revs != null) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "
@@ -324,7 +329,7 @@ public class ReviewSorter {
                         + rev.getTimeStamp());
             }
         }
-        if (testing && testingSec) {
+        if (testing && testingSec && revs != null) {
             System.out.println("_____Unsorted_____");
             for (Review rev : revs) {
                 System.out.println("User: " + rev.getUserId() + " \t| Stars: " + rev.getStars() + " \t| TimeStamp: "

@@ -6,14 +6,12 @@ public class Conversation {
 
     private String id;
     private String name;
-    private ArrayList<Message> messages;
     private ArrayList<User> members;
 
-    public Conversation(String id, String name, ArrayList<User> members, ArrayList<Message> messages) {
+    public Conversation(String id, String name, ArrayList<User> members) {
         this.id = id;
         this.name = name;
         this.members = members;
-        this.messages = messages;
     }
 
     public String getID() {
@@ -38,18 +36,6 @@ public class Conversation {
 
     public void removeMember(User user) {
         members.remove(user);
-    }
-
-    public ArrayList<Message> getMessages() {
-        return messages;
-    }
-
-    public void addMessage(Message m) {
-        messages.add(m);
-    }
-
-    public void removeMessage(Message m) {
-        messages.remove(m);
     }
 
 }

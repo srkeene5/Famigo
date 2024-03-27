@@ -1,8 +1,10 @@
 package com.famigo.website.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import com.famigo.website.utilities.Status;
 
-public class Message {
+public class Message implements Serializable {
 
     private String id;
     private String sender;
@@ -10,15 +12,17 @@ public class Message {
     private String content;
     private Boolean edited;
     private String conversation;
+    private Status status;
 
     public Message(String id, String sender, String content, LocalDateTime timestamp, Boolean edited,
-            String conversation) {
+            String conversation, Status status) {
         this.id = id;
         this.sender = sender;
         this.timestamp = timestamp;
         this.content = content;
         this.edited = edited;
         this.conversation = conversation;
+        this.status = status;
     }
 
     public String getId() {
@@ -51,6 +55,14 @@ public class Message {
 
     public String getConversation() {
         return conversation;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
 }

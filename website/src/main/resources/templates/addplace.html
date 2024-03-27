@@ -11,7 +11,9 @@
 
     <form action="/addplace" method="post">
         <label for="placeName">Place Name:</label>
-        <input type="text" id="placeName" name="placeName" required>
+        <input type="text" id="placeName" name="placeName" required/>
+        <input type="text" id="address" name="address"/>
+        <textarea id="description" name="description"></textarea>
         <br>
         <input type="submit" value="Add Place" onclick="submitPlace()">
     </form>
@@ -19,7 +21,11 @@
     <script>
         function submitPlace() {
             var placeName = document.getElementById("placeName").value;
-            var placeData = { "name": placeName };
+            var placeData = { 
+                "name": placeName,
+                "address" : document.getElementById("address").value,
+                "description" : document.getElementById("description").value
+            };
 
             fetch("/addplace", {
                 method: "POST",
