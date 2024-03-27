@@ -25,7 +25,7 @@ public class UserRepository {
 
     public void createUser(User user) {
         jdbcTemplate.update(
-                "INSERT INTO user (id, username, email, password, name, description, visibility, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO user (id, username, email, password, name, description, visibility, role, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)",
                 new PreparedStatementSetter() {
 
                     @Override
@@ -141,5 +141,49 @@ public class UserRepository {
             
         }, userID);
         return answer;
+    }
+
+    public void addVerificationLink(String link, String userID) {
+        String sql = "INSERT INTO verification (userID, link) VALUES (?, ?)";
+        jdbcTemplate.update(sql, new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                // TODO Auto-generated method stub
+                ps.setString(1, userID);
+                ps.setString(2, link);
+            }
+            
+        });
+    }
+
+    public boolean verify(String link) {
+        String sql = "SELECT COUNT(1) FROM verification WHERE link=?";
+        int result = jdbcTemplate.queryForObject(sql, Integer.class, link);
+        if (result == 1) {
+            String userID = jdbcTemplate.queryForObject("SELECT userID FROM verification WHERE link=?", String.class, link);
+            jdbcTemplate.update("DELETE FROM verification WHERE userID=?", new PreparedStatementSetter() {
+
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    // TODO Auto-generated method stub
+                    ps.setString(1, userID);
+                }
+                
+            });
+            jdbcTemplate.update("UPDATE user SET enabled=1 WHERE id=?", new PreparedStatementSetter() {
+
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    // TODO Auto-generated method stub
+                    ps.setString(1, userID);
+                }
+                
+            });
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

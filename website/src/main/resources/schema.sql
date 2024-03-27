@@ -7,8 +7,13 @@ CREATE TABLE IF NOT EXISTS user (
     description TEXT,
     visibility VARCHAR(20) NOT NULL,
     role VARCHAR(20) NOT NULL,
-    enabled BOOLEAN DEFAULT 1 NOT NULL,
+    enabled BOOLEAN DEFAULT 0 NOT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS verification (
+    userID VARCHAR(20),
+    link VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS conversation (
