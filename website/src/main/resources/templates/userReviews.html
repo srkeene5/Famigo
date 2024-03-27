@@ -51,7 +51,6 @@
     <div id="reviewList">
         <ul th:each="i, ib : ${reviews}">
             <div class="reviewBlock" th:object="${i}">
-                <img draggable="false" class="relationIcon" th:src="@{/images/gold.png}"/>
                 <div th:id="'rev' + ${ib.index}" class="revId">[[*{revId}]]</div>
                 <div th:text="'Place: ' + ${placeNames[ib.index]}"></div>
                 <div th:text="'Rated ' + *{stars} + ' stars'"></div>
