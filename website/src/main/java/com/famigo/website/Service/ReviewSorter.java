@@ -62,22 +62,66 @@ public class ReviewSorter {
                 secAscend);
     }
 
-    public void ReviewSortByUnPack(ArrayList<Review> revs, String valStr, ArrayList<User> sortPrime,
-            ArrayList<User> sortSec, String Ascend) {
+    public void ReviewSortByUnPack(ArrayList<Review> revs, String valStr, ArrayList<User> following,
+            ArrayList<User> followers, String priority) {
+
+        String val = "timeStamp";
+        boolean ascending = false;
+        if (!valStr.equals("")) {
+            val = valStr.substring(1);
+            ascending = (!valStr.substring(0, 1).equals("0"));
+        }
+
+        ArrayList<User> friends = new ArrayList<>();
+        for (User follower : followers) {
+            for (User follows : following) {
+                if (follower.getID().equals(follows.getID())) {
+                    friends.add(follower);
+                    System.out.println(follower.getName());
+                    // following.remove(follows);
+                }
+            }
+        }
+
+        boolean primeAscend = false;
+        boolean secAscend = false;
+        ArrayList<User> sortPrime = null;
+        ArrayList<User> sortSec = null;
+        if (!priority.equals("")) {
+            String priorities[] = priority.split(" ");
+            primeAscend = (!priorities[0].substring(0, 1).equals("0"));
+            if (priorities[0].substring(1).equals("follows")) {
+                sortPrime = following;
+            } else {
+                sortPrime = friends;
+            }
+            if (priorities.length > 1) {
+                secAscend = (!priorities[1].substring(0, 1).equals("0"));
+                if (priorities[1].substring(1).equals("follows")) {
+                    sortSec = following;
+                } else {
+                    sortSec = friends;
+                }
+            }
+        }
+
         /*
-         * boolean primeAscend = false;
-         * boolean secAscend = false;
-         * if (!Ascend.equals("")) {
-         * Ascend.split(" ")
-         * }
-         * if (valStr.equals("0")) {
-         * if(sortPrime.isEmpty() && sortSec.isEmpty()){
-         * ReviewSortBy(revs, "timeStamp", false);
-         * } else if (sortSec.isEmpty()) {
-         * ReviewSortBy(revs, "timeStamp", false,);
-         * }
+         * if (sortPrime != null && sortSec != null) {
+         * System.out.println(revs.get(0).getRevId() + "\t" + val + "\t" + ascending +
+         * "\t"
+         * + sortPrime.get(0).getName() + "\t" + primeAscend + "\t" +
+         * sortSec.get(0).getName()
+         * + "\t" + secAscend);
          * }
          */
+
+        if (sortPrime == null) {
+            ReviewSortBy(revs, val, ascending);
+        } else if (sortSec == null) {
+            ReviewSortBy(revs, val, ascending, sortPrime, primeAscend);
+        } else {
+            ReviewSortBy(revs, val, ascending, sortPrime, primeAscend, sortSec, secAscend);
+        }
     }
 
     /* _____Private Classes_____ */
@@ -145,8 +189,10 @@ public class ReviewSorter {
                     i++;
                 }
             } else if (val.equals("likes")) {
-                if ((ascending && revs.get(i).getLikes() > revs.get(j).getLikes())
-                        || (!ascending && revs.get(i).getLikes() < revs.get(j).getLikes())) {
+                if ((ascending && revs.get(i).getLikes() - revs.get(i).getDislikes() > revs.get(j).getLikes()
+                        - revs.get(j).getDislikes())
+                        || (!ascending && revs.get(i).getLikes() - revs.get(i).getDislikes() < revs.get(j).getLikes()
+                                - revs.get(j).getDislikes())) {
                     Review hold = revs.get(j);
                     int index = j;
                     while (index != i) {

@@ -53,8 +53,15 @@
             clear:left;
             height: 5px;
         }
-        .checked {
-            color: orange;
+
+        #reportsAppeals {
+            overflow: hidden;
+        }
+        #reportList {
+            float:left;
+        }
+        #appealList {
+            overflow: hidden;
         }
     </style>
 </head>
@@ -63,39 +70,42 @@
     <h1>Mod Page</h1>
     <!-- details -->
     <br>
-    <h2>Reports</h2>
 
-    <div id="reportList">
-        <ul th:each="i, ib : ${reports}">
-            <div class="reportBlock" th:object="${i}">
-                <p th:id="'rep' + ${ib.index}" class="repID">[[*{reportID}]]</p>
-                <li th:text="'User Reporting: ' + *{reportingUserID}"></li>
-                <li th:text="'Reported User: ' + *{contentUserID}"></li>
-                <li th:text="'Reported Content: ' + ${i.getReportedText()}">
-                <li th:text="'Report: ' + ${i.getExplanation()}"></li>
-    
-                <li><button th:id="'ignoreBtn' + ${i.getReportID()}" class="ignBtn">Reject Report</button>
-                <li><button th:id="'deleteBtn' + ${i.getReportID()}" class="delBtn">Delete Reported Content</button>
-                <li><button th:id="'delBanBtn' + ${i.getReportID()}" class="delBanBtn">Delete Content and Ban User</button>
-                <br>
-            </div>
-        </ul>
-    </div>
-    <div id="appealList">
-        <ul th:each="i, ib : ${reports}">
-            <div class="reportBlock" th:object="${i}">
-                <p th:id="'rep' + ${ib.index}" class="repID">[[*{reportID}]]</p>
-                <li th:text="'User Reporting: ' + *{reportingUserID}"></li>
-                <li th:text="'Reported User: ' + *{contentUserID}"></li>
-                <li th:text="'Reported Content: ' + ${i.getReportedText()}">
-                <li th:text="'Report: ' + ${i.getExplanation()}"></li>
-                <li th:text="'Appeal: ' + ${i.getAppeal()}"></li>
-    
-                <li><button th:id="'appRejBtn' + ${i.getReportID()}" class="appRejBtn">Reject Appeal</button>
-                <li><button th:id="'appAccBtn' + ${i.getReportID()}" class="appAccBtn">Accept Appeal</button>
-                <br>
-            </div>
-        </ul>
+    <div id="reportsAppeals">
+        <div id="reportList">
+            <h2>Reports</h2>
+            <ul th:each="i, ib : ${reports}">
+                <div class="reportBlock" th:object="${i}">
+                    <p th:id="'rep' + ${ib.index}" class="repID">[[*{reportID}]]</p>
+                    <li th:text="'User Reporting: ' + *{reportingUserID}"></li>
+                    <li th:text="'Reported User: ' + *{contentUserID}"></li>
+                    <li th:text="'Reported Content: ' + ${i.getReportedText()}">
+                    <li th:text="'Report: ' + ${i.getExplanation()}"></li>
+        
+                    <li><button th:id="'ignoreBtn' + ${i.getReportID()}" class="ignBtn">Reject Report</button>
+                    <li><button th:id="'deleteBtn' + ${i.getReportID()}" class="delBtn">Delete Reported Content</button>
+                    <li><button th:id="'delBanBtn' + ${i.getReportID()}" class="delBanBtn">Delete Content and Ban User</button>
+                    <br>
+                </div>
+            </ul>
+        </div>
+        <div id="appealList">
+            <h2>Appeals</h2>
+            <ul th:each="i, ib : ${appeals}">
+                <div class="appealBlock" th:object="${i}">
+                    <p th:id="'rep' + ${ib.index}" class="repID">[[*{reportID}]]</p>
+                    <li th:text="'User Reporting: ' + *{reportingUserID}"></li>
+                    <li th:text="'Reported User: ' + *{contentUserID}"></li>
+                    <li th:text="'Reported Content: ' + ${i.getReportedText()}">
+                    <li th:text="'Report: ' + ${i.getExplanation()}"></li>
+                    <li th:text="'Appeal: ' + ${i.getAppeal()}"></li>
+        
+                    <li><button th:id="'appRejBtn' + ${i.getReportID()}" class="appRejBtn">Reject Appeal</button>
+                    <li><button th:id="'appAccBtn' + ${i.getReportID()}" class="appAccBtn">Accept Appeal</button>
+                    <br>
+                </div>
+            </ul>
+        </div>
     </div>
 
     <script>

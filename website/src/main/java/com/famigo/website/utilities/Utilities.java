@@ -39,4 +39,9 @@ public class Utilities {
         return s.toString();
     }
 
+    public static String getModConvID() {
+        // Just a random static modConvoID of size 30
+        return "012345678901234567890123456789";
+    }
+
 }

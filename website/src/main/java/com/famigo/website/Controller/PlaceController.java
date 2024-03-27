@@ -1,6 +1,7 @@
 package com.famigo.website.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.service.ReviewSorter;
 import com.famigo.website.model.Review;
 import com.famigo.website.model.SubReview;
+import com.famigo.website.model.User;
 import com.famigo.website.utilities.Utilities;
 
 @Controller
@@ -58,25 +60,20 @@ public class PlaceController {
             model.addAttribute("userReactions", new int[0]);
         } else {
             // sorting
-            /*
-             * String[] priorities = priority.split(" ");
-             * ArrayList<ArrayList<User>> priorArray = new ArrayList<>();
-             * List<String> followingIDs = fr.getFollowingList(Utilities.getUserID());
-             * for (String string : priorities) {
-             * ArrayList<User> hold = new ArrayList<>();
-             * for (String str : followingIDs) {
-             * if (string.substring(1).equals("friends")) {
-             * hold.add(ur.getUserByUsername(str));
-             * }
-             * if (string.substring(1).equals("followers")) {
-             * hold.add(ur.getUserByUsername(str));
-             * }
-             * }
-             * priorArray.add(hold);
-             * }
-             * rs.ReviewSortByUnPack(reviews, revSort, priorArray.get(0), priorArray.get(1),
-             * priority);
-             */
+
+            ArrayList<User> followers = new ArrayList<>();
+            ArrayList<User> following = new ArrayList<>();
+            List<String> followingIDs = fr.getFollowingList(Utilities.getUserID());
+            List<String> followersIDs = fr.getFollowersList(Utilities.getUserID());
+
+            for (String str : followingIDs) {
+                following.add(ur.getUserByUsername(str));
+            }
+            for (String str : followersIDs) {
+                followers.add(ur.getUserByUsername(str));
+            }
+
+            rs.ReviewSortByUnPack(reviews, revSort, following, followers, priority);
             // fin sorting
             model.addAttribute("reviews", reviews.toArray());
 

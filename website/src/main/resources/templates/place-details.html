@@ -95,7 +95,7 @@
     <form th:action="@{'/places/' + ${selectedPlace.name}}" method="post">
         
         <div class="sortOpts">
-            <label for="revSort">Sort By:</label>
+            <label for="revSort">Sort Reviews By:</label>
             <select name="revSort" id="revSort">
                 <option value="0timeStamp">Most Recent</option>
                 <option value="1timeStamp">Least Recent</option>
@@ -106,18 +106,26 @@
             </select>
         </div>
         <div class="sortOpts">
+            <label for="comSort">Sort Comments By:</label>
+            <select name="comSort" id="comSort">
+                <option value="0timeStamp">Most Recent</option>
+                <option value="1timeStamp">Least Recent</option>
+                <option value="0likes">Most Liked</option>
+                <option value="1likes">Least Liked</option>
+            </select>
+        </div>
+        <div class="sortOpts">
             <label for="priority1">Priorize:</label>
             <select name="priority" id="priority">
                 <option value="">None</option>
-                <option value="0friends">Prioritize Friends</option>
-                <option value="0follows">Prioritize Following</option>
-                <option value="0friends 0follows">Prioritize Friends and Following</option>
-                <option value="1friends">Deprioritize Friends</option>
-                <option value="1follows">Deprioritize Following</option>
-                <option value="1friends 0follows">Deprioritize Friends and Following</option>
+                <option value="1friends">Prioritize Friends</option>
+                <option value="1follows">Prioritize Following</option>
+                <option value="1friends 1follows">Prioritize Friends and Following</option>
+                <option value="0friends">Deprioritize Friends</option>
+                <option value="0follows">Deprioritize Following</option>
+                <option value="0friends 0follows">Deprioritize Friends and Following</option>
             </select>
         </div>
-        <br>
         <input type="submit" value="Submit">
         <br><br><br>
     </form>

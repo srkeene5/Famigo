@@ -79,6 +79,19 @@ public class UserRepository {
         return users;
     }
 
+    public ArrayList<User> getAllMods() {
+        ArrayList<User> mods = new ArrayList<>();
+        List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT * FROM user WHERE role=?",
+                Role.MODERATOR.toString());
+        for (Map<String, Object> user : userList) {
+            User u = new User((String) user.get("id"), (String) user.get("username"), (String) user.get("email"),
+                    (String) user.get("password"), (String) user.get("name"), (String) user.get("description"),
+                    Visibility.valueOf((String) user.get("visibility")), Role.valueOf((String) user.get("role")));
+            mods.add(u);
+        }
+        return mods;
+    }
+
     public ArrayList<String> getAllUsernames() {
         ArrayList<String> users = new ArrayList<>();
         List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT username FROM user");

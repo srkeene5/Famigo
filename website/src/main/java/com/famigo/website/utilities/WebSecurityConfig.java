@@ -31,6 +31,14 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/user", true))
                 .logout((logout) -> logout.permitAll())
                 .csrf(AbstractHttpConfigurer::disable);
+        /*
+         * http
+         * .authorizeHttpRequests((authorize) -> authorize
+         * .requestMatchers("/user")
+         * .hasAuthority("USER")
+         * .anyRequest()
+         * .authenticated());
+         */
         return http.build();
     }
 

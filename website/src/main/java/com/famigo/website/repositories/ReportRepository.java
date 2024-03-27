@@ -89,7 +89,7 @@ public class ReportRepository {
         return reports;
     }
 
-    public ArrayList<Report> getReports() {
+    public ArrayList<Report> getReportsAppeals() {
         List<Map<String, Object>> reportList = jdbcTemplate.queryForList("SELECT * FROM reports");
         if (reportList == null || reportList.isEmpty()) {
             System.out.println("Failed to Pull");
@@ -106,4 +106,42 @@ public class ReportRepository {
         }
         return reports;
     }
+
+    public ArrayList<Report> getReports() {
+        List<Map<String, Object>> reportList = jdbcTemplate.queryForList("SELECT * FROM reports WHERE appText IS NULL");
+        if (reportList == null || reportList.isEmpty()) {
+            System.out.println("Failed to Pull");
+            return null;
+        }
+        ArrayList<Report> reports = new ArrayList<>();
+        for (Map<String, Object> o : reportList) {
+            reports.add(new Report((int) o.get("repID"),
+                    (String) o.get("repUserID"), (String) o.get("conUserID"), (String) o.get("repText"),
+                    (String) o.get("appText"),
+                    (LocalDateTime) o.get("timestamp"), pr.getPlaceByID((int) o.get("placeID")),
+                    rr.getReviewByID((int) o.get("revID")),
+                    cr.getCommentByID((int) o.get("comID")), (boolean) o.get("banned")));
+        }
+        return reports;
+    }
+
+    public ArrayList<Report> getAppeals() {
+        List<Map<String, Object>> reportList = jdbcTemplate
+                .queryForList("SELECT * FROM reports WHERE appText IS NOT NULL");
+        if (reportList == null || reportList.isEmpty()) {
+            System.out.println("Failed to Pull");
+            return null;
+        }
+        ArrayList<Report> reports = new ArrayList<>();
+        for (Map<String, Object> o : reportList) {
+            reports.add(new Report((int) o.get("repID"),
+                    (String) o.get("repUserID"), (String) o.get("conUserID"), (String) o.get("repText"),
+                    (String) o.get("appText"),
+                    (LocalDateTime) o.get("timestamp"), pr.getPlaceByID((int) o.get("placeID")),
+                    rr.getReviewByID((int) o.get("revID")),
+                    cr.getCommentByID((int) o.get("comID")), (boolean) o.get("banned")));
+        }
+        return reports;
+    }
+
 }

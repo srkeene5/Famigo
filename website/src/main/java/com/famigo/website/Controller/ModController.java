@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.famigo.website.model.Report;
 import com.famigo.website.model.Review;
+import com.famigo.website.repositories.MessageRepository;
 import com.famigo.website.repositories.ReportRepository;
 import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.repositories.UserRepository;
@@ -31,6 +32,9 @@ public class ModController {
 
     @Autowired
     ReviewRepository rr;
+
+    @Autowired
+    MessageRepository mr;
 
     /*
      * Banned Page:
@@ -80,6 +84,7 @@ public class ModController {
     public String makeMod(@PathVariable String uid) {
         System.out.println(uid);
         ur.updateRole(uid, Role.MODERATOR);
+        mr.addUserToConversation(Utilities.getModConvID(), uid);
         return "redirect:/user/" + uid;
     }
 
@@ -87,6 +92,7 @@ public class ModController {
     public String unMod(@PathVariable String uid) {
         System.out.println(uid);
         ur.updateRole(uid, Role.USER);
+        mr.removeUserFromConversation(Utilities.getModConvID(), uid);
         return "redirect:/user/" + uid;
     }
 

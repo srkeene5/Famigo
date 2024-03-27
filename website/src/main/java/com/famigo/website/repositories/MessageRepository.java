@@ -24,7 +24,7 @@ import com.famigo.website.utilities.Status;
 
 @Repository
 public class MessageRepository {
-    
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -45,7 +45,7 @@ public class MessageRepository {
                 ps.setBoolean(5, message.getEdited());
                 ps.setString(6, message.getConversation());
             }
-            
+
         });
     }
 
@@ -53,22 +53,24 @@ public class MessageRepository {
         ArrayList<User> members = conversation.getMembers();
         for (int i = 0; i < members.size(); i++) {
             User user = members.get(i);
-            jdbcTemplate.update("INSERT INTO unread (messageID, conversationID, userID) VALUES (?, ?, ?)", new PreparedStatementSetter() {
+            jdbcTemplate.update("INSERT INTO unread (messageID, conversationID, userID) VALUES (?, ?, ?)",
+                    new PreparedStatementSetter() {
 
-                @Override
-                public void setValues(PreparedStatement ps) throws SQLException {
-                    // TODO Auto-generated method stub
-                    ps.setString(1, message.getId());
-                    ps.setString(2, conversation.getID());
-                    ps.setString(3, user.getID());
-                }
-                
-            });
+                        @Override
+                        public void setValues(PreparedStatement ps) throws SQLException {
+                            // TODO Auto-generated method stub
+                            ps.setString(1, message.getId());
+                            ps.setString(2, conversation.getID());
+                            ps.setString(3, user.getID());
+                        }
+
+                    });
         }
     }
 
     public ArrayList<Message> getUnread(String userID, String cid) {
-        List<Map<String, Object>> messageIDList = jdbcTemplate.queryForList("SELECT messageID FROM unread WHERE userID=? AND conversationID=?", userID, cid);
+        List<Map<String, Object>> messageIDList = jdbcTemplate
+                .queryForList("SELECT messageID FROM unread WHERE userID=? AND conversationID=?", userID, cid);
         ArrayList<Message> messages = new ArrayList<>();
         for (int i = 0; i < messageIDList.size(); i++) {
             String id = (String) messageIDList.get(i).get("messageID");
@@ -88,13 +90,16 @@ public class MessageRepository {
     }
 
     public ArrayList<Message> getMessages(String cid) {
-        List<Map<String, Object>> messageList = jdbcTemplate.queryForList("SELECT * FROM message WHERE conversation=? ORDER BY timestamp", new Object[]{cid});
+        List<Map<String, Object>> messageList = jdbcTemplate
+                .queryForList("SELECT * FROM message WHERE conversation=? ORDER BY timestamp", new Object[] { cid });
         if (messageList == null || messageList.isEmpty()) {
             return null;
         }
         ArrayList<Message> messages = new ArrayList<>();
         for (Map<String, Object> o : messageList) {
-            messages.add(new Message((String) o.get("id"), (String) o.get("sender"), (String) o.get("content"), (LocalDateTime) o.get("timestamp"), (Boolean) o.get("edited"), (String) o.get("conversation"), Status.READ));
+            messages.add(new Message((String) o.get("id"), (String) o.get("sender"), (String) o.get("content"),
+                    (LocalDateTime) o.get("timestamp"), (Boolean) o.get("edited"), (String) o.get("conversation"),
+                    Status.READ));
         }
         return messages;
     }
@@ -108,24 +113,51 @@ public class MessageRepository {
                 ps.setString(1, conversation.getID());
                 ps.setString(2, conversation.getName());
             }
-            
+
         });
         for (User u : conversation.getMembers()) {
-            jdbcTemplate.update("INSERT INTO conversationParticipants (conversationID, userID) VALUES (?, ?)", new PreparedStatementSetter() {
+            jdbcTemplate.update("INSERT INTO conversationParticipants (conversationID, userID) VALUES (?, ?)",
+                    new PreparedStatementSetter() {
 
-                @Override
-                public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
-                    // TODO Auto-generated method stub
-                    ps.setString(1, conversation.getID());
-                    ps.setString(2, u.getID());
-                }
-                
-            });
+                        @Override
+                        public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
+                            // TODO Auto-generated method stub
+                            ps.setString(1, conversation.getID());
+                            ps.setString(2, u.getID());
+                        }
+
+                    });
         }
     }
 
+    public boolean conversationExists(String cid) {
+        List<Map<String, Object>> con = jdbcTemplate.queryForList("SELECT * FROM conversation WHERE id = ?",
+                new Object[] { cid });
+        return con.size() > 0;
+    }
+
+    public void addUserToConversation(String cid, String uid) {
+        jdbcTemplate.update("INSERT INTO conversationParticipants (conversationID, userID) VALUES (?, ?)",
+                new PreparedStatementSetter() {
+
+                    @Override
+                    public void setValues(PreparedStatement ps) throws SQLException, DataAccessException {
+                        // TODO Auto-generated method stub
+                        ps.setString(1, cid);
+                        ps.setString(2, uid);
+                    }
+
+                });
+    }
+
+    // TODO: Nitin, I don't know if this will mess up Dependencies
+    public void removeUserFromConversation(String cid, String uid) {
+        jdbcTemplate.update("DELETE FROM conversationParticipants WHERE conversationID=? AND userID=?", cid, uid);
+    }
+
     public ArrayList<Conversation> getConversations(String userID) {
-        List<Map<String, Object>> conversationList = jdbcTemplate.queryForList("SELECT conversationID FROM conversationParticipants WHERE userID=?", new Object[]{userID});
+        List<Map<String, Object>> conversationList = jdbcTemplate.queryForList(
+                "SELECT conversationID FROM conversationParticipants WHERE userID=?", new Object[] { userID });
         if (conversationList == null) {
             return null;
         }
@@ -137,23 +169,25 @@ public class MessageRepository {
     }
 
     public Conversation getConversation(String cid) {
-        List<Map<String, Object>> memberList = jdbcTemplate.queryForList("SELECT userID FROM conversationParticipants WHERE conversationID=?", new Object[]{cid});
+        List<Map<String, Object>> memberList = jdbcTemplate.queryForList(
+                "SELECT userID FROM conversationParticipants WHERE conversationID=?", new Object[] { cid });
         ArrayList<User> members = new ArrayList<>();
         for (Map<String, Object> o : memberList) {
             members.add(ur.getUser("id", (String) o.get("userID")));
         }
-        Conversation conversationObject = jdbcTemplate.queryForObject("SELECT name FROM conversation WHERE id=?", new RowMapper<Conversation>() {
+        Conversation conversationObject = jdbcTemplate.queryForObject("SELECT name FROM conversation WHERE id=?",
+                new RowMapper<Conversation>() {
 
-            @Override
-            public Conversation mapRow(ResultSet rs, int rowNum) throws SQLException {
-                if (rs == null) {
-                    return null;
-                }
-                Conversation conversation = new Conversation(cid, rs.getString("name"), members);
-                return conversation;
-            }
-            
-        }, cid);
+                    @Override
+                    public Conversation mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        if (rs == null) {
+                            return null;
+                        }
+                        Conversation conversation = new Conversation(cid, rs.getString("name"), members);
+                        return conversation;
+                    }
+
+                }, cid);
         return conversationObject;
     }
 
@@ -164,13 +198,15 @@ public class MessageRepository {
                 @Override
                 public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
                     // TODO Auto-generated method stub
-                    Message m = new Message(rs.getString("id"), rs.getString("sender"), rs.getString("content"), (LocalDateTime) rs.getObject("timestamp"), rs.getBoolean("edited"), rs.getString("conversation"), Status.READ);
+                    Message m = new Message(rs.getString("id"), rs.getString("sender"), rs.getString("content"),
+                            (LocalDateTime) rs.getObject("timestamp"), rs.getBoolean("edited"),
+                            rs.getString("conversation"), Status.READ);
                     return m;
                 }
 
             }, messageID);
             return message;
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }

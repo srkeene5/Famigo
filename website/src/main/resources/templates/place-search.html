@@ -49,6 +49,7 @@
             <form th:action="@{/places/{name}(name=${placeName})}" method="post">
                 <button type="submit" th:text="${placeName}"></button>
                 <input type="hidden" name="revSort" value="">
+                <input type="hidden" name="comSort" value="">
                 <input type="hidden" name="priority" value="">
             </form>
         </li>
