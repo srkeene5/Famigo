@@ -44,7 +44,7 @@ public class TravelController {
 
     @RequestMapping(value="/new-event", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> createEvent(@RequestBody SubEvent event) {
-        Event e = new Event(Utilities.generateID(IDSize.EVENTID), event.getName(), Utilities.getUserID(), pr.getPlaceById(event.getPlace()), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription());
+        Event e = new Event(Utilities.generateID(IDSize.EVENTID), event.getName(), Utilities.getUserID(), pr.getPlaceById(Integer.parseInt(event.getPlace())), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription());
         tr.createEvent(e);
         Map<String, String> result = new HashMap<String, String>();
         result.put("eid", e.getID());
@@ -53,7 +53,7 @@ public class TravelController {
 
     @RequestMapping(value="/events/{eventID}/edit-event", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> editEvent(@PathVariable String eventID, @RequestBody SubEvent event) {
-        Event e = new Event(eventID, event.getName(), Utilities.getUserID(), pr.getPlaceById(event.getPlace()), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription());
+        Event e = new Event(eventID, event.getName(), Utilities.getUserID(), pr.getPlaceById(Integer.parseInt(event.getPlace())), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription());
         tr.editEvent(e);
         Map<String, String> result = new HashMap<String, String>();
         result.put("eid", e.getID());

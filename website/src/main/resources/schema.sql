@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS comments (
     likes INTEGER,
     timestamp DATETIME,
     edited BOOLEAN,
-    reviewID VARCHAR(20),
+    reviewID INTEGER NOT NULL,
     PRIMARY KEY (comID),
     FOREIGN KEY (userID) REFERENCES user(id)
 );
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS place (
     id INTEGER NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) UNIQUE NOT NULL,
     address VARCHAR(255) NOT NULL,
-    rating VARCHAR(255) NOT NULL,
+    rating INTEGER NOT NULL,
     PRIMARY KEY (id)
 );
 

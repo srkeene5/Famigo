@@ -6,7 +6,7 @@ public class Place {
     private String rating;
     private String name;
     private String address;
-    private String id;
+    private int id;
 
     // Needed for ajax
     public Place() {}
@@ -18,7 +18,7 @@ public class Place {
         this.address = address;
     }
 
-    public Place(String rating, String name, String address, String id) {
+    public Place(String rating, String name, String address, int id) {
         this.rating = rating;
         this.name = name;
         this.address = address;
@@ -30,7 +30,7 @@ public class Place {
         return rating;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

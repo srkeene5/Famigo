@@ -45,7 +45,7 @@ public class PlaceController {
         ArrayList<Review> reviews = rr.getReviewsByPlace(place.getId());
         if (reviews == null || reviews.isEmpty()) {
             model.addAttribute("reviews", new Review[0]);
-            model.addAttribute("userReactions", new int[0]);
+            model.addAttribute("revReactions", new int[0]);
         } else {
             model.addAttribute("reviews", reviews.toArray());
 
@@ -63,12 +63,12 @@ public class PlaceController {
 
     @RequestMapping(value = "/places/{name}/addRev", method = RequestMethod.POST)
     public ResponseEntity<String> submitReview(@PathVariable String name, @RequestBody SubReview sr) {
-        rr.addReview(new Review(Utilities.getUserID(), sr.getrPlace(),
+        rr.addReview(new Review(Utilities.getUserID(), Integer.parseInt(sr.getrPlace()),
                 sr.getrText(), Integer.parseInt(sr.getrStar())));
 
         if (testing) {
             ArrayList<Review> uRevArr = rr.getReviewsByUser(Utilities.getUserID());
-            ArrayList<Review> pRevArr = rr.getReviewsByPlace(sr.getrPlace());
+            ArrayList<Review> pRevArr = rr.getReviewsByPlace(Integer.parseInt(sr.getrPlace()));
             System.out.println("_____Print Review By UserID_____");
             for (Review uRev : uRevArr) {
                 System.out.println("User: " + uRev.getUserId());

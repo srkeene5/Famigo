@@ -34,7 +34,7 @@ public class addRevController {
     @RequestMapping(value = "/addRev", method = RequestMethod.POST)
     public ResponseEntity<String> submitReview(@RequestBody SubReview sr) {
         // System.out.println("Received");
-        Review rev = new Review(Utilities.getUserID(), sr.getrPlace(),
+        Review rev = new Review(Utilities.getUserID(), Integer.parseInt(sr.getrPlace()),
                 sr.getrText(), Integer.parseInt(sr.getrStar()));
         rr.addReview(rev);
         System.out.println("User: " + rev.getUserId());
@@ -46,7 +46,7 @@ public class addRevController {
         System.out.println("Dislikes: " + rev.getDislikes());
         if (testing) {
             ArrayList<Review> uRevArr = rr.getReviewsByUser(Utilities.getUserID());
-            ArrayList<Review> pRevArr = rr.getReviewsByPlace(sr.getrPlace());
+            ArrayList<Review> pRevArr = rr.getReviewsByPlace(Integer.parseInt(sr.getrPlace()));
             System.out.println("_____Print Review By UserID_____");
             for (Review uRev : uRevArr) {
                 System.out.println("User: " + uRev.getUserId());

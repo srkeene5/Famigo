@@ -39,7 +39,7 @@ public class TravelRepository {
                 ps.setString(1, e.getID());
                 ps.setString(2, e.getName());
                 ps.setString(3, e.getCreator());
-                ps.setInt(4, Integer.parseInt(e.getPlace().getId()));
+                ps.setInt(4, e.getPlace().getId());
                 ps.setTimestamp(5, Timestamp.valueOf(e.getStart()));
                 ps.setTimestamp(6, Timestamp.valueOf(e.getEnd()));
                 ps.setString(7, e.getDescription());
@@ -57,7 +57,7 @@ public class TravelRepository {
                 // TODO Auto-generated method stub
                 ps.setString(1, e.getName());
                 ps.setString(2, e.getCreator());
-                ps.setInt(3, Integer.parseInt(e.getPlace().getId()));
+                ps.setInt(3, e.getPlace().getId());
                 ps.setTimestamp(4, Timestamp.valueOf(e.getStart()));
                 ps.setTimestamp(5, Timestamp.valueOf(e.getEnd()));
                 ps.setString(6, e.getDescription());
@@ -78,7 +78,7 @@ public class TravelRepository {
     }
 
     public Event convertEvent(Map<String, Object> event) {
-        return new Event((String) event.get("id"), (String) event.get("name"), (String) event.get("creator"), pr.getPlaceById(String.valueOf(event.get("place"))), (LocalDateTime) event.get("start"), (LocalDateTime) event.get("end"), (String) event.get("description"));
+        return new Event((String) event.get("id"), (String) event.get("name"), (String) event.get("creator"), pr.getPlaceById((int) event.get("place")), (LocalDateTime) event.get("start"), (LocalDateTime) event.get("end"), (String) event.get("description"));
     }
 
     public Event getEvent(String eventID) {
@@ -87,7 +87,7 @@ public class TravelRepository {
             @Override
             public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
                 // TODO Auto-generated method stub
-                Event event = new Event(rs.getString("id"), rs.getString("name"), rs.getString("creator"), pr.getPlaceById(rs.getString("place")), (LocalDateTime) rs.getObject("start"), (LocalDateTime) rs.getObject("end"), rs.getString("description"));
+                Event event = new Event(rs.getString("id"), rs.getString("name"), rs.getString("creator"), pr.getPlaceById(rs.getInt("place")), (LocalDateTime) rs.getObject("start"), (LocalDateTime) rs.getObject("end"), rs.getString("description"));
                 return event;
             }
             

@@ -9,9 +9,9 @@ public class Comment {
     private int likes;
     private LocalDateTime timeStamp;
     private boolean edited;
-    private String reviewId;
+    private int reviewId;
 
-    public Comment(String userId, String reviewId, String comment, int likes) {
+    public Comment(String userId, int reviewId, String comment, int likes) {
         this.userId = userId;
         this.timeStamp = java.time.LocalDateTime.now();
         this.comment = comment;
@@ -21,7 +21,7 @@ public class Comment {
     }
 
     public Comment(String userId, int comId, String comment, int likes, LocalDateTime timeStamp, boolean edited,
-            String reviewId) {
+            int reviewId) {
         this.userId = userId;
         this.comId = comId;
         this.comment = comment;
@@ -55,7 +55,7 @@ public class Comment {
         return edited;
     }
 
-    public String getReviewId() {
+    public int getReviewId() {
         return reviewId;
     }
 
