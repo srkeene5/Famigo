@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS place (
     name VARCHAR(255) UNIQUE NOT NULL,
     address VARCHAR(255) NOT NULL,
     rating INTEGER NOT NULL,
+    description TEXT,
     PRIMARY KEY (id)
 );
 

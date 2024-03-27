@@ -18,6 +18,15 @@
             <button id="deleteevent">Delete Event</button>
         </div>
     <body>
+        <iframe
+            width="600"
+            height="450"
+            style="border:0"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            th:src="'https://www.google.com/maps/embed/v1/place?key=AIzaSyABB5qjyvqKcHKCf5YRAb0T0vhcS8a9d-8&q='+${event.getPlace().getAddress()}">
+        </iframe>
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.getElementById("createevent").addEventListener("click", function(e) {

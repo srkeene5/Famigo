@@ -2,7 +2,6 @@ package com.famigo.website.repositories;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.Place;
-import com.famigo.website.model.Review;
 
 @Repository
 public class PlaceRepository {
@@ -22,7 +20,7 @@ public class PlaceRepository {
     private JdbcTemplate jdbcTemplate;
 
     public void addPlace(Place place) {
-        String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO place (id, name, address, rating, description) VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql, new PreparedStatementSetter() {
 
@@ -32,6 +30,7 @@ public class PlaceRepository {
                 ps.setString(2, place.getName());
                 ps.setString(3, place.getAddress());
                 ps.setString(4, place.getRating());
+                ps.setString(5, place.getDescription());
             }
 
         });
@@ -64,7 +63,7 @@ public class PlaceRepository {
         // int count = 0;
         for (Map<String, Object> o : placeList) {
             if (name.equals(o.get("name"))) {
-                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), (int) o.get("id"));
+                place = new Place((String) o.get("rating"), (String) o.get("name"), (String) o.get("address"), (String) o.get("description"), (int) o.get("id"));
             }
             // count++;
         }
@@ -84,6 +83,7 @@ public class PlaceRepository {
             return new Place((String) place.get("rating"),
                     (String) place.get("name"),
                     (String) place.get("address"),
+                    (String) place.get("description"),
                     ((int) place.get("id"))
             );
         }
