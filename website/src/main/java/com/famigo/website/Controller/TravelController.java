@@ -61,7 +61,7 @@ public class TravelController {
 
     @RequestMapping(value="/trips/{tripID}/new-event", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> createEvent(@RequestBody SubEvent event, @PathVariable String tripID) {
-        Event e = new Event(Utilities.generateID(IDSize.EVENTID), event.getName(), Utilities.getUserID(), pr.getPlaceById(event.getPlace()), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription(), tripID);
+        Event e = new Event(Utilities.generateID(IDSize.EVENTID), event.getName(), Utilities.getUserID(), pr.getPlaceById(Integer.parseInt(event.getPlace())), LocalDateTime.parse(event.getStart()), LocalDateTime.parse(event.getEnd()), event.getDescription(), tripID);
         tr.createEvent(e);
         Map<String, String> result = new HashMap<String, String>();
         result.put("eid", e.getID());

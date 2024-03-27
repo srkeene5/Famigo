@@ -63,7 +63,7 @@ public class SignupController {
 					SimpleMailMessage message = new SimpleMailMessage();
 					message.setTo(signup.getEmail());
 					message.setSubject("Verify Registration");
-					message.setText("Click this link to verify registration: localhost:8080/signup/" + verification);
+					message.setText("Click this link to verify registration: http://localhost:8080/signup/" + verification);
 					es.sendEmail(message);
 					return "emailMessage.html";
 				}
