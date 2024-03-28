@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS user (
 
 CREATE TABLE IF NOT EXISTS verification (
     userID VARCHAR(20),
-    link VARCHAR(50)
+    link VARCHAR(50),
+    created TIMESTAMP,
+    register BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS conversation (

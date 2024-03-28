@@ -3,14 +3,19 @@ package com.famigo.website.repositories;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.User;
@@ -143,8 +148,8 @@ public class UserRepository {
         return answer;
     }
 
-    public void addVerificationLink(String link, String userID) {
-        String sql = "INSERT INTO verification (userID, link) VALUES (?, ?)";
+    public void addVerificationLink(String link, String userID, boolean register) {
+        String sql = "INSERT INTO verification (userID, link, created, register) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, new PreparedStatementSetter() {
 
             @Override
@@ -152,15 +157,49 @@ public class UserRepository {
                 // TODO Auto-generated method stub
                 ps.setString(1, userID);
                 ps.setString(2, link);
+                ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setBoolean(4, register);
             }
             
         });
     }
 
-    public boolean verify(String link) {
+    public User getUserIDFromLink(String link) {
+        String sql = "SELECT userID FROM verification WHERE link=?";
+        try {
+            String userID = jdbcTemplate.queryForObject(sql, String.class, link);
+            User user = getUser("id", userID);
+            return user;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public void removeVerificationLink(String link) {
+        String sql = "DELETE FROM verification WHERE link=?";
+        jdbcTemplate.update(sql, new PreparedStatementSetter() {
+
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                // TODO Auto-generated method stub
+                ps.setString(1, link);
+            }
+            
+        });
+    }
+
+    public boolean verify(String link, boolean register) {
         String sql = "SELECT COUNT(1) FROM verification WHERE link=?";
         int result = jdbcTemplate.queryForObject(sql, Integer.class, link);
         if (result == 1) {
+            LocalDateTime time = jdbcTemplate.queryForObject("SELECT created FROM verification WHERE link=?", LocalDateTime.class, link);
+            LocalDateTime now = LocalDateTime.now();
+            if (Duration.between(time, now).getSeconds() > 3 * 60 * 60) {
+                return false;
+            }
+            if (jdbcTemplate.queryForObject("SELECT register FROM verification WHERE link=?", Boolean.class, link) != register) {
+                return false;
+            }
             String userID = jdbcTemplate.queryForObject("SELECT userID FROM verification WHERE link=?", String.class, link);
             jdbcTemplate.update("DELETE FROM verification WHERE userID=?", new PreparedStatementSetter() {
 
@@ -185,5 +224,15 @@ public class UserRepository {
         else {
             return false;
         }
+    }
+
+    public void changePassword(User user) {
+        jdbcTemplate.update("UPDATE user SET password= ? WHERE id= ?", new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, "{bcrypt}"+BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+                ps.setString(2, user.getID());
+            }
+        });
     }
 }

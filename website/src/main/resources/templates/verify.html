@@ -5,8 +5,9 @@
     </head>
     <body>
         <button id="verify">Confirm Signup</button>
-        <p id="favorable" hidden>Your account has been verified. Please click <a href="/login">here</a> to login.</p>
-        <p id="unfavorable" hidden>Either the link is incorrect or has expired. Please try again.</p>
+        <p id="favorable" style="display: none">Your account has been verified. Please click <a href="/login">here</a> to login.</p>
+        <p id="unfavorable" style="display: none">Either the link is incorrect or has expired. Please click <button id="newlink">here</button>.</p>
+        <p id="anewlink" style="display: none">A new link has been generated.</p>
     </body>
     <script>
         document.getElementById("verify").addEventListener("click", function(e) {
@@ -15,13 +16,25 @@
                     method: "POST"
                 }).then((response) => {
                     if (response.status == 200) {
-                        document.getElementById("verify").hidden = true;
-                        document.getElementById("favorable").hidden = false;
+                        document.getElementById("verify").style.display = 'none';
+                        document.getElementById("favorable").style.display = 'block';
                     }
                     else {
-                        document.getElementById("verify").hidden = true;
-                        document.getElementById("unfavorable").hidden = false;
+                        document.getElementById("verify").style.display = 'none';
+                        document.getElementById("unfavorable").style.display = 'block';
                     }
+                });
+            } catch(error) {
+                console.log(error);
+            }
+        });
+        document.getElementById("newlink").addEventListener("click", function(e) {
+            try {
+                const response = fetch(window.location.href + "/new-link", {
+                    method: "POST"
+                }).then((response) => {
+                    document.getElementById("unfavorable").style.display = 'none';
+                    document.getElementById("anewlink").style.display = 'block';
                 });
             } catch(error) {
                 console.log(error);

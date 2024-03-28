@@ -59,7 +59,7 @@ public class SignupController {
 					}
 					User user = new User(userID, signup.getUsername(), signup.getEmail(), password, signup.getFirstName().concat(" " + signup.getLastName()), "", Visibility.ALL, Role.USER);
 					userRepository.createUser(user);
-					userRepository.addVerificationLink(verification, userID);
+					userRepository.addVerificationLink(verification, userID, true);
 					SimpleMailMessage message = new SimpleMailMessage();
 					message.setTo(signup.getEmail());
 					message.setSubject("Verify Registration");
@@ -83,11 +83,29 @@ public class SignupController {
 
 	@RequestMapping(value="/signup/{link}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HttpStatus> confirmSignup(Model model, @PathVariable String link) {
-		if (userRepository.verify(link)) {
+
+		if (userRepository.verify(link, true)) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		else {
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 		}
+	}
+
+	@RequestMapping(value="/signup/{link}/new-link", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<HttpStatus> newlink(Model model, @PathVariable String link) {
+		User user = userRepository.getUserIDFromLink(link);
+		if (user == null) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		String verification = Utilities.generateID(50);
+		userRepository.removeVerificationLink(user.getID());
+		userRepository.addVerificationLink(verification, user.getID(), true);
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(user.getEmail());
+		message.setSubject("Verify Registration");
+		message.setText("Click this link to verify registration: http://localhost:8080/signup/" + verification);
+		es.sendEmail(message);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

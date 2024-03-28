@@ -130,13 +130,23 @@
         </p>
     </div>
 
-    <form action="#" th:action="@{/login}" th:object="${login}" method="post">
-    	<p><input type="text" placeholder="Username or Email" th:field="*{username}" /></p>
-        <p><input type="password" placeholder="Password" th:field="*{password}" /></p>
-        <p><input type="submit" value="Login" class="login" onclick="CheckValidity();"/></p>
-    </form>
-
-    <button class="signup">Sign Up</button>
+    <div id="loginForm">
+        <form action="#" th:action="@{/login}" th:object="${login}" method="post">
+            <p><input type="text" placeholder="Username or Email" th:field="*{username}" /></p>
+            <p><input type="password" placeholder="Password" th:field="*{password}" /></p>
+            <p><input type="submit" value="Login" class="login" onclick="CheckValidity();"/></p>
+        </form>
+        <button class="signup">Sign Up</button>
+        <button id="forgotPassword">Forgot Password</button>
+    </div>
+    <div id="forgotPasswordForm" style="display: none">
+        <form th:action="@{/forgot-password}" method="post" th:object="${email}">
+            <p><input type="text" placeholder="Username" th:field="*{username}"/></p>
+            <p><input type="text" placeholder="Email" th:field="*{email}" style="margin-top: -140px"/></p>
+            <p><input type="submit" class="signup"/>
+        </form>
+        <button id="back">Back</button>
+    </div>
 </body>
 <script>
     document.getElementsByClassName("signup")[0].addEventListener("click", function() {
@@ -148,5 +158,14 @@
             alert("Incorrect username or password. Please try again.");
         }
     }
+
+    document.getElementById("forgotPassword").addEventListener("click", function(e) {
+        document.getElementById("forgotPasswordForm").style.display = "block";
+        document.getElementById("loginForm").style.display = "none";
+    });
+    document.getElementById("back").addEventListener("click", function(e) {
+        document.getElementById("forgotPasswordForm").style.display = "none";
+        document.getElementById("loginForm").style.display = "block";
+    });
 </script>
 </html>
