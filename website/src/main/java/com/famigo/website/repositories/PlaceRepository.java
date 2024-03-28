@@ -14,11 +14,15 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import com.famigo.website.model.Place;
+import com.famigo.website.model.Review;
 
 @Repository
 public class PlaceRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReviewRepository rr;
 
     public void addPlace(Place place) {
         String sql = "INSERT INTO place (id, name, address, rating) VALUES (?, ?, ?, ?)";
@@ -84,5 +88,13 @@ public class PlaceRepository {
             // count++;
         }
         return place;
+    }
+
+    public void deletePlace(int pid) {
+        jdbcTemplate.update("DELETE FROM place WHERE id=?", pid);
+        ArrayList<Review> reviews = rr.getReviewsByPlace(pid);
+        for (Review review : reviews) {
+            rr.deleteReview(review);
+        }
     }
 }

@@ -18,8 +18,10 @@ import com.famigo.website.repositories.UserRepository;
 import com.famigo.website.service.Stats;
 import com.famigo.website.repositories.CommentRepository;
 import com.famigo.website.repositories.FollowingRepository;
+import com.famigo.website.repositories.ReportRepository;
 import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.model.User;
+import com.famigo.website.service.AutherizeAccess;
 //import com.famigo.website.model.SubFollow;
 
 @Controller
@@ -37,6 +39,11 @@ public class UserPageController {
 	@Autowired
 	private ReviewRepository rr;
 
+	@Autowired
+	private ReportRepository repR;
+
+	private AutherizeAccess auth = new AutherizeAccess();
+
 	@GetMapping("/user")
 	public String greeting(Model model) {
 		User user = userRepository.getUser("id", Utilities.getUserID());
@@ -46,6 +53,14 @@ public class UserPageController {
 		String uID = user.getID();
 		ArrayList<Review> reviews = rr.getReviewsByUser(uID);
 		ArrayList<Comment> comments = cr.getCommentsByUser(uID);
+		// updating required for sort
+		if (reviews == null) {
+			reviews = new ArrayList<>();
+		}
+		for (Review review : reviews) {
+			review.updateLikes(rr.getReviewLikes(review));
+			review.updateDislikes(rr.getReviewDislikes(review));
+		}
 		model.addAttribute("stats", new Stats(uID, reviews, comments));
 		// Should probably return a different user page or use some th:if statements so
 		// that you don't have to return this
@@ -53,7 +68,7 @@ public class UserPageController {
 		model.addAttribute("following_count_of_user",
 				followRepository.getNumFollowing(user.getUsername()));
 		model.addAttribute("followlist", followRepository.getFollowersList(user.getUsername()));
-		return "userpage";
+		return auth.authorizeNotBanned("userpage", repR.getReportsByContentUser(uID));
 	}
 
 	@GetMapping("/user/{username}")

@@ -77,7 +77,8 @@ public class ReviewRepository {
         return reviews;
     }
 
-    // This method fires when a user presses the like or dislike button on a review, and
+    // This method fires when a user presses the like or dislike button on a review,
+    // and
     // adds and/or removes reactions as necessary.
     public void alterReviewReaction(String uid, int rid, boolean isLike) {
         // First, check if the user has liked or disliked this review already
@@ -93,33 +94,36 @@ public class ReviewRepository {
         if (pastReaction != null) {
 
             if (((boolean) pastReaction.get("isLike")) == isLike) {
-                // If past reaction and current reaction match, the user is removing an earlier reaction
+                // If past reaction and current reaction match, the user is removing an earlier
+                // reaction
                 jdbcTemplate.update("DELETE FROM reviewReaction WHERE userID=? AND reviewID=?",
-                        new Object[] {uid, rid});
+                        new Object[] { uid, rid });
                 if (isLike) {
                     jdbcTemplate.update("UPDATE reviews SET likes = likes - 1 WHERE revID=?",
-                            new Object[] {rid});
+                            new Object[] { rid });
                 } else {
                     jdbcTemplate.update("UPDATE reviews SET dislikes = dislikes - 1 WHERE revID=?",
-                            new Object[] {rid});
+                            new Object[] { rid });
                 }
 
             } else {
-                // If past reaction and current reaction don't match, the user is adding the opposite
-                // reaction, in which case their previous reaction must also be deleted. So we can
+                // If past reaction and current reaction don't match, the user is adding the
+                // opposite
+                // reaction, in which case their previous reaction must also be deleted. So we
+                // can
                 // just update the isLike value in the SQL entry.
                 String sqlStr = "UPDATE reviewReaction SET isLike = NOT isLike WHERE userID=? AND reviewID=?";
-                jdbcTemplate.update(sqlStr, new Object[] {uid, rid});
+                jdbcTemplate.update(sqlStr, new Object[] { uid, rid });
                 if (isLike) {
                     jdbcTemplate.update("UPDATE reviews SET likes = likes + 1 WHERE revID=?",
-                            new Object[] {rid});
+                            new Object[] { rid });
                     jdbcTemplate.update("UPDATE reviews SET dislikes = dislikes - 1 WHERE revID=?",
-                            new Object[] {rid});
+                            new Object[] { rid });
                 } else {
                     jdbcTemplate.update("UPDATE reviews SET dislikes = dislikes + 1 WHERE revID=?",
-                            new Object[] {rid});
+                            new Object[] { rid });
                     jdbcTemplate.update("UPDATE reviews SET likes = likes - 1 WHERE revID=?",
-                            new Object[] {rid});
+                            new Object[] { rid });
                 }
             }
 
@@ -136,15 +140,16 @@ public class ReviewRepository {
             });
             if (isLike) {
                 jdbcTemplate.update("UPDATE reviews SET likes = likes + 1 WHERE revID=?",
-                        new Object[] {rid});
+                        new Object[] { rid });
             } else {
                 jdbcTemplate.update("UPDATE reviews SET dislikes = dislikes + 1 WHERE revID=?",
-                        new Object[] {rid});
+                        new Object[] { rid });
             }
         }
     }
 
-    // For each review, returns 1 if the given user has liked the given review, -1 if they disliked,
+    // For each review, returns 1 if the given user has liked the given review, -1
+    // if they disliked,
     // and 0 if they haven't done either.
     public int[] getUserReviewReactions(String userId, ArrayList<Review> revs) {
         int[] reactions = new int[revs.size()];
@@ -168,6 +173,24 @@ public class ReviewRepository {
         return reactions;
     }
 
+    public int getReviewLikes(Review review) {
+        List<Map<String, Object>> reviewList = jdbcTemplate
+                .queryForList("SELECT * FROM reviewReaction WHERE reviewID=? AND isLike=?", review.getRevId(), true);
+        if (reviewList == null || reviewList.isEmpty()) {
+            return 0;
+        }
+        return reviewList.size();
+    }
+
+    public int getReviewDislikes(Review review) {
+        List<Map<String, Object>> reviewList = jdbcTemplate
+                .queryForList("SELECT * FROM reviewReaction WHERE reviewID=? AND isLike=?", review.getRevId(), false);
+        if (reviewList == null || reviewList.isEmpty()) {
+            return 0;
+        }
+        return reviewList.size();
+    }
+
     public Review getReviewByID(int rid) {
         List<Map<String, Object>> commentList = jdbcTemplate.queryForList("SELECT * FROM reviews WHERE revID=?",
                 new Object[] { rid });
@@ -185,6 +208,18 @@ public class ReviewRepository {
                     (int) o.get("dislikes"));
         }
         return review;
+    }
+
+    public void deleteReview(int rid) {
+        jdbcTemplate.update("DELETE FROM reviews WHERE revID=?", rid);
+        jdbcTemplate.update("DELETE FROM reviewReaction WHERE reviewID=?", rid);
+        jdbcTemplate.update("DELETE FROM comments WHERE reviewID=?", rid);
+    }
+
+    public void deleteReview(Review review) {
+        jdbcTemplate.update("DELETE FROM reviews WHERE revID=?", review.getRevId());
+        jdbcTemplate.update("DELETE FROM reviewReaction WHERE reviewID=?", review.getRevId());
+        jdbcTemplate.update("DELETE FROM comments WHERE reviewID=?", review.getRevId());
     }
 
 }

@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS comments (
     userID VARCHAR(20) NOT NULL,
     comment TEXT,
     likes INTEGER,
+    dislikes INTEGER,
     timestamp DATETIME,
     edited BOOLEAN,
     reviewID INTEGER,

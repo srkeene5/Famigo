@@ -39,8 +39,7 @@ public class PlaceController {
     private FollowingRepository fr;
     @Autowired
     private UserRepository ur;
-
-    ReviewSorter rs = new ReviewSorter();
+    private ReviewSorter rs = new ReviewSorter();
 
     @PostMapping("/places/{name}")
     public String showPlaceDetails(@PathVariable String name, @RequestParam String revSort,
@@ -72,7 +71,11 @@ public class PlaceController {
             for (String str : followersIDs) {
                 followers.add(ur.getUserByUsername(str));
             }
-
+            // Updating Required for sort
+            for (Review review : reviews) {
+                review.updateLikes(rr.getReviewLikes(review));
+                review.updateDislikes(rr.getReviewDislikes(review));
+            }
             rs.ReviewSortByUnPack(reviews, revSort, following, followers, priority);
             // fin sorting
             model.addAttribute("reviews", reviews.toArray());

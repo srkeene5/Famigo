@@ -60,18 +60,12 @@
 
 <body>
     <h1>Banned Page</h1>
-    <button id="appealButton">Appeal Ban</button>
-
     <div id="myPopup" class="popup">
         <div class="popup-content">
             <h3>Appeal:</h3>
             <span id="error"></span>
-
-
-
             <textarea id="appealText" name="appeal"></textarea>
             <div class="formClear"></div>
-
             <div class="formClear"></div>
             <div class="button-container">
                 <button id="cancel">Cancel</button>
@@ -79,15 +73,40 @@
             </div>
         </div>
     </div>
+    
+    <h3>Reports:</h3>
+    <div id="reportList">
+        <ul th:each="report, i : ${Reports}">
+            <div class="reportBlock" th:object="${report}">
+                <p th:id="'rep' + ${i.index}" class="repID">[[${report.getReportID()}]]</p>
+                <li th:text="'User Reporting: ' + *{reportingUserID}"></li>
+                <li th:text="'Reported User: ' + *{contentUserID}"></li>
+                <li th:text="'Reported Content: ' + ${report.getReportedText()}">
+                <li th:text="'Report: ' + ${report.getExplanation()}"></li>
+                <li th:text="'Appeal: ' + ${report.getAppeal()}"></li>
 
+                <button th:id="'appealButton' + ${report.getReportID()}" class="appBtn">Appeal Ban</button>
+            </div>
+        </ul>
+    </div>
     
     <script>
         var script = document.createElement('script');
         script.src = '//code.jquery.com/jquery-3.6.3.min.js'; // Check https://jquery.com/ for the current version
         document.getElementsByTagName('head')[0].appendChild(script);
-        appealButton.addEventListener("click",function(){
-            myPopup.classList.add("show");
-        });
+
+        let appBtns = document.getElementsByClassName("appBtn");
+
+        let vals = [];
+        var reportID = 0;
+        for (let i = 0; i < appBtns.length; i++) {
+            appBtns[i].addEventListener("click", function(event) {
+                myPopup.classList.add("show");
+                let reportID = event.target.id.substring(12); // ID# of button
+                console.log(reportID);
+                vals[1] = reportID;
+            });
+        }
         cancel.addEventListener("click",function(){
             resetAppPop();
         });
@@ -98,9 +117,7 @@
                 error.textContent = "Appeal must contain Text";
                 error.style.color = "red";
             } else {
-                let vals = [];
                 vals[0] = appText;
-                
                 $.ajax({
                     type: "POST",
                     url: "/addAppeal",
@@ -116,6 +133,7 @@
             myPopup.classList.remove("show");
             appealText.value = "";
             error.textContent = "";
+            location.reload();
         }
     </script>
 </body>

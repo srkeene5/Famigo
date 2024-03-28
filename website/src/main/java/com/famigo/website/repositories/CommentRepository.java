@@ -48,9 +48,16 @@ public class CommentRepository {
         }
         ArrayList<Comment> comments = new ArrayList<>();
         for (Map<String, Object> o : commentList) {
-            comments.add(new Comment(uid, (int) o.get("comID"),
-                    (String) o.get("comment"), (int) o.get("likes"),
-                    (LocalDateTime) o.get("timestamp"), (boolean) o.get("edited"),
+            System.out.println("Testing");
+            System.out.println(
+                    "ComID: \"" + o.get("comID").getClass() + "\"\tRevID: \"" + o.get("reviewID").getClass() + "\"");
+            System.err.println("Done");
+            comments.add(new Comment(uid,
+                    (int) o.get("comID"),
+                    (String) o.get("comment"),
+                    (int) o.get("likes"),
+                    (LocalDateTime) o.get("timestamp"),
+                    (boolean) o.get("edited"),
                     (int) o.get("reviewID")));
         }
         return comments;
@@ -86,6 +93,14 @@ public class CommentRepository {
                     (int) o.get("reviewID"));
         }
         return comment;
+    }
+
+    public void deleteComment(int cid) {
+        jdbcTemplate.update("DELETE FROM comments WHERE comID=?", cid);
+    }
+
+    public void deleteComment(Comment comment) {
+        jdbcTemplate.update("DELETE FROM comments WHERE comID=?", comment.getComId());
     }
 
 }

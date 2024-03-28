@@ -9,6 +9,7 @@ import com.famigo.website.model.Review;
 
 @Service
 public class Stats {
+
     private String userID;
     private int totStars;
     private int avgStars;

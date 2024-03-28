@@ -35,5 +35,4 @@ public class addPlaceController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    
 }

@@ -81,6 +81,7 @@
                     <li th:text="'Reported User: ' + *{contentUserID}"></li>
                     <li th:text="'Reported Content: ' + ${i.getReportedText()}">
                     <li th:text="'Report: ' + ${i.getExplanation()}"></li>
+                    <li th:text="'Report: ' + ${i.isBanned()}"></li>
         
                     <li><button th:id="'ignoreBtn' + ${i.getReportID()}" class="ignBtn">Reject Report</button>
                     <li><button th:id="'deleteBtn' + ${i.getReportID()}" class="delBtn">Delete Reported Content</button>
@@ -99,6 +100,7 @@
                     <li th:text="'Reported Content: ' + ${i.getReportedText()}">
                     <li th:text="'Report: ' + ${i.getExplanation()}"></li>
                     <li th:text="'Appeal: ' + ${i.getAppeal()}"></li>
+                    <li th:text="'Report: ' + ${i.isBanned()}"></li>
         
                     <li><button th:id="'appRejBtn' + ${i.getReportID()}" class="appRejBtn">Reject Appeal</button>
                     <li><button th:id="'appAccBtn' + ${i.getReportID()}" class="appAccBtn">Accept Appeal</button>

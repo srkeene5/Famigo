@@ -3,6 +3,7 @@ package com.famigo.website.model;
 import java.time.LocalDateTime;
 
 public class Review {
+
     private String userId;
     private int revId;
     private String review;
@@ -83,6 +84,14 @@ public class Review {
 
     public int getDislikes() {
         return dislikes;
+    }
+
+    public void updateLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public void updateDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
 
 }

@@ -72,6 +72,24 @@ public class ReportRepository {
         return reports;
     }
 
+    public Report getReportByID(int repID) {
+        List<Map<String, Object>> reportList = jdbcTemplate.queryForList("SELECT * FROM reports WHERE repID=?",
+                new Object[] { repID });
+        if (reportList == null || reportList.isEmpty()) {
+            return null;
+        }
+        ArrayList<Report> reports = new ArrayList<>();
+        for (Map<String, Object> o : reportList) {
+            reports.add(new Report(repID, (String) o.get("repUserID"), (String) o.get("conUserID"),
+                    (String) o.get("repText"), (String) o.get("appText"),
+                    (LocalDateTime) o.get("timestamp"), pr.getPlaceByID((int) o.get("placeID")),
+                    rr.getReviewByID((int) o.get("revID")), cr.getCommentByID((int) o.get("comID")),
+                    (boolean) o.get("banned")));
+        }
+        reports.add(null);
+        return reports.get(0);
+    }
+
     public ArrayList<Report> getReportsByContentUser(String uid) {
         List<Map<String, Object>> reportList = jdbcTemplate.queryForList("SELECT * FROM reports WHERE conUserID=?",
                 new Object[] { uid });
@@ -107,10 +125,11 @@ public class ReportRepository {
         return reports;
     }
 
-    public ArrayList<Report> getReports() {
-        List<Map<String, Object>> reportList = jdbcTemplate.queryForList("SELECT * FROM reports WHERE appText IS NULL");
+    public ArrayList<Report> getActiveReports() {
+        List<Map<String, Object>> reportList = jdbcTemplate
+                .queryForList("SELECT * FROM reports WHERE appText IS NULL AND banned=?", false);
         if (reportList == null || reportList.isEmpty()) {
-            System.out.println("Failed to Pull");
+            System.out.println("Failed to Pull Reports");
             return null;
         }
         ArrayList<Report> reports = new ArrayList<>();
@@ -129,7 +148,7 @@ public class ReportRepository {
         List<Map<String, Object>> reportList = jdbcTemplate
                 .queryForList("SELECT * FROM reports WHERE appText IS NOT NULL");
         if (reportList == null || reportList.isEmpty()) {
-            System.out.println("Failed to Pull");
+            System.out.println("Failed to Pull Appeals");
             return null;
         }
         ArrayList<Report> reports = new ArrayList<>();
@@ -142,6 +161,18 @@ public class ReportRepository {
                     cr.getCommentByID((int) o.get("comID")), (boolean) o.get("banned")));
         }
         return reports;
+    }
+
+    public void updateBan(boolean ban, int id) {
+        jdbcTemplate.update("UPDATE reports SET banned=? WHERE repID=?", ban, id);
+    }
+
+    public void deleteReport(int repID) {
+        jdbcTemplate.update("DELETE FROM reports WHERE repID=?", repID);
+    }
+
+    public void deleteReport(Report report) {
+        jdbcTemplate.update("DELETE FROM reports WHERE repID=?", report.getReportID());
     }
 
 }

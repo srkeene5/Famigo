@@ -163,15 +163,7 @@ public class Report {
         this.ban = ban;
     }
 
-    public void deleteReport() {
-
-    }
-
-    public void removeReported() {
-
-    }
-
-    public void removeBanReported() {
+    public void rejectAppeal() {
 
     }
 

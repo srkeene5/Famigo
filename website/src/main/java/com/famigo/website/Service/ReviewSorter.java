@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import com.famigo.website.utilities.Role;
 import com.famigo.website.utilities.Visibility;
@@ -14,6 +15,7 @@ import com.famigo.website.model.Review;
 import com.famigo.website.model.User;
 import com.famigo.website.repositories.ReviewRepository;
 
+@Service
 public class ReviewSorter {
 
     /*
@@ -105,16 +107,6 @@ public class ReviewSorter {
             }
         }
 
-        /*
-         * if (sortPrime != null && sortSec != null) {
-         * System.out.println(revs.get(0).getRevId() + "\t" + val + "\t" + ascending +
-         * "\t"
-         * + sortPrime.get(0).getName() + "\t" + primeAscend + "\t" +
-         * sortSec.get(0).getName()
-         * + "\t" + secAscend);
-         * }
-         */
-
         if (sortPrime == null) {
             ReviewSortBy(revs, val, ascending);
         } else if (sortSec == null) {
@@ -189,10 +181,12 @@ public class ReviewSorter {
                     i++;
                 }
             } else if (val.equals("likes")) {
-                if ((ascending && revs.get(i).getLikes() - revs.get(i).getDislikes() > revs.get(j).getLikes()
-                        - revs.get(j).getDislikes())
-                        || (!ascending && revs.get(i).getLikes() - revs.get(i).getDislikes() < revs.get(j).getLikes()
-                                - revs.get(j).getDislikes())) {
+                if ((ascending && revs.get(i).getLikes()
+                        - revs.get(i).getDislikes() > revs.get(j).getLikes()
+                                - revs.get(j).getDislikes())
+                        || (!ascending && revs.get(i).getLikes()
+                                - revs.get(i).getDislikes() < revs.get(j).getLikes()
+                                        - revs.get(j).getDislikes())) {
                     Review hold = revs.get(j);
                     int index = j;
                     while (index != i) {

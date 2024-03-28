@@ -53,15 +53,18 @@ public class ModController {
         if (bannedReports.isEmpty()) {
             model.addAttribute(new Report[0]);
         } else {
-            model.addAttribute("Report", bannedReports.toArray());
+            System.out.println(bannedReports.get(0).getExplanation());
+            model.addAttribute("Reports", bannedReports.toArray());
         }
         return "bannedPage";
     }
 
     @RequestMapping(value = "/addAppeal", method = RequestMethod.POST)
     public ResponseEntity<String> AppealReport(@RequestParam(value = "vals[]") String[] vals) {
-        Review review = rr.getReviewByID(Integer.valueOf(vals[1]));
-        repR.addReport(new Report(Utilities.getUserID(), review.getUserId(), review, vals[0]));
+        System.out.println(vals[0] + "\t" + vals[1] + "\t" + Integer.parseInt(vals[1]));
+        Report report = repR.getReportByID(Integer.valueOf(vals[1]));
+        report.setAppeal(vals[0]);
+
         return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
     }
 
