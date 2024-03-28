@@ -1,5 +1,6 @@
 package com.famigo.website.repositories;
 
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,26 +8,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
+
 
 import com.famigo.website.model.User;
 import com.famigo.website.utilities.Role;
 import com.famigo.website.utilities.Visibility;
 
+
 @Repository
 public class UserRepository {
 
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
 
     public void createUser(User user) {
         jdbcTemplate.update(
                 "INSERT INTO user (id, username, email, password, name, description, visibility, role, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)",
                 new PreparedStatementSetter() {
+
 
                     @Override
                     public void setValues(PreparedStatement ps) throws SQLException {
@@ -41,12 +49,15 @@ public class UserRepository {
                         ps.setString(8, user.getRole().toString());
                     }
 
+
                 });
     }
+
 
     public User getUser(String column, String value) {
         try {
             User user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE " + column + "=?", new RowMapper<User>() {
+
 
                 @Override
                 public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -60,12 +71,14 @@ public class UserRepository {
                     }
                 }
 
+
             }, value);
             return user;
         } catch (Exception e) {
             return null;
         }
     }
+
 
     public ArrayList<User> getAllUsers() {
         ArrayList<User> users = new ArrayList<>();
@@ -79,6 +92,7 @@ public class UserRepository {
         return users;
     }
 
+
     public ArrayList<String> getAllUsernames() {
         ArrayList<String> users = new ArrayList<>();
         List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT username FROM user");
@@ -87,6 +101,50 @@ public class UserRepository {
         }
         return users;
     }
+
+
+    public void changeVisibility(User user) {
+        jdbcTemplate.update("UPDATE user SET visibility= ? WHERE id= ?", new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, user.getVisibility().toString());
+                ps.setString(2, user.getID());
+            }
+        });
+    }
+
+
+    public void changeUsername(User user) {
+        jdbcTemplate.update("UPDATE user SET username= ? WHERE id= ?", new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getID());
+            }
+        });
+    }
+
+
+    public void changePassword(User user) {
+        jdbcTemplate.update("UPDATE user SET password= ? WHERE id= ?", new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps) throws SQLException {
+                ps.setString(1, "{bcrypt}"+BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+                ps.setString(2, user.getID());
+            }
+        });
+    }
+
+
+    public ArrayList<String> getAllVisibility() {
+        ArrayList<String> users = new ArrayList<>();
+        List<Map<String, Object>> userList = jdbcTemplate.queryForList("SELECT visibility FROM user");
+        for (Map<String, Object> user : userList) {
+            users.add((String) user.get("visibility"));
+        }
+        return users;
+    }
+
 
     public User getUserByUsername(String userID) {
         try {
@@ -104,6 +162,7 @@ public class UserRepository {
                     }
                 }
 
+
             }, userID);
             return user;
         } catch (Exception e) {
@@ -111,18 +170,21 @@ public class UserRepository {
         }
     }
 
+
     public String getPassword(String userID) {
         String password = jdbcTemplate.queryForObject("SELECT password FROM user WHERE id=?", new RowMapper<String>() {
+
 
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
                 // TODO Auto-generated method stub
                 return rs.getString("password");
             }
-            
+           
         }, userID);
         return password;
     }
+
 
     public void deleteAccount(String userID) {
         jdbcTemplate.update("UPDATE user SET enabled=0 WHERE id=?", userID);
@@ -130,22 +192,26 @@ public class UserRepository {
         jdbcTemplate.update("DELETE FROM followers WHERE id=? OR following_id=?", userID, userID);
     }
 
+
     public boolean isUserID(String userID) {
         boolean answer = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM user WHERE id=?", new RowMapper<Boolean>() {
+
 
             @Override
             public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
                 // TODO Auto-generated method stub
                 return rs.getBoolean(1);
             }
-            
+           
         }, userID);
         return answer;
     }
 
+
     public void addVerificationLink(String link, String userID) {
         String sql = "INSERT INTO verification (userID, link) VALUES (?, ?)";
         jdbcTemplate.update(sql, new PreparedStatementSetter() {
+
 
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
@@ -153,9 +219,10 @@ public class UserRepository {
                 ps.setString(1, userID);
                 ps.setString(2, link);
             }
-            
+           
         });
     }
+
 
     public boolean verify(String link) {
         String sql = "SELECT COUNT(1) FROM verification WHERE link=?";
@@ -164,21 +231,23 @@ public class UserRepository {
             String userID = jdbcTemplate.queryForObject("SELECT userID FROM verification WHERE link=?", String.class, link);
             jdbcTemplate.update("DELETE FROM verification WHERE userID=?", new PreparedStatementSetter() {
 
-                @Override
-                public void setValues(PreparedStatement ps) throws SQLException {
-                    // TODO Auto-generated method stub
-                    ps.setString(1, userID);
-                }
-                
-            });
-            jdbcTemplate.update("UPDATE user SET enabled=1 WHERE id=?", new PreparedStatementSetter() {
 
                 @Override
                 public void setValues(PreparedStatement ps) throws SQLException {
                     // TODO Auto-generated method stub
                     ps.setString(1, userID);
                 }
-                
+               
+            });
+            jdbcTemplate.update("UPDATE user SET enabled=1 WHERE id=?", new PreparedStatementSetter() {
+
+
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    // TODO Auto-generated method stub
+                    ps.setString(1, userID);
+                }
+               
             });
             return true;
         }
@@ -187,3 +256,8 @@ public class UserRepository {
         }
     }
 }
+
+
+
+
+
