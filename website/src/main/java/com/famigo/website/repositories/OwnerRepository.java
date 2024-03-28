@@ -69,4 +69,18 @@ public class OwnerRepository {
         return requests;
     }
 
+    public String getuserIdFromReqId(int ownerReqId) {
+        String sql = "SELECT userID FROM ownerRequests WHERE ownerReqID=?";
+        return jdbcTemplate.queryForObject(sql, String.class, ownerReqId);
+    }
+
+    public int getPlaceIdFromReqId(int ownerReqId) {
+        String sql = "SELECT placeID FROM ownerRequests WHERE ownerReqID=?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, ownerReqId);
+    }
+
+    public void deleteOwnerRequest(int ownerReqId) {
+        String sql = "DELETE FROM ownerRequests WHERE ownerReqID=?";
+        jdbcTemplate.update(sql, ownerReqId);
+    }
 }
