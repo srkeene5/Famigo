@@ -52,6 +52,9 @@ public class PlaceController {
             int[] revReactions = rr.getUserReviewReactions(Utilities.getUserID(), reviews);
             model.addAttribute("revReactions", revReactions);
         }
+
+        model.addAttribute("currentUser", Utilities.getUserID());
+
         return "place-details";
     }
 
@@ -87,6 +90,20 @@ public class PlaceController {
                 System.out.println("PlaceID: " + pRev.getPlaceId());
                 System.out.println();
             }
+        }
+
+        return new ResponseEntity<>("\"Success\"", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/places/{name}/editRev", method = RequestMethod.POST)
+    public ResponseEntity<String> editReview(@RequestParam(value = "vals[]") String[] vals) {
+        // vals[]: index 0 = review ID, 1 = review stars, 2 = review text
+
+        // Double-check that the user ID of the review equals the ID of the logged in user,
+        // for security reasons.
+        Review rev = rr.getReviewById(Integer.parseInt(vals[0]));
+        if ((rev != null) && (rev.getUserId().equals(Utilities.getUserID()))) {
+            rr.editReview(Integer.parseInt(vals[0]), Integer.parseInt(vals[1]), vals[2]);
         }
 
         return new ResponseEntity<>("\"Success\"", HttpStatus.OK);

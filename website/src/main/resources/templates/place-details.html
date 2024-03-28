@@ -80,6 +80,12 @@
         .disliked:hover {
             background-color: gray;
         }
+        .editBtn {
+            background-color: lightgray;
+        }
+        .editBtn:hover {
+            background-color: gray;
+        }
     </style>
 </head>
 
@@ -122,11 +128,15 @@
         <ul th:each="i, ib : ${reviews}">
             <div class="reviewBlock" th:object="${i}">
                 <div th:id="'rev' + ${ib.index}" class="revId">[[*{revId}]]</div>
-                <div th:text="'User: ' + *{userId}"></div>
-                <div th:text="'Rated ' + *{stars} + ' stars'"></div>
-                <div th:text="*{review}"></div>
+                <div th:id="'user' + ${ib.index}" th:text="'User: ' + *{userId}"></div>
+                <div th:id="'rating' + ${ib.index}" th:text="'Rated ' + *{stars} + ' stars'"></div>
+                <div th:id="'revText' + ${ib.index}" th:text="*{review}"></div>
                 <button th:id="'lkBtn' + ${ib.index}" class="likeBtn">Like</button> <div th:id="'likes' + ${ib.index}" style="display:inline-block" th:text="*{likes}"></div>
                 &emsp;<button th:id="'dlBtn' + ${ib.index}" class="dislikeBtn">Dislike</button> <div th:id="'dislikes' + ${ib.index}" style="display:inline-block" th:text="*{dislikes}"></div>
+                <div th:if="${currentUser} == *{userId}">
+                    <br>
+                    <button th:id="'editBtn' + ${ib.index}" class="editBtn">Edit Review</button>
+                </div>
                 <div th:id="'revReaction' + ${ib.index}" class="revReaction" th:text="${revReactions[ib.index]}"></div>
                 <br><br>
             </div>
@@ -155,9 +165,21 @@
 
         /* - - - Add Review Popup - - - */
 
+        let isPopupShowing = false;
+        let isEditingReview = false;
+
+        // Global variable to help with review edit submission
+        // Index 0 = review ID
+        // 1 = review stars
+        // 2 = review text
+        let editValues = ["", "", "", ""];
+
         let stval = 0;
         addReview.addEventListener("click",function(){
-            myPopup.classList.add("show");
+            if (!isPopupShowing) {
+                isEditingReview = false;
+                myPopup.classList.add("show");
+            }
         });
         cancel.addEventListener("click",function(){
             resetRevPop();
@@ -169,22 +191,39 @@
                 let error = document.getElementById("error");
                 error.textContent = "Review must contain Text and Rating";
                 error.style.color = "red";
+
             } else {
-                let send = {
-                    rText : revText,
-                    rStar : revStVal,
-                    rPlace : place
+                if (isEditingReview) {
+                    // editValues[0] is set already
+                    editValues[1] = stval;
+                    editValues[2] = Review.value;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "${placePath}/editRev",
+                        data: {vals: editValues},
+                        timeout: 30,
+                    }).done(function (data) {
+                        console.log(data);
+                    });
+
+                } else {
+                    let send = {
+                        rText : revText,
+                        rStar : revStVal,
+                        rPlace : place
+                    }
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: "${placePath}/addRev",
+                        data: JSON.stringify(send),
+                        dataType: "json",
+                        timeout: 60,
+                    }).done(function (data) {
+                        console.log(data);
+                    });
                 }
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json",
-                    url: "${placePath}/addRev",
-                    data: JSON.stringify(send),
-                    dataType: "json",
-                    timeout: 60,
-                }).done(function (data) {
-                    console.log(data);
-                });
                 
                 resetRevPop();
             }
@@ -245,6 +284,7 @@
             }
         });
         function resetRevPop(){
+            isPopupShowing = false;
             myPopup.classList.remove("show");
             Review.value = "";
             stval = 0;
@@ -349,6 +389,33 @@
                 }).done(function (data) {
                     console.log(data);
                 });
+        }
+
+        let editBtns = document.getElementsByClassName("editBtn");
+        
+        for (let i = 0; i < editBtns.length; i++) {
+            editBtns[i].addEventListener("click", function() {
+                // Don't do any of this if another edit review or add review popup is already showing
+                if (isPopupShowing) { return; }
+                isEditingReview = true;
+
+                let reviewNum = event.target.id.substring(7); // ID# of button
+                reviewId = parseInt(document.getElementById("rev" + reviewNum).innerHTML);
+                editValues[0] = reviewId;
+
+                // Display popup
+                myPopup.classList.add("show");
+
+                // Add already stored review data into the popup
+                let previousStars = document.getElementById("rating" + reviewNum).innerHTML.substring(6, 7);
+                for (let i = 1; (i <= previousStars) && (i <= 5); i++) {
+                    console.log(document.getElementById("st" + i));
+                    document.getElementById("st" + i).classList.add("checked");
+                }
+                Review.value = document.getElementById("revText" + reviewNum).innerHTML;
+
+                // Edit submission is handled where adding a review is implemented
+            });
         }
 
     </script>

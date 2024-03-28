@@ -52,9 +52,10 @@ CREATE TABLE IF NOT EXISTS reviews (
     stars INTEGER,
     timestamp DATETIME,
     edited BOOLEAN,
-    placeID VARCHAR(20),
+    placeID INTEGER NOT NULL,
     likes INTEGER,
     dislikes INTEGER,
+    isEdited BOOLEAN,
     PRIMARY KEY (revID),
     FOREIGN KEY (userID) REFERENCES user(id)
 );
@@ -106,4 +107,12 @@ CREATE TABLE IF NOT EXISTS event (
     start DATETIME,
     end DATETIME,
     description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS reviewVersions (
+    revId INTEGER NOT NULL,
+    versionId INTEGER,
+    stars INTEGER NOT NULL,
+    review TEXT,
+    timestamp DATETIME
 );

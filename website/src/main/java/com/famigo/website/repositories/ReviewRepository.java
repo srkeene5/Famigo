@@ -168,4 +168,56 @@ public class ReviewRepository {
         return reactions;
     }
 
+    /**
+     * Returns an ArrayList that contains up to 4 alternate versions of text for the given review
+     * which have been stored by the user.
+     * @param revId The ID of the review
+     */
+    public ArrayList<String> getReviewHistory(int revId) {
+        ArrayList<String> revVersions = new ArrayList<String>();
+
+        // Get the reviewEdits table with the review ID. This table contains up to 4 extra versions
+        // of text for the current review that the user has saved. If the request fails, meaning
+        // no reviewEdits table exists because the given review hasn't been edited, return an
+        // empty list.
+        Map<String, Object> history;
+        try {
+            history = jdbcTemplate.queryForMap("SELECT * FROM reviewEdits WHERE revId=?",
+                    new Object[] { revId });
+            // For each review text version that exists, add it to the ArrayList to be returned.
+            // The versions are stored in order from rev1 (most recently used) to rev4 (least recently used).
+            for (int i = 1; i <= 4; i++) {
+                Object review = history.get("rev" + i);
+                if (review != null) {
+                    revVersions.add((String) review);
+                } else {
+                    break;
+                }
+            }
+
+        } catch (DataAccessException e) {}
+
+        return revVersions;
+    }
+
+    public Review getReviewById(int revId) {
+        Map<String, Object> revEntry;
+        Review rev;
+        try {
+            revEntry = jdbcTemplate.queryForMap("SELECT * FROM reviews WHERE revID=?",
+                    new Object[] { revId });
+            rev = new Review((String) revEntry.get("userID"), (int) revEntry.get("placeID"),
+                    (String) revEntry.get("review"), (int) revEntry.get("stars"));
+
+        } catch (DataAccessException e) {
+            rev = null;
+        }
+        return rev;
+    }
+
+    public void editReview(int revId, int newStars, String newText) {
+        jdbcTemplate.update("UPDATE reviews SET stars=?, review=?, timestamp=? WHERE revID=?",
+                new Object[] {newStars, newText, Timestamp.valueOf(java.time.LocalDateTime.now()), revId});
+    }
+
 }
