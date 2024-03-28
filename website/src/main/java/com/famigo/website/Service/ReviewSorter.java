@@ -1,4 +1,4 @@
-package com.famigo.website.service;
+package com.famigo.website.Service;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -75,10 +75,12 @@ public class ReviewSorter {
         ArrayList<User> friends = new ArrayList<>();
         for (User follower : followers) {
             for (User follows : following) {
-                if (follower.getID().equals(follows.getID())) {
-                    friends.add(follower);
-                    System.out.println(follower.getName());
-                    // following.remove(follows);
+                if (follows != null) {
+                    if (follower.getID().equals(follows.getID())) {
+                        friends.add(follower);
+                        System.out.println(follower.getName());
+                        // following.remove(follows);
+                    }
                 }
             }
         }

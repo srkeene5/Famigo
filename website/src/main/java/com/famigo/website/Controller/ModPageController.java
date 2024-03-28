@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.famigo.website.model.Report;
+import com.famigo.website.model.OwnerRequest;
+
 import com.famigo.website.repositories.ReportRepository;
+import com.famigo.website.repositories.OwnerRepository;
 
 @Controller
 public class ModPageController {
@@ -20,11 +23,15 @@ public class ModPageController {
     @Autowired
     ReportRepository repR;
 
+    @Autowired
+    OwnerRepository or;
+
     @RequestMapping(value = "/modPage", method = RequestMethod.GET)
     public String showPlaceDetails(Model model) {
         // Get all Reports
         ArrayList<Report> reports = repR.getReports();
         ArrayList<Report> appeals = repR.getAppeals();
+        
         if (reports == null || reports.isEmpty()) {
             model.addAttribute("reports", new Report[0]);
         } else {
@@ -37,6 +44,15 @@ public class ModPageController {
             System.out.println(appeals.get(0).getExplanation());
             model.addAttribute("appeals", appeals.toArray());
         }
+
+        ArrayList<OwnerRequest> ownerRequests = or.getOwnerRequests();
+        if (ownerRequests == null || ownerRequests.isEmpty()) {
+            model.addAttribute("ownerRequests", new OwnerRequest[0]);
+        } else {
+            System.out.println("ownerRequests array list: " + ownerRequests);
+            model.addAttribute("ownerRequests", ownerRequests.toArray());
+        }
+
 
         return "/modPage";
     }

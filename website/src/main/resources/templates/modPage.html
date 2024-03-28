@@ -108,6 +108,23 @@
         </div>
     </div>
 
+    <div id="ownerStatus">
+        <div id="ownerRequestList">
+            <h2>Place Ownership Requests</h2>
+            <ul th:each="i, ib : ${ownerRequests}">
+                <p th:id="'*{ownerReqId}'" class="ownerReqId">[[*{ownerReqId}]]</p>
+                <p th:id="'rev' + ${ib.index}" class="revId">[[*{ownerReqId}]]</p>
+                <div class="requestBlock" th:object="${i}">
+                    <li th:text="*{userId} + ' requests ownership of: ' + *{placeName} + ' page'"></li>
+
+                    <li><button th:id="'accReqBtn' + ${i.getOwnerReqID()}" class="accReqBtn">Approve</button>
+                    <li><button th:id="'denyReqBtn' + ${i.getOwnerReqID()}" class="denyReqBtn">Deny</button>
+                    <br>
+                </div>
+            </ul>
+        </div>
+    </div>
+
     <script>
 
         // Ajax setup
@@ -229,6 +246,50 @@
             resetRepPop();
         }
         */
+
+        /* Owner Status */
+
+        /*let ownerReqIds = document.getElementsByClassName("ownerReqId");
+        for (let i = 0; i < ownerReqIds.length; i++) {
+            ownerReqIds[i].style.display = "none";
+        }
+        console.log("Owner Req IDS:");
+        for (let i = 0; i < ownerReqIds.length; i++) {
+            console.log(ownerReqIds[i]);
+        }*/
+
+        let accReqBtns = document.getElementsByClassName("accReqBtn");
+        let denyReqBtns = document.getElementsByClassName("denyReqBtn");
+
+        for (let i = 0; i < accReqBtns.length; i++) {
+            accReqBtns[i].addEventListener("click", function(event) {
+                console.log("inside accept request");
+                ownerReqId = event.target.id.substring(9);
+                console.log("req id:" + ownerReqId);
+                giveOwnerStatus(true, ownerReqId);
+            });
+            denyReqBtns[i].addEventListener("click", function(event) {
+                console.log("inside deny request");
+                ownerReqId = event.target.id.substring(9);
+                console.log("req id:" + ownerReqId);
+                giveOwnerStatus(false, ownerReqId);
+            });
+            
+        }
+
+        function giveOwnerStatus(give, ownerReqId) {
+            console.log("reached giveOwnerStatus");
+            console.log("give=" + give);
+            console.log("ownerReqId=" + ownerReqId);
+            $.ajax({
+                type: "POST",
+                url: "/mod/giveOwnerStatus",
+                data: {give: give, ownerReqId: ownerReqId},
+                timeout: 60,
+            }).done(function (data) {
+                console.log(data);
+            });
+        }
         
     </script>
 </body>

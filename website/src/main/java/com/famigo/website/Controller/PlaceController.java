@@ -20,7 +20,7 @@ import com.famigo.website.repositories.FollowingRepository;
 import com.famigo.website.repositories.PlaceRepository;
 import com.famigo.website.repositories.ReviewRepository;
 import com.famigo.website.repositories.UserRepository;
-import com.famigo.website.service.ReviewSorter;
+import com.famigo.website.Service.ReviewSorter;
 import com.famigo.website.model.Review;
 import com.famigo.website.model.SubReview;
 import com.famigo.website.model.User;

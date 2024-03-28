@@ -15,7 +15,7 @@ import com.famigo.website.model.Signup;
 import com.famigo.website.utilities.Utilities;
 
 import com.famigo.website.repositories.UserRepository;
-import com.famigo.website.service.Stats;
+import com.famigo.website.Service.Stats;
 import com.famigo.website.repositories.CommentRepository;
 import com.famigo.website.repositories.FollowingRepository;
 import com.famigo.website.repositories.ReviewRepository;

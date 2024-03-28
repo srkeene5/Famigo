@@ -155,6 +155,8 @@
         </div>
     </div>
 
+    <button id="submitOwnerReq">Do you own this place?</button>
+
     <div id="myReport" class="popup">
         <div class="popup-content">
             <h3>Report Here:</h3>
@@ -426,6 +428,11 @@
             resetRepPop();
         });
 
+        submitOwnerReq.addEventListener("click", function(){
+            console.log("reached owner event listener");
+            sendReqToModForOwnerStatus(true, place);
+        });
+
         function resetRepPop(){
             myReport.classList.remove("show");
             Rep.value = "";
@@ -442,6 +449,19 @@
                 console.log(data);
             });
             resetRepPop();
+        }
+
+        function sendReqToModForOwnerStatus(isButtonClicked, place) {
+            console.log("reached sendReqToModForOwnerStatus");
+            console.log("value "+ isButtonClicked);
+            $.ajax({
+                type: "POST",
+                url: "${placePath}/requestOwnerStatus",
+                data: {sendReq: isButtonClicked, placeId: place},
+                timeout: 60,
+            }).done(function (data) {
+                console.log(data);
+            });
         }
 
         function sendLikeOrDislike(values) {
